@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{991E323C-E61E-4039-97FF-6C7C75097409}</ProjectGuid>
+    <RootNamespace>BWEM</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)BWAPI\include;$(ProjectDir)include\BWEM;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)BWAPI\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)BWAPI\include;$(ProjectDir)include\BWEM;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)BWAPI\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>BWAPId.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>BWAPI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="EasyBMP_1.06\EasyBMP.cpp" />
+    <ClCompile Include="src\area.cpp" />
+    <ClCompile Include="src\base.cpp" />
+    <ClCompile Include="src\bwapiExt.cpp" />
+    <ClCompile Include="src\bwem.cpp" />
+    <ClCompile Include="src\cp.cpp" />
+    <ClCompile Include="src\examples.cpp" />
+    <ClCompile Include="src\graph.cpp" />
+    <ClCompile Include="src\gridMap.cpp" />
+    <ClCompile Include="src\map.cpp" />
+    <ClCompile Include="src\mapDrawer.cpp" />
+    <ClCompile Include="src\mapImpl.cpp" />
+    <ClCompile Include="src\mapPrinter.cpp" />
+    <ClCompile Include="src\neutral.cpp" />
+    <ClCompile Include="src\tiles.cpp" />
+    <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\winutils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EasyBMP_1.06\EasyBMP.h" />
+    <ClInclude Include="EasyBMP_1.06\EasyBMP_BMP.h" />
+    <ClInclude Include="EasyBMP_1.06\EasyBMP_DataStructures.h" />
+    <ClInclude Include="EasyBMP_1.06\EasyBMP_VariousBMPutilities.h" />
+    <ClInclude Include="include\BWEM\area.h" />
+    <ClInclude Include="include\BWEM\base.h" />
+    <ClInclude Include="include\BWEM\bwapiExt.h" />
+    <ClInclude Include="include\BWEM\bwem.h" />
+    <ClInclude Include="include\BWEM\cp.h" />
+    <ClInclude Include="include\BWEM\defs.h" />
+    <ClInclude Include="include\BWEM\examples.h" />
+    <ClInclude Include="include\BWEM\graph.h" />
+    <ClInclude Include="include\BWEM\gridMap.h" />
+    <ClInclude Include="include\BWEM\map.h" />
+    <ClInclude Include="include\BWEM\mapDrawer.h" />
+    <ClInclude Include="include\BWEM\mapImpl.h" />
+    <ClInclude Include="include\BWEM\mapPrinter.h" />
+    <ClInclude Include="include\BWEM\neutral.h" />
+    <ClInclude Include="include\BWEM\tiles.h" />
+    <ClInclude Include="include\BWEM\utils.h" />
+    <ClInclude Include="include\BWEM\winutils.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
