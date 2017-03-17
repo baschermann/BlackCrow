@@ -33,18 +33,22 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="StarcraftPath.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="StarcraftPath.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)BWAPI\include;$(SolutionDir)BWEM\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(OutDir);$(SolutionDir)BWAPI\lib;$(LibraryPath)</LibraryPath>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)BWAPI\include;$(SolutionDir)BWEM\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(OutDir);$(SolutionDir)BWAPI\lib;$(LibraryPath)</LibraryPath>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -56,6 +60,21 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>BWAPId.lib;BWEM.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CustomBuildStep>
+      <Command>copy /y "$(OutputPath)$(TargetFileName)" "$(StarcraftAIPath)$(TargetFileName)"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copy Bot to Starcraft AI folder</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(StarcraftAIPath)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(OutputPath)$(TargetFileName)</Inputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -71,6 +90,21 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>BWAPI.lib;BWEM.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CustomBuildStep>
+      <Command>copy /y "$(OutputPath)$(TargetFileName)" "$(StarcraftAIPath)$(TargetFileName)"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copy Bot to Starcraft AI folder</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(StarcraftAIPath)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(OutputPath)$(TargetFileName)</Inputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AreaData.cpp" />
