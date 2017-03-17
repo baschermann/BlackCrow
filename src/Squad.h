@@ -1,47 +1,52 @@
 #pragma once
 #include <BWAPI.h>
-#include "SquadUnit.h"
-#include <BWEM/bwem.h> 
 
 // Handles single units in a squad. Micro, target decision (focusfire) and positioning
 
-class Squad {
+namespace BlackCrow {
 
-public:
-	void init();
-	void onFrame();
+	class BlackCrow;
+	class SquadUnit;
 
-	//std::list<BWAPI::Unit> units;
-	std::set<SquadUnit*> units;
+	class Squad {
+	public:
 
-	void add(SquadUnit* unit);
-	void remove(SquadUnit* unit);
-	void moveAll(BWAPI::Position position, bool queue);
-	
-};
+		Squad();
+		~Squad();
+		void onFrame();
 
-class ScoutSquad : public Squad {
-	bool globalSearch;
-	std::list<BWAPI::TilePosition>* scoutLocations;
-public:
+		//std::list<BWAPI::Unit> units;
+		std::set<SquadUnit*> units;
 
-	ScoutSquad();
-	~ScoutSquad();
-	void init();
-	void onFrame();
-	bool isStillScouting();
-	int locationsToScout();
-	std::list<BWAPI::TilePosition>* getScoutingPositions();
-	void addScoutPosition(BWAPI::TilePosition position);
-	void addStartLocations();
-	void addExpansions();
-	void setGlobalSearch(bool searchGlobally);
-};
+		void add(SquadUnit* unit);
+		void remove(SquadUnit* unit);
+		void moveAll(BWAPI::Position position, bool queue);
+	};
 
-class AttackSquad : public Squad {
+	class ScoutSquad : public Squad {
+	public:
+		ScoutSquad();
+		~ScoutSquad();
+		void init();
+		void onFrame();
+		bool isStillScouting();
+		int locationsToScout();
+		std::list<BWAPI::TilePosition>* getScoutingPositions();
+		void addScoutPosition(BWAPI::TilePosition position);
+		void addStartLocations();
+		void addExpansions();
+		void setGlobalSearch(bool searchGlobally);
 
-};
+	private:
+		bool globalSearch;
+		std::list<BWAPI::TilePosition>* scoutLocations;
+	};
 
-class StallSquad : public Squad {
+	class AttackSquad : public Squad {
 
-};
+	};
+
+	class StallSquad : public Squad {
+
+	};
+}

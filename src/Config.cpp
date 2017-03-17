@@ -1,14 +1,17 @@
 #include <BWAPI.h>
 #include "Config.h"
 
-using namespace BWAPI;
-using namespace Filter;
+namespace BlackCrow {
 
-Config* config = new Config();
+	using namespace BWAPI;
+	using namespace Filter;
 
-Config::Config() {
-	localSpeed = 6;
-	maxDrones = 200;
-	saturationLevel = 0.5;
-	barSize = 3;
+	Config* config = new Config();
+
+	Config::Config() {
+		localSpeed = 6;
+		maxDrones = 200;
+		saturationLevel = 0.5;
+		barSize = 3;
+	}
 }

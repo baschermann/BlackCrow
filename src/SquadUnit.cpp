@@ -1,16 +1,19 @@
 #include "SquadUnit.h"
 
-using namespace BWAPI;
-using namespace Filter;
+namespace BlackCrow {
 
-SquadUnit::SquadUnit(BWAPI::Unit unit) {
-	this->unit = unit;
-}
+	using namespace BWAPI;
+	using namespace Filter;
+
+	SquadUnit::SquadUnit(BWAPI::Unit unit) {
+		this->unit = unit;
+	}
 
 
-SquadUnit::~SquadUnit() {
-}
+	SquadUnit::~SquadUnit() {
+	}
 
-void SquadUnit::move(BWAPI::Position position, bool queue) {
-	unit->move(position, queue);
+	void SquadUnit::move(BWAPI::Position position, bool queue) {
+		unit->move(position, queue);
+	}
 }

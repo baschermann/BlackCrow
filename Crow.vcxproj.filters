@@ -13,90 +13,120 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Macro">
+      <UniqueIdentifier>{ac205bcf-be98-4dbb-b46e-aa978d61b31a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Misc">
+      <UniqueIdentifier>{c6d0c215-2219-49f6-b0b5-de1d6b5ed174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Strategy">
+      <UniqueIdentifier>{13b85d1a-061e-48a4-be49-5e61caf51a2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enemy">
+      <UniqueIdentifier>{8c2f1e8e-5e92-4d2d-a2b5-a2ad38f51910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Squad">
+      <UniqueIdentifier>{674cf0cd-f08c-4de1-acb5-94e4b0b95cb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Macro">
+      <UniqueIdentifier>{ae911851-bf5a-43b6-bfcd-6b5fb649dd86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Misc">
+      <UniqueIdentifier>{48e00cb3-223f-4043-8c65-7964dec67cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Enemy">
+      <UniqueIdentifier>{e3342420-c8ec-4c31-80be-a44a397d7cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Squad">
+      <UniqueIdentifier>{961a545d-1161-4baa-a09c-c64af4f8200a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Strategy">
+      <UniqueIdentifier>{55e55b89-0f17-42af-9f4b-59c37becfb0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AreaData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BuildingManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Crow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Debug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Dll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Enemy.cpp">
+    <ClCompile Include="src\BlackCrow.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Area.cpp">
+      <Filter>Source Files\Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Builder.cpp">
+      <Filter>Source Files\Macro</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Config.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Debug.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Enemy.cpp">
+      <Filter>Source Files\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="src\EnemyUnit.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="src\MacroManager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Macro.cpp">
+      <Filter>Source Files\Macro</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mapdata.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Map.cpp">
+      <Filter>Source Files\Strategy</Filter>
     </ClCompile>
     <ClCompile Include="src\Squad.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Squad</Filter>
     </ClCompile>
     <ClCompile Include="src\SquadUnit.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Squad</Filter>
     </ClCompile>
-    <ClCompile Include="src\StrategyManager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Strategy.cpp">
+      <Filter>Source Files\Strategy</Filter>
     </ClCompile>
     <ClCompile Include="src\Util.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AreaData.h">
+    <ClInclude Include="src\BlackCrow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\BuildingManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Area.h">
+      <Filter>Header Files\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Builder.h">
+      <Filter>Header Files\Macro</Filter>
     </ClInclude>
     <ClInclude Include="src\Config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Crow.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
     <ClInclude Include="src\Debug.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Enemy.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
     <ClInclude Include="src\EnemyUnit.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\MacroManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Enemy.h">
+      <Filter>Header Files\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mapdata.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\Macro.h">
+      <Filter>Header Files\Macro</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map.h">
+      <Filter>Header Files\Strategy</Filter>
     </ClInclude>
     <ClInclude Include="src\Squad.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Squad</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Strategy.h">
+      <Filter>Header Files\Strategy</Filter>
     </ClInclude>
     <ClInclude Include="src\SquadUnit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\StrategyManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Squad</Filter>
     </ClInclude>
     <ClInclude Include="src\Util.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

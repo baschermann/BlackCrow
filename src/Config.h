@@ -1,16 +1,17 @@
 #pragma once
 #include <BWAPI.h>
 
-// Config!
-class Config {
+namespace BlackCrow {
 
-public:
-	Config();
+	// Config!
+	class Config {
 
-	int localSpeed;
-	int maxDrones;
-	float saturationLevel; 
-	float barSize;
-};
+	public:
+		Config();
 
-extern Config* config;
+		int localSpeed;
+		int maxDrones;
+		float saturationLevel;
+		float barSize;
+	};
+}

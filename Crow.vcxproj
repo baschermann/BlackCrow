@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{255F250D-F0A5-42DF-A738-4BD2442BD11E}</ProjectGuid>
     <RootNamespace>Crow</RootNamespace>
+    <ProjectName>BlackCrow</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -111,34 +112,34 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\AreaData.cpp" />
-    <ClCompile Include="src\BuildingManager.cpp" />
+    <ClCompile Include="src\Area.cpp" />
+    <ClCompile Include="src\Builder.cpp" />
     <ClCompile Include="src\Config.cpp" />
-    <ClCompile Include="src\Crow.cpp" />
+    <ClCompile Include="src\BlackCrow.cpp" />
     <ClCompile Include="src\Debug.cpp" />
     <ClCompile Include="src\Dll.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\EnemyUnit.cpp" />
-    <ClCompile Include="src\MacroManager.cpp" />
-    <ClCompile Include="src\Mapdata.cpp" />
+    <ClCompile Include="src\Macro.cpp" />
+    <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Squad.cpp" />
     <ClCompile Include="src\SquadUnit.cpp" />
-    <ClCompile Include="src\StrategyManager.cpp" />
+    <ClCompile Include="src\Strategy.cpp" />
     <ClCompile Include="src\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AreaData.h" />
-    <ClInclude Include="src\BuildingManager.h" />
+    <ClInclude Include="src\Area.h" />
+    <ClInclude Include="src\Builder.h" />
     <ClInclude Include="src\Config.h" />
-    <ClInclude Include="src\Crow.h" />
+    <ClInclude Include="src\BlackCrow.h" />
     <ClInclude Include="src\Debug.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\EnemyUnit.h" />
-    <ClInclude Include="src\MacroManager.h" />
-    <ClInclude Include="src\Mapdata.h" />
+    <ClInclude Include="src\Macro.h" />
+    <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Squad.h" />
     <ClInclude Include="src\SquadUnit.h" />
-    <ClInclude Include="src\StrategyManager.h" />
+    <ClInclude Include="src\Strategy.h" />
     <ClInclude Include="src\Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
