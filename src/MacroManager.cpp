@@ -2,7 +2,7 @@
 
 using namespace BWAPI;
 using namespace Filter;
-namespace { BWEM::Map& map = BWEM::Map::Instance(); }
+//namespace { BWEM::Map& map = BWEM::Map::Instance(); }
 
 MacroManager* macroManager = new MacroManager();
 
@@ -18,7 +18,7 @@ MacroManager::MacroManager() {
 
 void MacroManager::onStart() {
 
-	for (const BWEM::Area& area : map.Areas()) {
+	for (const BWEM::Area& area : BWEM::Map::Instance().Areas()) {
 		for (const BWEM::Base& base : area.Bases()) {
 			BaseInformation* baseInformation = new BaseInformation();
 			baseInformation->hatchery = nullptr;

@@ -2,7 +2,7 @@
 
 using namespace BWAPI;
 using namespace Filter;
-namespace { BWEM::Map* map; }
+//namespace { BWEM::Map* map; }
 
 StrategyManager* strategyManager = new StrategyManager();
 
@@ -14,12 +14,12 @@ StrategyManager::StrategyManager() {
 StrategyManager::~StrategyManager() {}
 
 void StrategyManager::onStart() {
-	map = &BWEM::Map::Instance();
+	//map = &BWEM::Map::Instance();
 	bo = getStartBuildOrder();
 	currentBuildOrder = getBuildOrder(bo);
 
 	// AreaData
-	for (const BWEM::Area& area : map->Areas()) {
+	for (const BWEM::Area& area : BWEM::Map::Instance().Areas()) {
 		AreaData* ad = new AreaData();
 		ad->area = &area;
 		areas->push_back(ad);

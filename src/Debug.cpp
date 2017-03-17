@@ -2,7 +2,7 @@
 
 using namespace BWAPI;
 using namespace Filter;
-namespace { BWEM::Map* map; }
+//namespace { BWEM::Map* map; }
 
 Debug* debug = new Debug();
 
@@ -24,7 +24,7 @@ Debug::Debug() {
 }
 
 void Debug::onStart() {
-	map = &BWEM::Map::Instance();
+	//map = &BWEM::Map::Instance();
 }
 
 bool Debug::command(std::string text) {
@@ -357,8 +357,8 @@ void Debug::drawPlacementInfo() {
 }
 
 void Debug::drawBwem() {
-	BWEM::utils::gridMapExample(*map);
-	BWEM::utils::drawMap(*map);
+	BWEM::utils::gridMapExample(BWEM::Map::Instance());
+	BWEM::utils::drawMap(BWEM::Map::Instance());
 }
 
 void Debug::drawSquadInfo() {
