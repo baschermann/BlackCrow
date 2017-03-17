@@ -5,7 +5,7 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), util(*this) {}
+	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), util(*this), bwem(BWEM::Map::Instance()) {}
 
 	BlackCrow::~BlackCrow() {};
 
@@ -18,12 +18,12 @@ namespace BlackCrow {
 			init();
 
 			// BWEM
-			BWEM::Map::Instance().Initialize();
-			BWEM::Map::Instance().EnableAutomaticPathAnalysis();
-			bool startingLocationsOK = BWEM::Map::Instance().FindBasesForStartingLocations();
+			bwem.Initialize();
+			bwem.EnableAutomaticPathAnalysis();
+			bool startingLocationsOK = bwem.FindBasesForStartingLocations();
 			assert(startingLocationsOK);
 
-			BWEM::utils::MapPrinter::Initialize(&BWEM::Map::Instance());
+			BWEM::utils::MapPrinter::Initialize(&bwem);
 			//BWEM::utils::printMap(*map);      // will print the map into the file <StarCraftFolder>bwapi-data/map.bmp
 			//BWEM::utils::pathExample(*map);   // add to the printed map a path between two starting locations
 			// END of BWEM
@@ -105,7 +105,7 @@ namespace BlackCrow {
 		Broodwar->drawCircleMap(right, 15, BWAPI::Colors::Red);
 
 		int length;
-		const BWEM::CPPath& path = BWEM::Map::Instance().GetPath(Position(left), Position(right), &length);
+		const BWEM::CPPath& path = bwem.GetPath(Position(left), Position(right), &length);
 
 		if (path.empty()) { // no ChokePoint between a and b: 
 			// just draw a single line between them:
@@ -182,9 +182,9 @@ namespace BlackCrow {
 		try {
 			// BWEM
 			if (unit->getType().isMineralField())
-				BWEM::Map::Instance().OnMineralDestroyed(unit);
+				bwem.OnMineralDestroyed(unit);
 			else if (unit->getType().isSpecialBuilding())
-				BWEM::Map::Instance().OnStaticBuildingDestroyed(unit);
+				bwem.OnStaticBuildingDestroyed(unit);
 
 			// Other
 			builder.onBuildingDestroyed(unit);

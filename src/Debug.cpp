@@ -32,7 +32,7 @@ namespace BlackCrow {
 	Debug::~Debug() {}
 
 	void Debug::onStart() {
-		//map = &BWEM::Map::Instance();
+		//map = &bc.bwem;
 	}
 
 	bool Debug::command(std::string text) {
@@ -368,8 +368,8 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawBwem() {
-		BWEM::utils::gridMapExample(BWEM::Map::Instance());
-		BWEM::utils::drawMap(BWEM::Map::Instance());
+		BWEM::utils::gridMapExample(bc.bwem);
+		BWEM::utils::drawMap(bc.bwem);
 	}
 
 	void Debug::drawSquadInfo() {

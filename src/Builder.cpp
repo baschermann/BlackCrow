@@ -12,9 +12,9 @@ namespace BlackCrow {
 	Builder::~Builder() {}
 
 	void Builder::onStart() {
-		//map = &BWEM::Map::Instance();
+		//map = &bc.bwem;
 
-		for (const BWEM::Area& area : BWEM::Map::Instance().Areas()) {
+		for (const BWEM::Area& area : bc.bwem.Areas()) {
 			for (const BWEM::Base& base : area.Bases()) {
 
 				// Block Hatchery Location
@@ -39,7 +39,7 @@ namespace BlackCrow {
 		}
 
 		// Block for Neutral Buildings
-		for (const auto& neutral : BWEM::Map::Instance().StaticBuildings()) {
+		for (const auto& neutral : bc.bwem.StaticBuildings()) {
 			setBuildable(neutral->TopLeft().x, neutral->BottomRight().x, neutral->TopLeft().y, neutral->BottomRight().y, false);
 		}
 	}

@@ -20,12 +20,16 @@ namespace BlackCrow {
 
 		void add(SquadUnit* unit);
 		void remove(SquadUnit* unit);
-		void moveAll(BWAPI::Position position, bool queue);
+		void moveAll(BWAPI::Position position, bool queue); 
+		
+	protected:
+		BlackCrow &bc;
+		Squad(BlackCrow &parent);
 	};
 
-	class ScoutSquad : public Squad {
+	class ScoutSquad : virtual public Squad {
 	public:
-		ScoutSquad();
+		ScoutSquad(BlackCrow &parent);
 		~ScoutSquad();
 		void init();
 		void onFrame();

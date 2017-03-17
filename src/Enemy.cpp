@@ -2,6 +2,7 @@
 #include "EnemyUnit.h"
 #include <assert.h>
 #include <BWEM/bwem.h>
+#include "BlackCrow.h"
 
 namespace BlackCrow {
 
@@ -40,7 +41,7 @@ namespace BlackCrow {
 				assert(enemy->tilePosition.x != 1);
 				assert(enemy->tilePosition.y != 1);
 
-				const BWEM::Area* a = BWEM::Map::Instance().GetNearestArea(enemy->tilePosition);
+				const BWEM::Area* a = bc.bwem.GetNearestArea(enemy->tilePosition);
 				enemy->areaId = a->Id();
 			}
 		}

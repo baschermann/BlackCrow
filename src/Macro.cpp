@@ -20,7 +20,7 @@ namespace BlackCrow {
 
 	void Macro::onStart() {
 
-		for (const BWEM::Area& area : BWEM::Map::Instance().Areas()) {
+		for (const BWEM::Area& area : bc.bwem.Areas()) {
 			for (const BWEM::Base& base : area.Bases()) {
 				BaseInformation* baseInformation = new BaseInformation();
 				baseInformation->hatchery = nullptr;

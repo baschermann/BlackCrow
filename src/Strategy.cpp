@@ -18,12 +18,12 @@ namespace BlackCrow {
 	Strategy::~Strategy() {}
 
 	void Strategy::onStart() {
-		//map = &BWEM::Map::Instance();
+		//map = &bc.bwem;
 		bo = getStartBuildOrder();
 		currentBuildOrder = getBuildOrder(bo);
 
 		// Area
-		for (const BWEM::Area& area : BWEM::Map::Instance().Areas()) {
+		for (const BWEM::Area& area : bc.bwem.Areas()) {
 			Area* ad = new Area(bc);
 			ad->area = &area;
 			areas->push_back(ad);
@@ -152,7 +152,7 @@ namespace BlackCrow {
 
 
 	void Strategy::startInitialScout() {
-		ScoutSquad* ss = new ScoutSquad();
+		ScoutSquad* ss = new ScoutSquad(bc);
 		BWAPI::Unit worker = bc.macro.getDroneForBuilding(bc.macro.firstBase->hatchery->getPosition());
 		assert(worker);
 		SquadUnit* su = new SquadUnit(worker);

@@ -1,14 +1,14 @@
 #include "Squad.h"
 #include "SquadUnit.h"
 #include "BWEM/bwem.h"
+#include "BlackCrow.h"
 
 namespace BlackCrow {
 
 	using namespace BWAPI;
 	using namespace Filter;
-	//namespace { BWEM::Map& map = BWEM::Map::Instance(); }
 
-	Squad::Squad() {}
+	Squad::Squad(BlackCrow &parent) : bc(parent) {}
 
 	Squad::~Squad() {}
 
@@ -30,7 +30,7 @@ namespace BlackCrow {
 	}
 
 	// ######## Scout Squad #########
-	ScoutSquad::ScoutSquad() {
+	ScoutSquad::ScoutSquad(BlackCrow &parent) : Squad(parent) {
 		scoutLocations = new std::list<BWAPI::TilePosition>();
 	}
 
@@ -71,7 +71,7 @@ namespace BlackCrow {
 	}
 
 	void ScoutSquad::addStartLocations() {
-		for (BWAPI::TilePosition tilePosition : BWEM::Map::Instance().StartingLocations()) {
+		for (BWAPI::TilePosition tilePosition : bc.bwem.StartingLocations()) {
 			if (!Broodwar->isVisible(tilePosition)) {
 				tilePosition.x += 1; // TODO Do I change the starting position?!?
 				tilePosition.y += 1;
@@ -81,7 +81,7 @@ namespace BlackCrow {
 	}
 
 	void ScoutSquad::addExpansions() {
-		for (BWEM::Area area : BWEM::Map::Instance().Areas()) {
+		for (BWEM::Area area : bc.bwem.Areas()) {
 			for (BWEM::Base base : area.Bases()) {
 				if (!Broodwar->isVisible(base.Location())) {
 					addScoutPosition(base.Location());

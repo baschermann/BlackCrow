@@ -38,6 +38,7 @@ namespace BlackCrow {
 		virtual void onUnitComplete(BWAPI::Unit unit);
 		// Everything below this line is safe to modify.
 
+		BWEM::Map &bwem;
 		Builder builder;
 		Config config;
 		Debug debug;

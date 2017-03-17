@@ -11,7 +11,7 @@ namespace BlackCrow {
 
 	void Map::onStart() {
 
-		//map = &BWEM::Map::Instance();
+		//map = &bc.bwem;
 
 		// Map Tiles
 		tileWidth = Broodwar->mapWidth();
