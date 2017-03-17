@@ -2,7 +2,7 @@
 
 using namespace BWAPI;
 using namespace Filter;
-namespace { BWEM::Map& map = BWEM::Map::Instance(); }
+//namespace { BWEM::Map& map = BWEM::Map::Instance(); }
 
 void Squad::init() {
 	
@@ -71,7 +71,7 @@ void ScoutSquad::addScoutPosition(BWAPI::TilePosition tilePosition) {
 }
 
 void ScoutSquad::addStartLocations() {
-	for (BWAPI::TilePosition tilePosition : map.StartingLocations()) {
+	for (BWAPI::TilePosition tilePosition : BWEM::Map::Instance().StartingLocations()) {
 		if(!Broodwar->isVisible(tilePosition)) {
 			tilePosition.x += 1; // TODO Do I change the starting position?!?
 			tilePosition.y += 1;
@@ -81,7 +81,7 @@ void ScoutSquad::addStartLocations() {
 }
 
 void ScoutSquad::addExpansions() {
-	for (BWEM::Area area : map.Areas()) {
+	for (BWEM::Area area : BWEM::Map::Instance().Areas()) {
 		for (BWEM::Base base : area.Bases()) {
 			if (!Broodwar->isVisible(base.Location())) {
 				addScoutPosition(base.Location());

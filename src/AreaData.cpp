@@ -2,7 +2,7 @@
 
 using namespace BWAPI;
 using namespace Filter;
-namespace { BWEM::Map* map = &BWEM::Map::Instance(); }
+//namespace { BWEM::Map* map = &BWEM::Map::Instance(); }
 
 
 AreaData::AreaData() {

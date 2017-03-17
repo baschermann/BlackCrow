@@ -4,7 +4,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-namespace { BWEM::Map* map; }
+//namespace { BWEM::Map* map; }
 
 Mapdata* mapdata = new Mapdata();
 
@@ -12,7 +12,7 @@ Mapdata::Mapdata() {}
 
 void Mapdata::onStart() {
 
-	map = &BWEM::Map::Instance();
+	//map = &BWEM::Map::Instance();
 
 	// Map Tiles
 	tileWidth = Broodwar->mapWidth();

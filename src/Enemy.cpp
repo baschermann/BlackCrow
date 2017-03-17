@@ -2,7 +2,7 @@
 
 using namespace BWAPI;
 using namespace Filter;
-namespace { BWEM::Map* map; }
+//namespace { BWEM::Map* map; }
 
 Enemy* enemy = new Enemy();
 
@@ -16,7 +16,7 @@ Enemy::~Enemy() {
 }
 
 void Enemy::onStart() {
-	map = &BWEM::Map::Instance();
+	//map = &BWEM::Map::Instance();
 }
 
 void Enemy::enemyDiscovered(BWAPI::Unit unit) {
@@ -41,7 +41,7 @@ void Enemy::enemyDiscovered(BWAPI::Unit unit) {
 			assert(enemy->tilePosition.x != 1);
 			assert(enemy->tilePosition.y != 1);
 
-			const BWEM::Area* a = map->GetNearestArea(enemy->tilePosition);
+			const BWEM::Area* a = BWEM::Map::Instance().GetNearestArea(enemy->tilePosition);
 			enemy->areaId = a->Id();
 		}
 	} else {

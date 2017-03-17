@@ -3,7 +3,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-namespace { BWEM::Map* map; }
+//namespace { BWEM::Map* map; }
 
 BuildingManager* buildingManager = new BuildingManager();
 
@@ -15,9 +15,9 @@ BuildingManager::~BuildingManager() {
 }
 
 void BuildingManager::onStart() {
-	map = &BWEM::Map::Instance();
+	//map = &BWEM::Map::Instance();
 
-	for (const BWEM::Area& area : map->Areas()) {
+	for (const BWEM::Area& area : BWEM::Map::Instance().Areas()) {
 		for (const BWEM::Base& base : area.Bases()) {
 
 			// Block Hatchery Location
@@ -42,7 +42,7 @@ void BuildingManager::onStart() {
 	}
 
 	// Block for Neutral Buildings
-	for (const auto& neutral : map->StaticBuildings()) {
+	for (const auto& neutral : BWEM::Map::Instance().StaticBuildings()) {
 		setBuildable(neutral->TopLeft().x, neutral->BottomRight().x, neutral->TopLeft().y, neutral->BottomRight().y, false);
 	}
 }

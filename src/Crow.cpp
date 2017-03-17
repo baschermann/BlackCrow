@@ -2,7 +2,7 @@
 
 using namespace BWAPI;
 using namespace Filter;
-namespace { BWEM::Map* map = &BWEM::Map::Instance(); }
+//namespace { BWEM::Map* map = &BWEM::Map::Instance(); }
 
 
 Crow::Crow() {
@@ -19,12 +19,12 @@ void Crow::onStart() {
 		init();
 
 		// BWEM
-		map->Initialize();
-		map->EnableAutomaticPathAnalysis();
-		bool startingLocationsOK = map->FindBasesForStartingLocations();
+		BWEM::Map::Instance().Initialize();
+		BWEM::Map::Instance().EnableAutomaticPathAnalysis();
+		bool startingLocationsOK = BWEM::Map::Instance().FindBasesForStartingLocations();
 		assert(startingLocationsOK);
 
-		BWEM::utils::MapPrinter::Initialize(map);
+		BWEM::utils::MapPrinter::Initialize(&BWEM::Map::Instance());
 		//BWEM::utils::printMap(*map);      // will print the map into the file <StarCraftFolder>bwapi-data/map.bmp
 		//BWEM::utils::pathExample(*map);   // add to the printed map a path between two starting locations
 		// END of BWEM
@@ -104,7 +104,7 @@ void Crow::test() {
 	Broodwar->drawCircleMap(right, 15, BWAPI::Colors::Red);
 
 	int length;
-	const BWEM::CPPath& path = map->GetPath(Position(left), Position(right), &length);
+	const BWEM::CPPath& path = BWEM::Map::Instance().GetPath(Position(left), Position(right), &length);
 
 	if (path.empty()) { // no ChokePoint between a and b: 
 		// just draw a single line between them:
@@ -179,9 +179,9 @@ void Crow::onUnitDestroy(BWAPI::Unit unit) {
 	try {
 		// BWEM
 		if (unit->getType().isMineralField())
-			map->OnMineralDestroyed(unit);
+			BWEM::Map::Instance().OnMineralDestroyed(unit);
 		else if (unit->getType().isSpecialBuilding())
-			map->OnStaticBuildingDestroyed(unit);
+			BWEM::Map::Instance().OnStaticBuildingDestroyed(unit);
 
 		// Other
 		buildingManager->onBuildingDestroyed(unit);
