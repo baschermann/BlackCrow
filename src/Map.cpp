@@ -10,9 +10,6 @@ namespace BlackCrow {
 	Map::~Map() {}
 
 	void Map::onStart() {
-
-		//map = &bc.bwem;
-
 		// Map Tiles
 		tileWidth = Broodwar->mapWidth();
 		tileHeight = Broodwar->mapHeight();
@@ -27,6 +24,7 @@ namespace BlackCrow {
 				mapTiles[x][y] = Cell();
 				mapTiles[x][y].buildable = Broodwar->isBuildable(x, y, true);
 				mapTiles[x][y].resourceBuildable = true;
+				mapTiles[x][y].mineralLine = true;
 			}
 		}
 

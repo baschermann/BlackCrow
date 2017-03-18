@@ -24,7 +24,8 @@ namespace BlackCrow {
 		BWAPI::TilePosition getBuildingSpot(BWAPI::UnitType type, BWAPI::TilePosition searchPosition, bool inMineralLine);
 		void onBuildingDetected(BWAPI::Unit unit);
 		void onBuildingDestroyed(BWAPI::Unit unit);
-		bool canBuildTypeAt(BWAPI::UnitType type, int x, int y);
+		bool canBuildTypeAt(BWAPI::UnitType type, int x, int y, bool inMineralLine);
+		void Builder::setMineralLine(BWAPI::Position base, BWAPI::Position resource, int xStart, int xEnd, int yStart, int yEnd, bool buildable);
 
 	private:
 		BlackCrow &bc;

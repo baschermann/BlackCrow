@@ -13,6 +13,7 @@ namespace BlackCrow {
 		struct Cell {
 			bool buildable;
 			bool resourceBuildable;
+			bool mineralLine;
 		};
 
 		struct MiniCell {

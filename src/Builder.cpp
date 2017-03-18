@@ -25,15 +25,15 @@ namespace BlackCrow {
 				for (const BWEM::Mineral* mineral : base.Minerals()) {
 					setBuildable(mineral->TopLeft().x, mineral->BottomRight().x, mineral->TopLeft().y, mineral->BottomRight().y, false);
 					setResourceBuildable(mineral->TopLeft().x - 3, mineral->BottomRight().x + 3, mineral->TopLeft().y - 3, mineral->BottomRight().y + 3, false);
+					setMineralLine(base.Center(), mineral->Pos(), mineral->TopLeft().x -3, mineral->BottomRight().x + 3, mineral->TopLeft().y - 3, mineral->BottomRight().y + 3, false);
 				}
 
 				// Block for Geysirs
 				for (const BWEM::Geyser* geyser : base.Geysers()) {
 					setBuildable(geyser->TopLeft().x, geyser->BottomRight().x, geyser->TopLeft().y, geyser->BottomRight().y, false);
 					setResourceBuildable(geyser->TopLeft().x - 3, geyser->BottomRight().x + 3, geyser->TopLeft().y - 3, geyser->BottomRight().y + 3, false);
+					setMineralLine(base.Center(), geyser->Pos(), geyser->TopLeft().x - 3, geyser->BottomRight().x + 3, geyser->TopLeft().y - 3, geyser->BottomRight().y + 3, false);
 				}
-
-				// TODO Flag Mineral Line Tiles
 			}
 		}
 
@@ -61,6 +61,17 @@ namespace BlackCrow {
 		}
 	}
 
+	void Builder::setMineralLine(Position base, Position resource, int xStart, int xEnd, int yStart, int yEnd, bool buildable) {
+		double distanceBetween = Util::distance(base.x, base.y, resource.x, resource.y);
+
+		for (int x = xStart; x <= xEnd; x++) {
+			for (int y = yStart; y <= yEnd; y++) {
+				if (x >= 0 && x < bc.map.tileWidth && y >= 0 && y < bc.map.tileHeight)
+					if (Util::distance(x * 32 + 16, y * 32 + 16, base.x, base.y) + 42 < distanceBetween)
+						bc.map.mapTiles[x][y].mineralLine = buildable;
+			}
+		}
+	}
 
 	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, BWAPI::Position searchPosition, bool inMineralLine) {
 		return getBuildingSpot(type, TilePosition(searchPosition.x / 32, searchPosition.y / 32), inMineralLine);
@@ -70,26 +81,23 @@ namespace BlackCrow {
 		bool found = false;
 		int searchRadius = 0;
 
-		Broodwar->sendText("Looking around %i, %i", searchPosition.x, searchPosition.y);
-
 		Util::SpiralOut spiral;
 
 		positions.clear();
 
-		for (int i = 0; i < bc.map.width * bc.map.height; i++) {
-			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y)) {
-				Broodwar->sendText("Building Location found at %i, %i", spiral.x + searchPosition.x, spiral.y + searchPosition.y);
+		for (int i = 0; i < bc.map.tileWidth * bc.map.tileHeight; i++) {
+			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y, inMineralLine)) {
 				return TilePosition(spiral.x + searchPosition.x, spiral.y + searchPosition.y);
 			}
 			else
 				spiral.goNext();
 		}
 		
-		assert(false);
+		assert(!"No Building Position found!");
 		return TilePosition();
 	}
 
-	bool Builder::canBuildTypeAt(UnitType type, int x, int y) {
+	bool Builder::canBuildTypeAt(UnitType type, int x, int y, bool inMineralLine) {
 		if (x < 0 || x >= bc.map.tileWidth || y < 0 || y >= bc.map.tileHeight || !bc.map.mapTiles[x][y].buildable)
 			return false;
 
@@ -105,6 +113,9 @@ namespace BlackCrow {
 				}
 
 				canBuild &= bc.map.mapTiles[tilePosX][tilePosY].buildable;
+
+				if (!inMineralLine)
+					canBuild &= bc.map.mapTiles[tilePosX][tilePosY].mineralLine;
 
 				if (type == UnitTypes::Zerg_Hatchery)
 					canBuild &= bc.map.mapTiles[tilePosX][tilePosY].resourceBuildable;

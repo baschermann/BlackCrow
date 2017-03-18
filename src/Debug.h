@@ -26,7 +26,6 @@ namespace BlackCrow {
 
 		bool showBaseInfo;
 		bool showBuildable;
-		bool showResourceBuildable;
 		bool showManagerInfos;
 		bool showPlacementInfos;
 		bool showBwem;
@@ -37,7 +36,6 @@ namespace BlackCrow {
 
 		void drawBaseInformation();
 		void drawBuildable();
-		void drawResourceBuildable();
 		void drawManagerInfo();
 		void drawPlacementInfo();
 		void drawBwem();

@@ -15,7 +15,6 @@ namespace BlackCrow {
 
 		showBaseInfo = false;
 		showBuildable = true;
-		showResourceBuildable = false;
 		showManagerInfos = true;
 		showPlacementInfos = false;
 		showBwem = false;
@@ -62,15 +61,7 @@ namespace BlackCrow {
 
 		if (text == "buildable") {
 			showBuildable = !showBuildable;
-			showResourceBuildable = false;
 			Broodwar->sendText(("Buildable turned " + getOnOffString(showBuildable)).c_str());
-			return true;
-		}
-
-		if (text == "rbuildable") {
-			showResourceBuildable = !showResourceBuildable;
-			showBuildable = false;
-			Broodwar->sendText(("Resource Buildable turned " + getOnOffString(showResourceBuildable)).c_str());
 			return true;
 		}
 
@@ -133,9 +124,6 @@ namespace BlackCrow {
 
 		if (showBuildable)
 			drawBuildable();
-
-		if (showResourceBuildable)
-			drawResourceBuildable();
 
 		if (showManagerInfos)
 			drawManagerInfo();
@@ -269,29 +257,26 @@ namespace BlackCrow {
 	void Debug::drawBuildable() {
 		for (int x = 0; x < Broodwar->mapWidth(); x++) {
 			for (int y = 0; y < Broodwar->mapHeight(); y++) {
-				if (bc.map.mapTiles[x][y].buildable) {
-					//Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, Colors::Grey, false);
-				}
-				else {
-					Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, Colors::Red, false);
-				}
-			}
-		}
-	}
 
-	void Debug::drawResourceBuildable() {
+				bool draw = false;
+				Color color = Colors::Orange; ;
 
-		Color* colorGreen = &Color(0, 255, 0);
-		Color* colorRed = &Color(255, 0, 0);
+				if (!bc.map.mapTiles[x][y].resourceBuildable) {
+					draw = true;
+				}
 
-		for (int x = 0; x < Broodwar->mapWidth(); x++) {
-			for (int y = 0; y < Broodwar->mapHeight(); y++) {
-				if (bc.map.mapTiles[x][y].resourceBuildable) {
-					//Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, *colorGreen, false);
+				if (!bc.map.mapTiles[x][y].buildable) {
+					draw = true;
+					color = Colors::Red;
 				}
-				else {
-					Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, *colorRed, false);
+
+				if (!bc.map.mapTiles[x][y].mineralLine) {
+					draw = true;
+					color = Colors::Yellow;
 				}
+
+				if (draw)
+					Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, color, false);
 			}
 		}
 	}
@@ -396,7 +381,7 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawLifeBars() {
-		float barSize = bc.config.barSize;
+		float barSize = bc.config.barSize; // Pixel width of a single recangle of the healthbar
 
 		for (Unit unit : Broodwar->getAllUnits()) {
 			if (!unit->getPlayer()->isNeutral()) {

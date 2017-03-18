@@ -87,7 +87,7 @@ namespace BlackCrow {
 	}
 
 	BaseInformation* Strategy::getSafestEstablishedBase() {
-		// TODO get the safest base depending where it is being attacked
+		// TODO get the safest base depending where the fight is
 		// for now just get the first base with a hatchery
 
 		for (BaseInformation* baseInformation : *bc.macro.bases) {
