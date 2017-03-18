@@ -189,6 +189,7 @@ namespace BlackCrow {
 			// Other
 			builder.onBuildingDestroyed(unit);
 			strategy.onUnitDestroyed(unit);
+			macro.onUnitDestroyed(unit);
 
 		}
 		catch (const std::exception & e) {

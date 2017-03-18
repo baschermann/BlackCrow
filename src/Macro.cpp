@@ -145,15 +145,43 @@ namespace BlackCrow {
 			|| unit->getType() == BWAPI::UnitTypes::Zerg_Lair
 			|| unit->getType() == BWAPI::UnitTypes::Zerg_Hive) {
 
-
 			for (BaseInformation* bi : *bases) {
 				if (bi->hatchery == unit) {
 					bi->hatchery = nullptr;
 					return;
 				}
 			}
-
 			macroHatcheries->erase(unit);
+		}
+
+		// Remove Planned Unit
+		for (auto it = plannedUnits->begin(); it != plannedUnits->end();) {
+			PlannedUnit* p = (*it);
+
+			if (p->larvaEgg && p->larvaEgg->getID() == unit->getID()) {
+				it = plannedUnits->erase(it);
+			} else
+				it++;
+		}
+
+		// Remove workers from bases
+		for (BaseInformation* bi : *bases) {
+			// Minerals
+			for (auto it = bi->workersOnMinerals.begin(); it != bi->workersOnMinerals.end();) {
+				Unit worker = (*it);
+				if (worker->getID() == unit->getID())
+					it = bi->workersOnMinerals.erase(it);
+				else
+					it++;
+			}
+			// Gas
+			for (auto it = bi->workersOnGas.begin(); it != bi->workersOnGas.end();) {
+				Unit worker = (*it);
+				if (worker->getID() == unit->getID())
+					it = bi->workersOnGas.erase(it);
+				else
+					it++;
+			}
 		}
 
 		// TODO If its a planned overlord that was being built, remove the incoming supply
@@ -329,8 +357,6 @@ namespace BlackCrow {
 						break;
 					}
 
-
-
 					reservedLarvae->erase(pu->larvaEgg);
 					delete pu;
 				}
@@ -356,8 +382,7 @@ namespace BlackCrow {
 						base->workersOnGas.insert(worker);
 						worker->gather(base->extractor);
 					}
-				}
-				else {
+				} else {
 					if (base->workersOnGas.size() > 0) {
 						for (Unit worker : base->workersOnGas) {
 							base->workersOnGas.erase(worker);

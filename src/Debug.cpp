@@ -14,15 +14,15 @@ namespace BlackCrow {
 	Debug::Debug(BlackCrow &parent) : bc(parent) {
 
 		showBaseInfo = false;
-		showBuildable = true;
+		showBuildable = false;
+		fastDrawBuildable = false;
 		showManagerInfos = true;
-		showPlacementInfos = false;
+		showPlacementInfos = true;
 		showBwem = false;
 		showSquadInfo = true;
 		showEnemyUnits = true;
 		showLifeBars = true;
 
-		fastDrawBuildable = false;
 
 		elapsedMs = 0;
 		highestFrameTime = 0;
@@ -79,15 +79,15 @@ namespace BlackCrow {
 			return true;
 		}
 
-		if (text == "mi") {
+		if (text == "manager") {
 			showManagerInfos = !showManagerInfos;
-			Broodwar->sendText(("BWTA terrain turned " + getOnOffString(showManagerInfos)).c_str());
+			Broodwar->sendText(("Show Manager turned " + getOnOffString(showManagerInfos)).c_str());
 			return true;
 		}
 
-		if (text == "pi") {
+		if (text == "placement") {
 			showPlacementInfos = !showPlacementInfos;
-			Broodwar->sendText(("Placement info turned " + getOnOffString(showPlacementInfos)).c_str());
+			Broodwar->sendText(("Placement info turned " + getOnOffString(showPlacementInfos)).c_str()); 
 			return true;
 		}
 
@@ -97,21 +97,21 @@ namespace BlackCrow {
 			return true;
 		}
 
-		if (text == "si") {
+		if (text == "squad") {
 			showSquadInfo = !showSquadInfo;
 			Broodwar->sendText(("Squad info turned " + getOnOffString(showSquadInfo)).c_str());
 			return true;
 		}
 
-		if (text == "eu") {
+		if (text == "enemy") {
 			showEnemyUnits = !showEnemyUnits;
-			Broodwar->sendText(("Enemy Units turned " + getOnOffString(showEnemyUnits)).c_str());
+			Broodwar->sendText(("Enemy units turned " + getOnOffString(showEnemyUnits)).c_str());
 			return true;
 		}
 
-		if (text == "lb") {
+		if (text == "lifebars") {
 			showLifeBars = !showLifeBars;
-			Broodwar->sendText(("Enemy Units turned " + getOnOffString(showLifeBars)).c_str());
+			Broodwar->sendText(("Lifebars turned " + getOnOffString(showLifeBars)).c_str());
 			return true;
 		}
 
