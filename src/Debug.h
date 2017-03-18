@@ -21,6 +21,8 @@ namespace BlackCrow {
 		double highestFrameTime;
 		double highestFrameTimeAgo;
 
+		bool fastDrawBuildable;
+
 	private:
 		BlackCrow &bc;
 

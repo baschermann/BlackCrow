@@ -22,6 +22,8 @@ namespace BlackCrow {
 		showEnemyUnits = true;
 		showLifeBars = true;
 
+		fastDrawBuildable = false;
+
 		elapsedMs = 0;
 		highestFrameTime = 0;
 		highestFrameTimeAgo = 0;
@@ -60,8 +62,20 @@ namespace BlackCrow {
 		}
 
 		if (text == "buildable") {
-			showBuildable = !showBuildable;
-			Broodwar->sendText(("Buildable turned " + getOnOffString(showBuildable)).c_str());
+			if (!showBuildable) {
+				showBuildable = true;
+				fastDrawBuildable = false;
+				Broodwar->sendText(("Buildable turned " + getOnOffString(showBuildable)).c_str());
+			} else {
+				if (!fastDrawBuildable) {
+					fastDrawBuildable = true;
+					Broodwar->sendText(("Fast Draw for Buildable turned " + getOnOffString(fastDrawBuildable)).c_str());
+				} else {
+					showBuildable = false;
+					Broodwar->sendText(("Buildable turned " + getOnOffString(showBuildable)).c_str());
+				}
+			}
+			//Broodwar->sendText("Buildable turned %s, Fast Draw is %s", getOnOffString(showBuildable), getOnOffString(fastDrawBuildable));
 			return true;
 		}
 
@@ -275,8 +289,32 @@ namespace BlackCrow {
 					color = Colors::Yellow;
 				}
 
-				if (draw)
-					Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, color, false);
+				if (draw) {
+
+					if (fastDrawBuildable)
+						Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, color, false);
+					else {
+						// Note: Using Position classes costs additional 30%
+						int border = 1;
+						int length = 5;
+
+						// Top Left
+						Broodwar->drawLineMap(x * 32 + border, y * 32 + border, x * 32 + border + length, y * 32 + border, color);
+						Broodwar->drawLineMap(x * 32 + border, y * 32 + border, x * 32 + border, y * 32 + border + length, color);
+
+						// Top Right
+						Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + border, x * 32 + 32 - border - length, y * 32 + border, color);
+						Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + border, x * 32 + 32 - border, y * 32 + border + length, color);
+
+						// Bottom Left
+						Broodwar->drawLineMap(x * 32 + border, y * 32 + 32 - border, x * 32 + border, y * 32 + 32 - border - length, color);
+						Broodwar->drawLineMap(x * 32 + border, y * 32 + 32 - border, x * 32 + border + length, y * 32 + 32 - border, color);
+
+						// Bottom Right
+						Broodwar->drawLineMap(x * 32 + 33 - border, y * 32 + 32 - border, x * 32 + 32 - border - length, y * 32 + 32 - border, color);
+						Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + 32 - border, x * 32 + 32 - border, y * 32 + 32 - border - length, color);
+					}
+				}
 			}
 		}
 	}
