@@ -158,7 +158,7 @@ namespace BlackCrow {
 		for (auto it = plannedUnits->begin(); it != plannedUnits->end();) {
 			PlannedUnit* p = (*it);
 
-			if (p->larvaEgg && p->larvaEgg->getID() == unit->getID()) {
+			if (p->larvaEgg && p->larvaEgg->getID() == unit->getID() && p->type != UnitTypes::Zerg_Extractor) {
 				it = plannedUnits->erase(it);
 			} else
 				it++;
@@ -185,7 +185,6 @@ namespace BlackCrow {
 		}
 
 		// TODO If its a planned overlord that was being built, remove the incoming supply
-
 		// When clicking a unit, simulate as if it were destroyed. Stop the unit.
 	}
 
