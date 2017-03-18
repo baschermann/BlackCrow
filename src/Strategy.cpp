@@ -18,7 +18,6 @@ namespace BlackCrow {
 	Strategy::~Strategy() {}
 
 	void Strategy::onStart() {
-		//map = &bc.bwem;
 		bo = getStartBuildOrder();
 		currentBuildOrder = getBuildOrder(bo);
 
@@ -41,8 +40,7 @@ namespace BlackCrow {
 				if (bc.macro.getNonReservedLarvaeAmount() > 0) {
 					if (boi->type.isBuilding()) {
 						bc.macro.planBuilding(boi->type, bc.macro.firstBase->hatchery->getPosition(), bc.macro.firstBase);
-					}
-					else {
+					} else {
 						bc.macro.planUnit(boi->type, bc.macro.firstBase->hatchery->getPosition());
 					}
 					currentBuildOrder->pop_front();
@@ -119,7 +117,6 @@ namespace BlackCrow {
 
 	}
 
-
 	Area* Strategy::getArea(int id) {
 		for (Area* ad : *areas) {
 			if (ad->area->Id() == id)
@@ -130,19 +127,13 @@ namespace BlackCrow {
 	}
 
 	Strategy::BuildOrder Strategy::getStartBuildOrder() {
-		// Which Race is the Enemy Playing
 		if (Broodwar->enemy()->getRace().getName() == "Terran") {
-			//Broodwar << "Terran Enemy Detected" << std::endl;
 			return Strategy::BuildOrder::TWELVE_HATCH;
-		}
-		else {
+		} else {
 			if (Broodwar->enemy()->getRace().getName() == "Zerg") {
-				//Broodwar << "Zerg Enemy Detected" << std::endl;
 				return Strategy::BuildOrder::NINE_POOL;
-			}
-			else {
+			} else {
 				if (Broodwar->enemy()->getRace().getName() == "Protoss") {
-					//Broodwar << "Protoss Enemy Detected" << std::endl;
 					return Strategy::BuildOrder::OVERPOOL;
 				}
 			}
@@ -174,7 +165,6 @@ namespace BlackCrow {
 				boi->type = BWAPI::UnitTypes::Zerg_Drone;
 				list->push_back(boi);
 			}
-
 			/*
 			{
 			// Drone @5
@@ -203,14 +193,13 @@ namespace BlackCrow {
 			boi->type = BWAPI::UnitTypes::Zerg_Drone;
 			list->push_back(boi);
 			}
-
+			
 			{
 			// Spawning Pool @9
 			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Spawning_Pool;
+			boi->type = BWAPI::UnitTypes::Zerg_Evolution_Chamber;
 			list->push_back(boi);
 			}
-
 
 			{
 			// Drone @8
@@ -238,8 +227,8 @@ namespace BlackCrow {
 			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
 			boi->type = BWAPI::UnitTypes::Zerg_Drone;
 			list->push_back(boi);
-			}
-			*/
+			}*/
+			
 			break;
 		}
 		case Strategy::BuildOrder::OVERPOOL:

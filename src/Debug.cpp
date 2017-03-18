@@ -17,7 +17,7 @@ namespace BlackCrow {
 		showBuildable = true;
 		showResourceBuildable = false;
 		showManagerInfos = true;
-		showPlacementInfos = true;
+		showPlacementInfos = false;
 		showBwem = false;
 		showSquadInfo = true;
 		showEnemyUnits = true;
@@ -116,17 +116,6 @@ namespace BlackCrow {
 
 
 	void Debug::drawOnFrame() {
-
-		BWAPI::Position prev;
-		prev.x = 0;
-		prev.y = 0;
-
-		int i = 0;
-		for (BWAPI::Position p : bc.builder.points) {
-			//Broodwar->drawLineMap(prev.x, prev.y, p.x, p.y, Colors::Cyan);
-			//prev = p;
-			Broodwar->drawTextMap(p, std::to_string(i++).c_str());
-		}
 
 		if (showBaseInfo)
 			drawBaseInformation();

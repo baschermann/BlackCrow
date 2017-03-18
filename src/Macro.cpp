@@ -347,7 +347,7 @@ namespace BlackCrow {
 
 				// Worker Minerals ratio, at least have 20% mineral workers before gas
 				int goalMineralWorkers = base->base->Minerals().size();
-				std::size_t mineralWorkerThreshold = (double)goalMineralWorkers * 0.2; // 20%
+				std::size_t mineralWorkerThreshold = (std::size_t)(goalMineralWorkers * 0.2); // 20%
 
 				if (base->extractor != nullptr && base->extractor->exists()) {
 					while (base->workersOnMinerals.size() > mineralWorkerThreshold && base->workersOnGas.size() < 3) {

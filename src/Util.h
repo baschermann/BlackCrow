@@ -19,5 +19,16 @@ namespace BlackCrow {
 		RgbColor HsvToRgb(HsvColor hsv);
 		HsvColor RgbToHsv(RgbColor rgb);
 		BWAPI::Unit findClosestUnit(BWAPI::Unitset* units, BWAPI::Position position);
+
+		// Mako from StackOverflow @ http://stackoverflow.com/questions/3706219/algorithm-for-iterating-over-an-outward-spiral-on-a-discrete-2d-grid-from-the-or
+		class SpiralOut{
+		protected:
+			unsigned layer;
+			unsigned leg;
+		public:
+			int x, y;
+			SpiralOut();
+			void goNext();
+		};
 	}
 }

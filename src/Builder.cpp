@@ -12,7 +12,6 @@ namespace BlackCrow {
 	Builder::~Builder() {}
 
 	void Builder::onStart() {
-		//map = &bc.bwem;
 
 		for (const BWEM::Area& area : bc.bwem.Areas()) {
 			for (const BWEM::Base& base : area.Bases()) {
@@ -67,103 +66,24 @@ namespace BlackCrow {
 		return getBuildingSpot(type, TilePosition(searchPosition.x / 32, searchPosition.y / 32), inMineralLine);
 	}
 
-
 	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, BWAPI::TilePosition searchPosition, bool inMineralLine) {
 		bool found = false;
 		int searchRadius = 0;
 
-		points.clear();
-		Broodwar << points.size() << std::endl;
+		Util::SpiralOut spiral;
 
-		/*
-		// TODO, take inMineralLine into account
-		while (true) {
-		// start tile position
-		for (int x = searchPosition.x - searchRadius; x < searchPosition.x + searchRadius; x++) {
-		for (int y = searchPosition.y - searchRadius; y < searchPosition.y + searchRadius; y++) {
-
-		points.push_back(Position(x * 32 + 16, y * 32 + 16));
-
-		if (x < 0 || x >= bc.map.tileWidth || y < 0 || y >= bc.map.tileHeight || !bc.map.mapTiles[x][y].buildable)
-		break;
-
-		bool canBuild = true;
-		// for every tile of the size of building
-		for (int tilePosX = x; tilePosX < x + type.tileWidth(); tilePosX++) {
-		for (int tilePosY = y; tilePosY < y + type.tileHeight(); tilePosY++) {
-
-		if (tilePosX < 0 || tilePosX >= bc.map.tileWidth || tilePosY < 0 || tilePosY >= bc.map.tileHeight) {
-		canBuild = false;
-		break;
-		}
-
-		canBuild &= bc.map.mapTiles[tilePosX][tilePosY].buildable;
-
-		if (type == UnitTypes::Zerg_Hatchery)
-		canBuild &= bc.map.mapTiles[tilePosX][tilePosY].resourceBuildable;
-
-		if (type.requiresCreep())
-		canBuild &= Broodwar->hasCreep(TilePosition(tilePosY, tilePosX));
-		}
-		}
-
-		if (canBuild == true)
-		return TilePosition(x, y);
-		}
-		}
-		searchRadius++;
-		}
-		*/
-
-		/*
-		int X = 300;
-		int Y = 300;
-
-		int x, y, dx, dy;
-		x = y = dx = 0;
-		dy = -1;
-
-		int t = std::max(X, Y);
-		int maxI = t*t;
-
-		for (int i = 0; i < maxI; i++) {
-		if ((-X / 2 <= x) && (x <= X / 2) && (-Y / 2 <= y) && (y <= Y / 2)){
-
-
-
-		}
-
-		if ((x == y) || ((x < 0) && (x == -y)) || ((x > 0) && (x == 1 - y))){
-		t = dx;
-		dx = -dy;
-		dy = t;
-		}
-
-		x += dx;
-		y += dy;
-		}
-		*/
-
-
-		//SpiralOut* o = new SpiralOut();
-
-		/*
 		for (int i = 0; i < bc.map.width * bc.map.height; i++) {
-		if (canBuildTypeAt(type, o.x + searchPosition.x, o.y + searchPosition.y))
-		return TilePosition(o.x + searchPosition.x, o.y + searchPosition.y);
-		else
-		o.goNext();
+			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y))
+				return TilePosition(spiral.x + searchPosition.x, spiral.y + searchPosition.y);
+			else
+				spiral.goNext();
 		}
-		*/
-
+		
 		assert(false);
 		return TilePosition();
 	}
 
-
 	bool Builder::canBuildTypeAt(UnitType type, int x, int y) {
-		points.push_back(Position(x * 32 + 16, y * 32 + 16));
-
 		if (x < 0 || x >= bc.map.tileWidth || y < 0 || y >= bc.map.tileHeight || !bc.map.mapTiles[x][y].buildable)
 			return false;
 
