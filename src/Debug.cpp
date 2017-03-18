@@ -420,7 +420,7 @@ namespace BlackCrow {
 				hsvColor.s = 0xFF;
 				hsvColor.v = 0xFF * 0.7;
 
-				Util::RgbColor rgbColor = bc.util.HsvToRgb(hsvColor);
+				Util::RgbColor rgbColor = Util::HsvToRgb(hsvColor);
 				Color barColor(rgbColor.r, rgbColor.b, rgbColor.g);
 
 				// Draw

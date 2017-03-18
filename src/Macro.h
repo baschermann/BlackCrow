@@ -65,6 +65,9 @@ namespace BlackCrow {
 		void updateGasMineralsRatio();
 		void updateExpansionBuilding();
 		void updateShiftWorkers();
+		BaseInformation* findClosestMiningBase(BWAPI::Position position);
+		BaseInformation* findClosestMiningBaseWithWorkers(BWAPI::Position position);
+		BaseInformation* getClosestExpansionLocation(BWAPI::TilePosition position);
 
 
 		PlannedUnit* Macro::planUnit(BWAPI::UnitType unitType, BWAPI::Position position);

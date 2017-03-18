@@ -1,5 +1,6 @@
 #include "Macro.h"
 #include "BlackCrow.h"
+#include "Util.h"
 
 namespace BlackCrow {
 
@@ -101,7 +102,7 @@ namespace BlackCrow {
 				}
 
 				if (pu->larvaEgg && !pu->larvaEgg->getType().isBuilding()) {
-					if (bc.util.distance(pu->larvaEgg->getPosition().x, pu->larvaEgg->getPosition().y, pu->base->base->Center().x, pu->base->base->Center().y) <= BWAPI::UnitTypes::Zerg_Drone.sightRange() * 0.8) {
+					if (Util::distance(pu->larvaEgg->getPosition().x, pu->larvaEgg->getPosition().y, pu->base->base->Center().x, pu->base->base->Center().y) <= BWAPI::UnitTypes::Zerg_Drone.sightRange() * 0.8) {
 						if (Broodwar->self()->minerals() >= pu->type.mineralPrice()) {
 							if (!pu->larvaEgg->build(pu->type, pu->buildLocation)) {
 								if (Broodwar->getLastError() != BWAPI::Errors::Unit_Busy) {
@@ -109,8 +110,7 @@ namespace BlackCrow {
 								}
 							}
 						}
-					}
-					else {
+					} else {
 						pu->larvaEgg->move(pu->base->base->Center());
 					}
 				}
@@ -302,7 +302,7 @@ namespace BlackCrow {
 
 							// TODO When there is no mineral left in the mineral field (mined out)
 							if (!pu->base) {
-								pu->base = bc.util.findClosestMiningBase(unit->getPosition());
+								pu->base = findClosestMiningBase(unit->getPosition());
 								unit->gather((*pu->base->base->Minerals().begin())->Unit());
 							}
 
@@ -469,7 +469,7 @@ namespace BlackCrow {
 	}
 
 	void Macro::buildExpansion() {
-		BaseInformation* expandBase = bc.util.getClosestExpansionLocation(getStartBaseInformation()->base->Location());
+		BaseInformation* expandBase = getClosestExpansionLocation(getStartBaseInformation()->base->Location());
 		if (expandBase) {
 			assert(expandBase != nullptr); // TODO No Expansions left, grab Island expansions
 			expandBase->isExpanding = true;
@@ -524,7 +524,7 @@ namespace BlackCrow {
 	BWAPI::Unit Macro::getNonReservedLarva(BWAPI::Position position) {
 		BWAPI::Unitset* larvae = getNonReservedLarvae();
 		if (larvae->size() > 0) {
-			BWAPI::Unit closestLarva = bc.util.findClosestUnit(larvae, position);
+			BWAPI::Unit closestLarva = Util::findClosestUnit(larvae, position);
 			reservedLarvae->insert(closestLarva);
 			return closestLarva;
 		}
@@ -535,7 +535,7 @@ namespace BlackCrow {
 
 	BWAPI::Unit Macro::getDroneForBuilding(BWAPI::Position position) {
 		BaseInformation* base = nullptr;
-		base = bc.util.findClosestMiningBaseWithWorkers(position);
+		base = findClosestMiningBaseWithWorkers(position);
 
 		if (base) {
 			BWAPI::Unit worker;
@@ -576,5 +576,58 @@ namespace BlackCrow {
 				hatcheriesBeingBuilt++;
 		}
 		return hatcheriesBeingBuilt;
+	}
+
+	// Base that can be actively mined from
+	BaseInformation* Macro::findClosestMiningBase(BWAPI::Position position) {
+		double closestDistance = 99999999999;
+		BaseInformation* closestBase = nullptr;
+
+		for (BaseInformation* base : *bc.macro.bases) {
+			if (base->hatchery) {
+				double dst = Util::distance(position.x, position.y, base->base->Center().x, base->base->Center().y);
+				if (dst < closestDistance) {
+					closestDistance = dst;
+					closestBase = base;
+				}
+			}
+		}
+
+		return closestBase;
+	}
+
+	// Base that has either worker on minerals or gas
+	BaseInformation* Macro::findClosestMiningBaseWithWorkers(BWAPI::Position position) {
+		double closestDistance = 99999999999;
+		BaseInformation* closestBase = nullptr;
+
+		for (BaseInformation* base : *bc.macro.bases) {
+			if (base->hatchery && (base->workersOnMinerals.size() > 0 || base->workersOnGas.size() > 0)) {
+				double dst = Util::distance(position.x, position.y, base->base->Center().x, base->base->Center().y);
+				if (dst < closestDistance) {
+					closestDistance = dst;
+					closestBase = base;
+				}
+			}
+		}
+
+		return closestBase;
+	}
+
+	BaseInformation* Macro::getClosestExpansionLocation(BWAPI::TilePosition position) {
+		double closestDistance = 99999999999;
+		BaseInformation* closestBase = nullptr;
+
+		for (BaseInformation* base : *bc.macro.bases) {
+			if (base->hatchery == nullptr && !base->isExpanding && base->base->GetArea()->AccessibleNeighbours().size() > 0) { // Handle Island Expansion
+				double dst = Util::distance(base->base->Location().x, base->base->Location().y, position.x, position.y);
+				if (dst < closestDistance) {
+					closestDistance = dst;
+					closestBase = base;
+				}
+			}
+		}
+
+		return closestBase;
 	}
 }

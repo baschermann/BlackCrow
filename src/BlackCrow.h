@@ -46,7 +46,6 @@ namespace BlackCrow {
 		Macro macro;
 		Map map;
 		Strategy strategy;
-		Util util;
 
 		BlackCrow();
 		~BlackCrow();

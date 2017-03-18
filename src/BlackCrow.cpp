@@ -5,7 +5,7 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), util(*this), bwem(BWEM::Map::Instance()) {}
+	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), bwem(BWEM::Map::Instance()) {}
 
 	BlackCrow::~BlackCrow() {};
 

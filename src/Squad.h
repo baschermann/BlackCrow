@@ -27,7 +27,7 @@ namespace BlackCrow {
 		Squad(BlackCrow &parent);
 	};
 
-	class ScoutSquad : virtual public Squad {
+	class ScoutSquad : public Squad {
 	public:
 		ScoutSquad(BlackCrow &parent);
 		~ScoutSquad();
