@@ -117,6 +117,17 @@ namespace BlackCrow {
 
 	void Debug::drawOnFrame() {
 
+		BWAPI::TilePosition prev;
+		prev.x = 0;
+		prev.y = 0;
+
+		int i = 0;
+		for (BWAPI::TilePosition p : bc.builder.positions) {
+			//Broodwar->drawLineMap(prev.x, prev.y, p.x, p.y, Colors::Cyan);
+			//prev = p;
+			Broodwar->drawTextMap(Position(p), std::to_string(i++).c_str());
+		}
+
 		if (showBaseInfo)
 			drawBaseInformation();
 

@@ -70,11 +70,17 @@ namespace BlackCrow {
 		bool found = false;
 		int searchRadius = 0;
 
+		Broodwar->sendText("Looking around %i, %i", searchPosition.x, searchPosition.y);
+
 		Util::SpiralOut spiral;
 
+		positions.clear();
+
 		for (int i = 0; i < bc.map.width * bc.map.height; i++) {
-			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y))
+			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y)) {
+				Broodwar->sendText("Building Location found at %i, %i", spiral.x + searchPosition.x, spiral.y + searchPosition.y);
 				return TilePosition(spiral.x + searchPosition.x, spiral.y + searchPosition.y);
+			}
 			else
 				spiral.goNext();
 		}
@@ -86,6 +92,8 @@ namespace BlackCrow {
 	bool Builder::canBuildTypeAt(UnitType type, int x, int y) {
 		if (x < 0 || x >= bc.map.tileWidth || y < 0 || y >= bc.map.tileHeight || !bc.map.mapTiles[x][y].buildable)
 			return false;
+
+		positions.push_back(TilePosition(x, y));
 
 		bool canBuild = true;
 		// for every tile of the size of building
@@ -102,7 +110,7 @@ namespace BlackCrow {
 					canBuild &= bc.map.mapTiles[tilePosX][tilePosY].resourceBuildable;
 
 				if (type.requiresCreep())
-					canBuild &= Broodwar->hasCreep(TilePosition(tilePosY, tilePosX));
+					canBuild &= Broodwar->hasCreep(TilePosition(tilePosX, tilePosY));
 			}
 		}
 

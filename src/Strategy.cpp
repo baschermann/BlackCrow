@@ -165,14 +165,14 @@ namespace BlackCrow {
 				boi->type = BWAPI::UnitTypes::Zerg_Drone;
 				list->push_back(boi);
 			}
-			/*
+			
 			{
 			// Drone @5
 			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
 			boi->type = BWAPI::UnitTypes::Zerg_Drone;
 			list->push_back(boi);
 			}
-
+			
 			{
 			// Drone @6
 			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
@@ -197,7 +197,7 @@ namespace BlackCrow {
 			{
 			// Spawning Pool @9
 			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Evolution_Chamber;
+			boi->type = BWAPI::UnitTypes::Zerg_Spawning_Pool;
 			list->push_back(boi);
 			}
 
@@ -227,7 +227,7 @@ namespace BlackCrow {
 			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
 			boi->type = BWAPI::UnitTypes::Zerg_Drone;
 			list->push_back(boi);
-			}*/
+			}
 			
 			break;
 		}
