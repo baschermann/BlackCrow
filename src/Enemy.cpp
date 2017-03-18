@@ -13,8 +13,7 @@ namespace BlackCrow {
 		enemies = new std::list <EnemyUnit*>();
 	}
 
-	Enemy::~Enemy() {
-	}
+	Enemy::~Enemy() {}
 
 	void Enemy::onStart() {
 	}

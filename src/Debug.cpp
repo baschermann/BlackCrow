@@ -24,16 +24,13 @@ namespace BlackCrow {
 		showLifeBars = true;
 
 		elapsedMs = 0;
-		frameTimeHistory = new std::list < float > ;
 		highestFrameTime = 0;
 		highestFrameTimeAgo = 0;
 	}
 
 	Debug::~Debug() {}
 
-	void Debug::onStart() {
-		//map = &bc.bwem;
-	}
+	void Debug::onStart() {}
 
 	bool Debug::command(std::string text) {
 
@@ -166,14 +163,14 @@ namespace BlackCrow {
 		// Get Current Logical Speed
 		// Read from BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]; the local game speed, see Additional Setup.txt in the Project Folder.
 
-		double logicalFrameSpeed = 6; // BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0];
+		int logicalFrameSpeed = 6; // BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0];
 
 		//Framerates
-		if (frameTimeHistory->size() >= ((float)Broodwar->getFPS() * .5)) {
-			if (frameTimeHistory->size() > 0)
-				frameTimeHistory->pop_back();
+		if (frameTimeHistory.size() >= Broodwar->getFPS() * .5) {
+			if (frameTimeHistory.size() > 0)
+				frameTimeHistory.pop_back();
 		}
-		frameTimeHistory->push_front(elapsedMs);
+		frameTimeHistory.push_front(elapsedMs);
 
 		if (++highestFrameTimeAgo > Broodwar->getFPS() * 11) {
 			highestFrameTime = 0;
@@ -186,12 +183,12 @@ namespace BlackCrow {
 		}
 
 		// Frame time taken
-		if (frameTimeHistory->size() > 0) {
+		if (frameTimeHistory.size() > 0) {
 			double average = 0;
-			for (double frameTime : *frameTimeHistory) {
+			for (double frameTime : frameTimeHistory) {
 				average += frameTime;
 			}
-			average /= frameTimeHistory->size();
+			average /= frameTimeHistory.size();
 
 			// Current Load
 			Broodwar->drawBoxScreen(0, 0, 23, 9, Colors::Brown, true);
@@ -215,7 +212,7 @@ namespace BlackCrow {
 			Broodwar->drawBoxScreen(23, 0, 100, 9, blackBarColor, true);
 			// Indicator Helper Bars
 			for (int i = 0; i <= logicalFrameSpeed; i++) {
-				int xPos = (75.0 / (int)logicalFrameSpeed) * i;
+				int xPos = (int)((75.0 / logicalFrameSpeed) * i);
 				if (i % 5 == 0) {
 					Broodwar->drawLineScreen(24 + xPos, 0, 24 + xPos, 9, Colors::Grey);
 				}
@@ -227,10 +224,10 @@ namespace BlackCrow {
 			}
 
 			// Highest Frame Indicator
-			int indicatorXPos = 24 + (75 * (std::min(highestFrameTime / logicalFrameSpeed, 1.0)));
+			int indicatorXPos = 24 + (int)(75 * (std::min(highestFrameTime / logicalFrameSpeed, 1.0)));
 			Broodwar->drawLineScreen(indicatorXPos, 0, indicatorXPos, 9, Colors::Yellow);
 			// White Average Bar
-			Broodwar->drawBoxScreen(24, 2, 25 + (74 * barPercent), 7, Colors::White, false);
+			Broodwar->drawBoxScreen(24, 2, 25 + (int)(74 * barPercent), 7, Colors::White, false);
 
 			// Over the limit red bar
 			if (highestFrameTime > logicalFrameSpeed) {
@@ -303,7 +300,6 @@ namespace BlackCrow {
 		return value ? "on" : "off";
 	}
 
-
 	void Debug::drawManagerInfo() {
 		// Strategy Manager
 		// Build Order
@@ -323,32 +319,32 @@ namespace BlackCrow {
 			}
 		}
 
-	{
-		// Macro Manager
-		// Planned Units
-		int xStart = 500;
-		int yStart = 20;
+		{
+			// Macro Manager
+			// Planned Units
+			int xStart = 500;
+			int yStart = 20;
 
-		Broodwar->drawTextScreen(xStart + 8, yStart, "L/D");
-		Broodwar->drawTextScreen(xStart + 33, yStart, "Planned Units");
-		Broodwar->drawLineScreen(xStart, yStart + 15, xStart + 120, yStart + 15, BWAPI::Colors::Yellow);
+			Broodwar->drawTextScreen(xStart + 8, yStart, "L/D");
+			Broodwar->drawTextScreen(xStart + 33, yStart, "Planned Units");
+			Broodwar->drawLineScreen(xStart, yStart + 15, xStart + 120, yStart + 15, BWAPI::Colors::Yellow);
 
-		int i = 1;
-		for (PlannedUnit* pu : *bc.macro.plannedUnits) {
-			//Broodwar->drawTextScreen(xStart, yStart + 5 + 9 * i, std::to_string(i).c_str());
-			//Broodwar->drawTextScreen(xStart + 8, yStart + 5 + 9 * i, pu->larvaEgg == nullptr ? " No" : "Yes");
-			Broodwar->drawTextScreen(xStart, yStart + 5 + 13 * i, pu->larvaEgg == nullptr ? "-" : std::to_string(pu->larvaEgg->getID()).c_str());
-			Broodwar->drawTextScreen(xStart + 27, yStart + 5 + 13 * i, pu->type.c_str());
+			int i = 1;
+			for (PlannedUnit* pu : *bc.macro.plannedUnits) {
+				//Broodwar->drawTextScreen(xStart, yStart + 5 + 9 * i, std::to_string(i).c_str());
+				//Broodwar->drawTextScreen(xStart + 8, yStart + 5 + 9 * i, pu->larvaEgg == nullptr ? " No" : "Yes");
+				Broodwar->drawTextScreen(xStart, yStart + 5 + 13 * i, pu->larvaEgg == nullptr ? "-" : std::to_string(pu->larvaEgg->getID()).c_str());
+				Broodwar->drawTextScreen(xStart + 27, yStart + 5 + 13 * i, pu->type.c_str());
 
-			if (pu->larvaEgg) {
-				float percentageFinished = (float)pu->larvaEgg->getRemainingBuildTime() / (float)pu->type.buildTime();
-				Broodwar->drawLineScreen(xStart, yStart + 6 + 13 * i, xStart + (120.0 * percentageFinished), yStart + 6 + 13 * i, BWAPI::Colors::White);
-				Broodwar->drawLineScreen(xStart, yStart + 17 + 13 * i, xStart + (120.0 * percentageFinished), yStart + 17 + 13 * i, BWAPI::Colors::White);
+				if (pu->larvaEgg) {
+					float percentageFinished = (float)pu->larvaEgg->getRemainingBuildTime() / (float)pu->type.buildTime();
+					Broodwar->drawLineScreen(xStart, yStart + 6 + 13 * i, xStart + (int)(120.0 * percentageFinished), yStart + 6 + 13 * i, BWAPI::Colors::White);
+					Broodwar->drawLineScreen(xStart, yStart + 17 + 13 * i, xStart + (int)(120.0 * percentageFinished), yStart + 17 + 13 * i, BWAPI::Colors::White);
+				}
+
+				i++;
 			}
-
-			i++;
 		}
-	}
 	}
 
 
@@ -404,32 +400,31 @@ namespace BlackCrow {
 
 		for (Unit unit : Broodwar->getAllUnits()) {
 			if (!unit->getPlayer()->isNeutral()) {
-				int length = ((float)unit->getType().width()) * 0.85;
-				int bars = ((float)length / (barSize + 1));
-				int pixelLength = bars * barSize + 2;
+				int length = (int)(unit->getType().width() * 0.85);
+				int bars = (int)(length / (barSize + 1));
+				int pixelLength = (int)(bars * barSize + 2);
 
-				Position barPos;
-				barPos.x = unit->getPosition().x - ((float)pixelLength * 0.5);
-				barPos.y = unit->getPosition().y - unit->getType().dimensionUp() * 1.2;
-
+				Position barPos = unit->getPosition() - Position((int)(pixelLength * 0.5), (int)(unit->getType().dimensionUp() * 1.2));
 				float percentage = (float)unit->getHitPoints() / (float)unit->getType().maxHitPoints();
 
-				// Colors are cacheable
+				// TODO Colors are cacheable
 				Util::HsvColor hsvColor;
-				hsvColor.h = -(0xFF * 0.33) * percentage;
+				hsvColor.h = (char)(-(0xFF * 0.33) * percentage);
 				hsvColor.s = 0xFF;
-				hsvColor.v = 0xFF * 0.7;
+				hsvColor.v = (char)(0xFF * 0.7);
 
 				Util::RgbColor rgbColor = Util::HsvToRgb(hsvColor);
 				Color barColor(rgbColor.r, rgbColor.b, rgbColor.g);
 
 				// Draw
-				Broodwar->drawBoxMap(barPos.x, barPos.y, barPos.x + pixelLength - 1, barPos.y + barSize + 2, Colors::Black, true);
+				Broodwar->drawBoxMap(barPos, barPos + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
 				for (int i = 0; i < bars; i++) {
-					if (i < (float)bars * percentage)
-						Broodwar->drawBoxMap(barPos.x + 1 + barSize* i, barPos.y + 1, barPos.x + barSize + barSize * i, barPos.y + barSize + 1, barColor, true);
-					else
-						Broodwar->drawBoxMap(barPos.x + 1 + barSize * i, barPos.y + 1, barPos.x + barSize + barSize * i, barPos.y + barSize + 1, Colors::Grey, true);
+					Color color = i < (float)bars * percentage ? barColor : Colors::Grey;
+					int barSizePixel = (int)(barSize * i);
+
+					Position topLeft(1 + barSizePixel, 1);
+					Position bottomRight((int)barSize + barSizePixel, (int)barSize + 1);
+					Broodwar->drawBoxMap(barPos + topLeft, barPos + bottomRight, color, true);
 				}
 			}
 		}

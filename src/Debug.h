@@ -17,7 +17,7 @@ namespace BlackCrow {
 		void drawOnFrame();
 		bool command(std::string text);
 		double elapsedMs;
-		std::list<float>* frameTimeHistory;
+		std::list<double> frameTimeHistory;
 		double highestFrameTime;
 		double highestFrameTimeAgo;
 
