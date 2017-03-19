@@ -55,10 +55,10 @@ namespace BlackCrow {
 			}
 
 			dynamicDecision();
+		}
 
-			if (scoutSquads->size() <= 0) {
-				startInitialScout();
-			}
+		if (scoutSquads->size() <= 0) {
+			startInitialScout();
 		}
 
 		for (ScoutSquad* ss : *scoutSquads) {
@@ -95,6 +95,9 @@ namespace BlackCrow {
 				return baseInformation;
 			}
 		}
+
+		// Kruecke: This statement has been reached (in a test game) right after the last hatchery has died.
+		// (In this case, that was just before the game was about to end. But that doesn't has to be the case necessarily.)
 		assert(false);
 		return nullptr;
 	}
