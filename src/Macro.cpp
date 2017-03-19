@@ -382,9 +382,10 @@ namespace BlackCrow {
 						worker->gather(base->extractor);
 					}
 				} else {
-					if (base->workersOnGas.size() > 0) {
-						for (Unit worker : base->workersOnGas) {
-							base->workersOnGas.erase(worker);
+					if (base->workersOnGas.size() > 0) { // TODO 1 worker is idle
+						for (auto it = base->workersOnGas.begin(); it != base->workersOnGas.end();) {
+							Unit worker = (*it);
+							it = base->workersOnGas.erase(it);
 							base->workersOnMinerals.insert(worker);
 							worker->gather((*base->base->Minerals().begin())->Unit());
 						}

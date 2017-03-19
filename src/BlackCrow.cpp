@@ -58,7 +58,7 @@ namespace BlackCrow {
 
 			// Extra
 			// Draw Mouse Tile Position
-			Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
+			//Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
 
 
 			if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
