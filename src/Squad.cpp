@@ -41,14 +41,14 @@ namespace BlackCrow {
 	void ScoutSquad::onFrame() {
 		Squad::onFrame();
 
-		if (scoutLocations->size() > 0 && Broodwar->isVisible(scoutLocations->front())) {
-			scoutLocations->pop_front();
+		while (scoutLocations->size() > 0 && Broodwar->isVisible(scoutLocations->front()))
+			scoutLocations->pop_front(); // FIXME: Kruecke: Smells like memory leak. Or is there a "delete" anywhere?
 
-			if (scoutLocations->size() > 0) {
-				BWAPI::TilePosition tilePosition = scoutLocations->front();
-				moveAll(BWAPI::Position(tilePosition.x * 32, tilePosition.y * 32), false);
-			}
+		if (scoutLocations->size() > 0) {
+			BWAPI::TilePosition tilePosition = scoutLocations->front();
+			moveAll(BWAPI::Position(tilePosition.x * 32, tilePosition.y * 32), false); // Kruecke: This will spam hard!
 		}
+		// TODO: Kruecke: else? Maybe remove scout squad or something.
 	}
 
 	bool ScoutSquad::isStillScouting() {
@@ -71,6 +71,10 @@ namespace BlackCrow {
 	}
 
 	void ScoutSquad::addStartLocations() {
+		// Kruecke: No, you do not change the starting positions here.
+		// 1) In each loop iteration "tilePosition" is a _copy_ as there is no reference ("&") in the type. It is safe to manipulate that copy.
+		// 2) StartingLocations() returns a _const_ vector. Any attempt to change its values will result in a compiler error.
+		//    Try: bc.bwem.StartingLocations().front() = TilePosition(123, 234); // Attempt to change first value in vector.
 		for (BWAPI::TilePosition tilePosition : bc.bwem.StartingLocations()) {
 			if (!Broodwar->isVisible(tilePosition)) {
 				tilePosition.x += 1; // TODO Do I change the starting position?!?
