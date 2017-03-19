@@ -38,7 +38,7 @@ namespace BlackCrow {
 			auto end = std::chrono::high_resolution_clock::now();
 
 			std::chrono::duration<double, std::milli> diff = end - start;
-			Broodwar->sendText("Init has taken %fms", diff);
+			Broodwar->sendText("Init has taken %fms", diff.count());
 			//Broodwar->sendText("black sheep wall");
 
 		}
@@ -83,22 +83,19 @@ namespace BlackCrow {
 		}
 	}
 
-	Position left;
-	Position right;
-
 	void BlackCrow::testPath() {
+		static Position left, right;
+
 		Broodwar->drawCircleMap(left, 10, BWAPI::Colors::Red);
 		Broodwar->drawCircleMap(right, 10, BWAPI::Colors::Red);
 
 		// Testdistances
 		if (Broodwar->getMouseState(BWAPI::MouseButton::M_LEFT)) {
-			left.x = (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x);
-			left.y = (Broodwar->getMousePosition().y + Broodwar->getScreenPosition().y);
+			left = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
 		}
 
 		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
-			right.x = (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x);
-			right.y = (Broodwar->getMousePosition().y + Broodwar->getScreenPosition().y);
+			right = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
 		}
 
 		Broodwar->drawCircleMap(left, 15, BWAPI::Colors::Red);
@@ -117,12 +114,12 @@ namespace BlackCrow {
 			for (const BWEM::ChokePoint * cp : path)
 			{
 				if (cpPrevious)
-					Broodwar->drawLineMap(cpPrevious->Center().x * 8, cpPrevious->Center().y * 8, cp->Center().x * 8, cp->Center().y * 8, BWAPI::Colors::Cyan);
+					Broodwar->drawLineMap(Position(cpPrevious->Center()), Position(cp->Center()), BWAPI::Colors::Cyan);
 				cpPrevious = cp;
 			}
 
-			Broodwar->drawLineMap(left.x, left.y, path.front()->Center().x * 8, path.front()->Center().y * 8, BWAPI::Colors::Cyan);
-			Broodwar->drawLineMap(right.x, right.y, path.back()->Center().x * 8, path.back()->Center().y * 8, BWAPI::Colors::Cyan);
+			Broodwar->drawLineMap(left, Position(path.front()->Center()), BWAPI::Colors::Cyan);
+			Broodwar->drawLineMap(right, Position(path.back()->Center()), BWAPI::Colors::Cyan);
 		}
 
 		Broodwar->sendText("BWEM length: %i", length);
