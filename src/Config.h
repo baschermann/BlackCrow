@@ -13,5 +13,6 @@ namespace BlackCrow {
 		int maxDrones;
 		float saturationLevel;
 		float barSize;
+		double mineralSaturationMultiplier;
 	};
 }

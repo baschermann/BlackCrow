@@ -41,8 +41,7 @@ namespace BlackCrow {
 			Broodwar->sendText("Init has taken %fms", diff.count());
 			//Broodwar->sendText("black sheep wall");
 
-		}
-		catch (const std::exception &e) {
+		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
 		}
 	}
@@ -52,14 +51,13 @@ namespace BlackCrow {
 			auto start = std::chrono::high_resolution_clock::now();
 
 			// Performance Qeuery Timer
-			//http://www.decompile.com/cpp/faq/windows_timer_api.htm
+			// http://www.decompile.com/cpp/faq/windows_timer_api.htm
 
 			debug.drawOnFrame();
 
 			// Extra
 			// Draw Mouse Tile Position
 			//Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
-
 
 			if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
 				return;
@@ -77,8 +75,7 @@ namespace BlackCrow {
 			std::chrono::duration<double, std::milli> diff = end - start;
 			debug.elapsedMs = diff.count();
 
-		}
-		catch (const std::exception &e) {
+		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
 		}
 	}
@@ -111,8 +108,7 @@ namespace BlackCrow {
 		else {
 			// draw a line between each ChokePoint in Path:
 			const BWEM::ChokePoint * cpPrevious = nullptr;
-			for (const BWEM::ChokePoint * cp : path)
-			{
+			for (const BWEM::ChokePoint * cp : path) {
 				if (cpPrevious)
 					Broodwar->drawLineMap(Position(cpPrevious->Center()), Position(cp->Center()), BWAPI::Colors::Cyan);
 				cpPrevious = cp;
@@ -122,7 +118,9 @@ namespace BlackCrow {
 			Broodwar->drawLineMap(right, Position(path.back()->Center()), BWAPI::Colors::Cyan);
 		}
 
-		Broodwar->sendText("BWEM length: %i", length);
+		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT) || Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
+			Broodwar->sendText("BWEM length: %i", length);
+		}
 	}
 
 	void BlackCrow::onSendText(std::string text) {

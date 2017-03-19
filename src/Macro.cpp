@@ -327,10 +327,12 @@ namespace BlackCrow {
 						// Drone
 						if (pu->type == BWAPI::UnitTypes::Zerg_Drone) {
 
-							// TODO When there is no mineral left in the mineral field (mined out)
 							if (!pu->base) {
 								pu->base = findClosestMiningBase(unit->getPosition());
-								unit->gather((*pu->base->base->Minerals().begin())->Unit());
+								
+								auto minerals = pu->base->base->Minerals();
+								if (minerals.size() > 0)
+									unit->gather(minerals.front()->Unit());
 							}
 
 							pu->base->workersOnMinerals.insert(unit);
@@ -382,7 +384,7 @@ namespace BlackCrow {
 						worker->gather(base->extractor);
 					}
 				} else {
-					if (base->workersOnGas.size() > 0) { // TODO 1 worker is idle
+					if (base->workersOnGas.size() > 0) { // TODO 1 worker is idle when extractor is being destroyed
 						for (auto it = base->workersOnGas.begin(); it != base->workersOnGas.end();) {
 							Unit worker = (*it);
 							it = base->workersOnGas.erase(it);
@@ -412,7 +414,9 @@ namespace BlackCrow {
 							BWAPI::Unit worker = *base->workersOnMinerals.begin();
 							base->workersOnMinerals.erase(worker);
 							base2->workersOnMinerals.insert(worker);
-							worker->gather((*base2->base->Minerals().begin())->Unit()); // TODO Nullpointer, when a base was built and destroyed it will try to mine minerals which are not been seen so getMinerals() gives size 0 back
+
+							auto minerals = base2->base->Minerals();
+							worker->gather(minerals.front()->Unit()); // TODO Nullpointer, when a base was built and destroyed it will try to mine minerals which are not been seen so getMinerals() gives size 0 back
 
 							dn--;
 							dronesAvailable--;
@@ -454,7 +458,7 @@ namespace BlackCrow {
 	}
 
 	int Macro::dronesTotalNeeded(BaseInformation* base) {
-		return base->base->Minerals().size() * 2 + base->base->Geysers().size() * 3;
+		return (int)(base->base->Minerals().size() * bc.config.mineralSaturationMultiplier) + base->base->Geysers().size() * 3;
 	}
 
 	bool Macro::buildDrone() {

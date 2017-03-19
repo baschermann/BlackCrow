@@ -74,7 +74,7 @@ namespace BlackCrow {
 				bc.macro.buildDrone();
 		}
 
-		if (bc.macro.expansionNeeded() || bc.macro.getUnreservedMinerals() > 700) {
+		if (bc.macro.expansionNeeded() || bc.macro.getUnreservedMinerals() > 400) {
 			//Broodwar << "Expansion needed" << std::endl;
 			bc.macro.buildExpansion();
 		}
@@ -96,10 +96,7 @@ namespace BlackCrow {
 			}
 		}
 
-		// Kruecke: This statement has been reached (in a test game) right after the last hatchery has died.
-		// (In this case, that was just before the game was about to end. But that doesn't has to be the case necessarily.)
-		assert(false);
-		return nullptr;
+		return *(bc.macro.bases->begin());
 	}
 
 	void Strategy::onPlannedComplete(PlannedUnit plannedUnit) {

@@ -12,6 +12,7 @@ namespace BlackCrow {
 		localSpeed = 6;
 		maxDrones = 200;
 		saturationLevel = 0.5;
+		mineralSaturationMultiplier = 2;
 		barSize = 3;
 	}
 }
