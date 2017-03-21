@@ -12,14 +12,12 @@ namespace BlackCrow {
 	public:
 
 		Squad();
-		~Squad();
 		void onFrame();
 
-		//std::list<BWAPI::Unit> units;
-		std::set<SquadUnit*> units;
+		std::vector<SquadUnit> units;
 
-		void add(SquadUnit* unit);
-		void remove(SquadUnit* unit);
+		void add(const SquadUnit& unit);
+		void remove(const SquadUnit& unit);
 		void moveAll(BWAPI::Position position, bool queue); 
 		
 	protected:
@@ -30,12 +28,11 @@ namespace BlackCrow {
 	class ScoutSquad : public Squad {
 	public:
 		ScoutSquad(BlackCrow &parent);
-		~ScoutSquad();
 		void init();
 		void onFrame();
 		bool isStillScouting();
 		int locationsToScout();
-		std::list<BWAPI::TilePosition>* getScoutingPositions();
+		std::vector<BWAPI::TilePosition> getScoutingPositions();
 		void addScoutPosition(BWAPI::TilePosition position);
 		void addStartLocations();
 		void addExpansions();
@@ -43,7 +40,7 @@ namespace BlackCrow {
 
 	private:
 		bool globalSearch;
-		std::list<BWAPI::TilePosition>* scoutLocations;
+		std::vector<BWAPI::TilePosition> scoutLocations;
 	};
 
 	class AttackSquad : public Squad {

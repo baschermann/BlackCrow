@@ -327,19 +327,14 @@ namespace BlackCrow {
 		// Strategy Manager
 		// Build Order
 
-		if (bc.strategy.currentBuildOrder->size() > 0) {
+		if (bc.strategy.buildOrder.size() > 0) {
 			int xStart = 20;
 			int yStart = 20;
 
-			Broodwar->drawTextScreen(xStart, yStart, "\x03 Build Order");
-			Broodwar->drawLineScreen(xStart, yStart + 15, xStart + 120, yStart + 15, BWAPI::Colors::Yellow);
+			Broodwar->drawTextScreen(xStart, yStart, "\x03 Build Order Items left %i", bc.strategy.buildOrder.size());
+			Broodwar->drawLineScreen(xStart + 4, yStart + 15, xStart + 120, yStart + 15, BWAPI::Colors::Yellow);
 
-			int i = 1;
-			for (Strategy::BuildOrderItem* boi : *bc.strategy.currentBuildOrder) {
-				Broodwar->drawTextScreen(xStart, yStart + 5 + 9 * i, std::to_string(i).c_str());
-				Broodwar->drawTextScreen(xStart + 10, yStart + 5 + 9 * i, boi->type.c_str());
-				i++;
-			}
+			Broodwar->drawTextScreen(xStart + 5, yStart + 17, bc.strategy.buildOrder.front().c_str());
 		}
 
 		{
@@ -392,9 +387,9 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawSquadInfo() {
-		for (ScoutSquad* ss : *bc.strategy.scoutSquads) {
-			for (BWAPI::TilePosition tilePosition : *ss->getScoutingPositions()) {
-				BWAPI::Unit scoutUnit = (*ss->units.begin())->unit;
+		for (ScoutSquad scoutSquad : bc.strategy.scoutSquads) {
+			for (BWAPI::TilePosition tilePosition : scoutSquad.getScoutingPositions()) {
+				BWAPI::Unit scoutUnit = scoutSquad.units.back().unit;
 				Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
 			}
 		}

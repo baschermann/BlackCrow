@@ -6,7 +6,7 @@ namespace BlackCrow {
 	using namespace Filter;
 
 
-	Area::Area(BlackCrow &parent) : bc(parent) {
+	Area::Area(BlackCrow &parent, const BWEM::Area& bwemArea) : bc(parent), bwemArea(bwemArea) {
 		occupied = false;
 		enemyBuildings = new std::list<EnemyUnit*>();
 	}

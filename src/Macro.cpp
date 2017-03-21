@@ -20,7 +20,6 @@ namespace BlackCrow {
 	Macro::~Macro() {}
 
 	void Macro::onStart() {
-
 		for (const BWEM::Area& area : bc.bwem.Areas()) {
 			for (const BWEM::Base& base : area.Bases()) {
 				BaseInformation* baseInformation = new BaseInformation();
@@ -44,6 +43,7 @@ namespace BlackCrow {
 						for (Unit worker : baseInformation->workersOnMinerals) {
 							worker->gather(worker->getClosestUnit(IsMineralField));
 						}
+
 						firstBase = baseInformation;
 					}
 				}
@@ -312,8 +312,7 @@ namespace BlackCrow {
 					pu->base->extractor = unit;
 					i = plannedUnits->erase(i);
 					delete pu;
-				}
-				else {
+				} else {
 					++i;
 				}
 			}
@@ -360,8 +359,7 @@ namespace BlackCrow {
 
 					reservedLarvae->erase(pu->larvaEgg);
 					delete pu;
-				}
-				else {
+				} else {
 					++i;
 				}
 			}

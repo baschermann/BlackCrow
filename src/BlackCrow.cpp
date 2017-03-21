@@ -7,8 +7,6 @@ namespace BlackCrow {
 
 	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), bwem(BWEM::Map::Instance()) {}
 
-	BlackCrow::~BlackCrow() {};
-
 	void BlackCrow::onStart() {
 
 		try {
@@ -32,8 +30,8 @@ namespace BlackCrow {
 			macro.onStart();
 			strategy.onStart();
 			enemy.onStart();
-			debug.onStart();
 			builder.onStart();
+			debug.onStart();
 
 			auto end = std::chrono::high_resolution_clock::now();
 
@@ -142,8 +140,7 @@ namespace BlackCrow {
 	void BlackCrow::onNukeDetect(BWAPI::Position target) {
 		if (target) {
 			Broodwar << "Nuclear Launch Detected at " << target << std::endl;
-		}
-		else {
+		} else {
 			Broodwar->sendText("Where's the nuke?");
 		}
 	}

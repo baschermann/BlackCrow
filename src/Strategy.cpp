@@ -11,58 +11,58 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	Strategy::Strategy(BlackCrow &parent) : bc(parent) {
-		scoutSquads = new std::list<ScoutSquad*>();
-		areas = new std::list<Area*>();
 	}
 
 	Strategy::~Strategy() {}
 
 	void Strategy::onStart() {
-		bo = getStartBuildOrder();
-		currentBuildOrder = getBuildOrder(bo);
+		fillBuildOrder(getStartBuildOrder());
 
 		// Area
-		for (const BWEM::Area& area : bc.bwem.Areas()) {
-			Area* ad = new Area(bc);
-			ad->area = &area;
-			areas->push_back(ad);
+		for (const BWEM::Area& bwemArea : bc.bwem.Areas()) {
+			Area ad(bc, bwemArea);
+			areas.push_back(ad);
 		}
 	}
 
 	void Strategy::update() {
 
 		// Build the Buildorder
-		if (currentBuildOrder->size() > 0) {
-			Strategy::BuildOrderItem* boi = *currentBuildOrder->begin();
+		if (buildOrder.size() > 0) {
+			UnitType type = buildOrder.front();
 
 			// Check if there are enough ressources to build it
-			if (bc.macro.getUnreservedMinerals() >= boi->type.mineralPrice()) {
+			if (bc.macro.getUnreservedMinerals() >= type.mineralPrice()) {
 				if (bc.macro.getNonReservedLarvaeAmount() > 0) {
-					if (boi->type.isBuilding()) {
-						bc.macro.planBuilding(boi->type, bc.macro.firstBase->hatchery->getPosition(), bc.macro.firstBase);
+					if (type.isBuilding()) {
+						if (type == UnitTypes::Zerg_Hatchery)
+							bc.macro.buildExpansion();
+						else {
+							assert(bc.macro.firstBase->hatchery); // TODO Crash when the first hatchery is being destroyed and the build order wants to build a building
+							bc.macro.planBuilding(type, bc.macro.firstBase->hatchery->getPosition(), bc.macro.firstBase);
+						}
 					} else {
-						bc.macro.planUnit(boi->type, bc.macro.firstBase->hatchery->getPosition());
+						bc.macro.planUnit(type, bc.macro.firstBase->hatchery->getPosition());
 					}
-					currentBuildOrder->pop_front();
+					buildOrder.pop();
 				}
 			}
-		}
-		else {
+		} else {
 
 			// Dynamics time!
-			if (currentBuildOrder->size() == 0) {
+			if (buildOrder.size() == 0) {
 				bc.macro.autoBuildOverlords = true;
 			}
 
 			dynamicDecision();
 		}
 
-		if (scoutSquads->size() <= 0) {
+		if (scoutSquads.size() <= 0) {
 			startInitialScout();
 		}
 
-		for (ScoutSquad* ss : *scoutSquads) {
-			ss->onFrame();
+		for (ScoutSquad& ss : scoutSquads) {
+			ss.onFrame();
 		}
 	}
 
@@ -75,7 +75,6 @@ namespace BlackCrow {
 		}
 
 		if (bc.macro.expansionNeeded() || bc.macro.getUnreservedMinerals() > 400) {
-			//Broodwar << "Expansion needed" << std::endl;
 			bc.macro.buildExpansion();
 		}
 
@@ -96,34 +95,26 @@ namespace BlackCrow {
 			}
 		}
 
+		// TODO FIX wenn keine basis
 		return *(bc.macro.bases->begin());
 	}
 
-	void Strategy::onPlannedComplete(PlannedUnit plannedUnit) {
+	void Strategy::onPlannedComplete(PlannedUnit& plannedUnit) {
 
 	}
 
-	void Strategy::onPlannedDestroyed(PlannedUnit plannedUnit) {
+	void Strategy::onPlannedDestroyed(PlannedUnit& plannedUnit) {
 
 	}
 
 	void Strategy::onUnitDiscovered(BWAPI::Unit unit) {
 		if (Broodwar->self()->isEnemy(unit->getPlayer())) {
-			//Broodwar->sendText("Enemy Unit %s with id %i discovered!", unit->getType().c_str(), unit->getID());
 			bc.enemy.enemyDiscovered(unit);
 		}
 	}
+
 	void Strategy::onUnitDestroyed(BWAPI::Unit unit) {
 
-	}
-
-	Area* Strategy::getArea(int id) {
-		for (Area* ad : *areas) {
-			if (ad->area->Id() == id)
-				return ad;
-		}
-		assert(false);
-		return nullptr;
 	}
 
 	Strategy::BuildOrder Strategy::getStartBuildOrder() {
@@ -143,106 +134,150 @@ namespace BlackCrow {
 
 
 	void Strategy::startInitialScout() {
-		ScoutSquad* ss = new ScoutSquad(bc);
+		ScoutSquad scoutSquad(bc);
 		BWAPI::Unit worker = bc.macro.getDroneForBuilding(bc.macro.firstBase->hatchery->getPosition());
 		assert(worker);
-		SquadUnit* su = new SquadUnit(worker);
-		ss->add(su);
-		ss->addStartLocations();
-		scoutSquads->push_back(ss);
+
+		SquadUnit su(worker);
+		scoutSquad.add(su);
+
+		scoutSquad.addStartLocations();
+		scoutSquads.push_back(scoutSquad);
+
 	}
 
-	std::list<Strategy::BuildOrderItem*>* Strategy::getBuildOrder(Strategy::BuildOrder build) {
-
-		std::list<Strategy::BuildOrderItem*>* list = new std::list<Strategy::BuildOrderItem*>();
+	void Strategy::fillBuildOrder(BuildOrder build) {
 
 		switch (build) {
 		case Strategy::BuildOrder::NINE_POOL:
-		{
-			{
-				// Drone @4
-				Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-				boi->type = BWAPI::UnitTypes::Zerg_Drone;
-				list->push_back(boi);
-			}
+					
+			// Drone @4
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 			
-			{
 			// Drone @5
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Drone;
-			list->push_back(boi);
-			}
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 			
-			{
 			// Drone @6
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Drone;
-			list->push_back(boi);
-			}
-
-			{
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+			
 			// Drone @7
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Drone;
-			list->push_back(boi);
-			}
-
-			{
-			// Drone @8
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Drone;
-			list->push_back(boi);
-			}
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 			
-			{
+			// Drone @8
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+			
 			// Spawning Pool @9
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Spawning_Pool;
-			list->push_back(boi);
-			}
-
-			{
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Spawning_Pool);
+			
 			// Drone @8
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Drone;
-			list->push_back(boi);
-			}
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 
-			{
 			// Extractor @9
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Extractor;
-			list->push_back(boi);
-			}
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Extractor);
 
-			{
 			// Overlord @8
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Overlord;
-			list->push_back(boi);
-			}
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Overlord);
 
-			{
 			// Drone @8
-			Strategy::BuildOrderItem* boi = new Strategy::BuildOrderItem();
-			boi->type = BWAPI::UnitTypes::Zerg_Drone;
-			list->push_back(boi);
-			}
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 			
 			break;
-		}
+		
 		case Strategy::BuildOrder::OVERPOOL:
-		{
-			int a = 4;
-			break;
-		}
-		case Strategy::BuildOrder::TWELVE_HATCH:
-		{
-			int b = 3;
-			break;
-		}
-		}
+		
+			// Drone @4
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 
-		return list;
+			// Drone @5
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @6
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @7
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @8
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Overlord @9
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Overlord);
+			
+			// Spawning Pool @9
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Spawning_Pool);
+
+			// Drone @8
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+			
+			// Drone @9
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @10
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+			// Now has 11 Drones
+
+			// Extractor @11
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Extractor);
+
+			// 6 Zerglings @10
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
+
+			break;
+		
+		case Strategy::BuildOrder::TWELVE_HATCH:
+		
+			// Drone @4
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @5
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @6
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @7
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @8
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Overlord @9
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Overlord);
+
+			// Drone @9
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @10
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @11
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Drone @12
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Hatchery @12
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// Spawning Pool @11
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Spawning_Pool);
+
+			// Extractor @11
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Extractor);
+
+			// 6 Zerglings @10
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
+
+			break;
+		
+		}
+	}
+
+	void Strategy::fillBuildOrderItem(UnitType item) {
+		buildOrder.emplace(item);
 	}
 }

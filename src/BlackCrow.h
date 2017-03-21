@@ -48,7 +48,6 @@ namespace BlackCrow {
 		Strategy strategy;
 
 		BlackCrow();
-		~BlackCrow();
 		void emptyMethod();
 		void init();
 		void testPath();

@@ -10,11 +10,11 @@ namespace BlackCrow {
 
 	class Area {
 	public:
-		Area(BlackCrow &parent);
+		Area(BlackCrow &parent, const BWEM::Area& bwemArea);
 		~Area();
 
 
-		const BWEM::Area* area;
+		const BWEM::Area& bwemArea;
 		void addEnemyBuilding(EnemyUnit* enemyBuilding);
 		void removeEnemyBuilding(EnemyUnit* enemyBuilding);
 		bool isOccupied();

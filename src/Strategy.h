@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include <queue>
 
 namespace BlackCrow {
 
@@ -19,31 +20,26 @@ namespace BlackCrow {
 			TWELVE_HATCH
 		};
 
-		class BuildOrderItem {
-		public:
-			BWAPI::UnitType type;
-		};
-
-		std::list<BuildOrderItem*>* currentBuildOrder;
-		std::list<ScoutSquad*>* scoutSquads;
-		std::list<Area*>* areas;
+		std::queue<BWAPI::UnitType> buildOrder;
+		std::list<ScoutSquad> scoutSquads;
+		std::vector<Area> areas;
 		BuildOrder bo;
 
 		Strategy(BlackCrow &parent);
 		~Strategy();
 		void onStart();
 		void update();
-		std::list<BuildOrderItem*>* getBuildOrder(BuildOrder build);
-		void onPlannedComplete(PlannedUnit plannedUnit);
-		void onPlannedDestroyed(PlannedUnit plannedUnit);
+		void onPlannedComplete(PlannedUnit& plannedUnit);
+		void onPlannedDestroyed(PlannedUnit& plannedUnit);
 		void onUnitDiscovered(BWAPI::Unit unit);
 		void onUnitDestroyed(BWAPI::Unit unit);
-		Area* getArea(int id);
 
 	private:
 		BlackCrow &bc;
 
 		BuildOrder getStartBuildOrder();
+		void fillBuildOrder(BuildOrder build);
+		void fillBuildOrderItem(BWAPI::UnitType item);
 		void buildDrone();
 		BaseInformation* getSafestEstablishedBase();
 		void dynamicDecision();
