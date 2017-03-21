@@ -1,4 +1,5 @@
 #include "Area.h"
+#include <algorithm>
 
 namespace BlackCrow {
 
@@ -6,19 +7,13 @@ namespace BlackCrow {
 	using namespace Filter;
 
 
-	Area::Area(BlackCrow &parent, const BWEM::Area& bwemArea) : bc(parent), bwemArea(bwemArea) {
-		occupied = false;
-		enemyBuildings = new std::list<EnemyUnit*>();
-	}
-	void Area::addEnemyBuilding(EnemyUnit* enemyBuilding) {
-		enemyBuildings->push_back(enemyBuilding);
+	Area::Area(BlackCrow &parent, const BWEM::Area& bwemArea) : bc(parent), bwemArea(bwemArea), isEnemyOwned(false) {}
+
+	void Area::addEnemyBuilding(const EnemyUnit& enemyBuilding) {
+		enemyBuildings.push_back(enemyBuilding);
 	}
 
-	void Area::removeEnemyBuilding(EnemyUnit* enemyBuilding) {
-		enemyBuildings->remove(enemyBuilding);
-	}
-
-	bool Area::isOccupied() {
-		return occupied;
+	void Area::removeEnemyBuilding(const EnemyUnit& enemyBuilding) {
+		//enemyBuildings.erase(std::remove(enemyBuildings.begin(), enemyBuildings.end(), enemyBuilding), enemyBuildings.end());
 	}
 }

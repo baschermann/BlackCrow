@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include "SquadUnit.h"
 
 // Handles single units in a squad. Micro, target decision (focusfire) and positioning
 

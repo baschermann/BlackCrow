@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <BWEM/bwem.h>
+#include "EnemyUnit.h"
 
 namespace BlackCrow {
 
@@ -11,17 +12,15 @@ namespace BlackCrow {
 	class Area {
 	public:
 		Area(BlackCrow &parent, const BWEM::Area& bwemArea);
-
-
 		const BWEM::Area& bwemArea;
-		void addEnemyBuilding(EnemyUnit* enemyBuilding);
-		void removeEnemyBuilding(EnemyUnit* enemyBuilding);
-		bool isOccupied();
+
+		bool isEnemyOwned;
+
+		void addEnemyBuilding(const EnemyUnit& enemyBuilding);
+		void removeEnemyBuilding(const EnemyUnit& enemyBuilding);
 
 	private:
 		BlackCrow &bc;
-
-		bool occupied;
-		std::list<EnemyUnit*>* enemyBuildings;
+		std::vector<EnemyUnit> enemyBuildings;
 	};
 }

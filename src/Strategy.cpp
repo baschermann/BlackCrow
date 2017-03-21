@@ -1,19 +1,13 @@
 #include "Strategy.h"
 #include "BlackCrow.h"
 #include <BWEM/bwem.h>
-#include "Area.h"
-#include "Squad.h"
-#include "SquadUnit.h"
 
 namespace BlackCrow {
 
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Strategy::Strategy(BlackCrow &parent) : bc(parent) {
-	}
-
-	Strategy::~Strategy() {}
+	Strategy::Strategy(BlackCrow &parent) : bc(parent) {}
 
 	void Strategy::onStart() {
 		fillBuildOrder(getStartBuildOrder());
