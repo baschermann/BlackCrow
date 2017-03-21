@@ -112,6 +112,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Planned.cpp" />
     <ClCompile Include="src\Area.cpp" />
     <ClCompile Include="src\Builder.cpp" />
     <ClCompile Include="src\Config.cpp" />
@@ -128,6 +129,7 @@
     <ClCompile Include="src\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Planned.h" />
     <ClInclude Include="src\Area.h" />
     <ClInclude Include="src\Builder.h" />
     <ClInclude Include="src\Config.h" />

@@ -2,6 +2,8 @@
 #include "BlackCrow.h"
 #include <BWEM/bwem.h>
 #include "Area.h"
+#include "Planned.h"
+
 
 namespace BlackCrow {
 
@@ -12,9 +14,27 @@ namespace BlackCrow {
 
 	void Strategy::onStart() {
 		fillBuildOrder(getStartBuildOrder());
+
+		plannedStuff.push_back(std::make_shared<PlannedUnitt>(bc, UnitTypes::Zerg_Zergling));
+		plannedStuff.back()->getGasCost();
 	}
 
 	void Strategy::update() {
+
+		for (auto planned : plannedStuff) {
+			if (planned->getStatus() == Planned::Status::FAILED) {
+				if (typeid(planned) == typeid(PlannedUnitt)) {
+
+				} else if (typeid(planned) == typeid(PlannedBuilding)) {
+
+				} else if (typeid(planned) == typeid(PlannedTech)) {
+
+				} else if (typeid(planned) == typeid(PlannedUpgrade)) {
+
+				}
+			}
+		}
+
 
 		// Build the Buildorder
 		if (buildOrder.size() > 0) {
@@ -86,14 +106,6 @@ namespace BlackCrow {
 
 		// TODO FIX wenn keine basis
 		return *(bc.macro.bases->begin());
-	}
-
-	void Strategy::onPlannedComplete(PlannedUnit& plannedUnit) {
-
-	}
-
-	void Strategy::onPlannedDestroyed(PlannedUnit& plannedUnit) {
-
 	}
 
 	void Strategy::onUnitDiscovered(BWAPI::Unit unit) {

@@ -38,7 +38,6 @@ namespace BlackCrow {
 	}
 
 	Area& Map::getArea(int id) {
-		assert(id >= 0 && id < areas.size());
 		return areas[id - 1];
 	}
 }

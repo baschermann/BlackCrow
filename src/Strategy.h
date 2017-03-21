@@ -1,7 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <queue>
-
+#include <memory>
 #include "Squad.h"
 
 namespace BlackCrow {
@@ -11,6 +11,7 @@ namespace BlackCrow {
 	class BaseInformation;
 	class ScoutSquad;
 	class Area;
+	class Planned;
 
 	class Strategy {
 
@@ -24,13 +25,12 @@ namespace BlackCrow {
 
 		std::queue<BWAPI::UnitType> buildOrder;
 		std::vector<ScoutSquad> scoutSquads;
+		std::vector<std::shared_ptr<Planned>> plannedStuff;
 		BuildOrder bo;
 
 		Strategy(BlackCrow &parent);
 		void onStart();
 		void update();
-		void onPlannedComplete(PlannedUnit& plannedUnit);
-		void onPlannedDestroyed(PlannedUnit& plannedUnit);
 		void onUnitDiscovered(BWAPI::Unit unit);
 		void onUnitDestroyed(BWAPI::Unit unit);
 

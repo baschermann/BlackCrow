@@ -87,6 +87,9 @@
     <ClCompile Include="src\Util.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="src\Planned.cpp">
+      <Filter>Source Files\Macro</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BlackCrow.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="src\Util.h">
       <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Planned.h">
+      <Filter>Header Files\Macro</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
