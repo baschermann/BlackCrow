@@ -14,6 +14,6 @@ namespace BlackCrow {
 	}
 
 	void Area::removeEnemyBuilding(const EnemyUnit& enemyBuilding) {
-		//enemyBuildings.erase(std::remove(enemyBuildings.begin(), enemyBuildings.end(), enemyBuilding), enemyBuildings.end());
+		enemyBuildings.erase(std::remove(enemyBuildings.begin(), enemyBuildings.end(), enemyBuilding), enemyBuildings.end());
 	}
 }

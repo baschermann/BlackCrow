@@ -15,4 +15,7 @@ namespace BlackCrow {
 		int lastSeen;
 		bool isVisible;
 	};
+
+	bool operator==(const EnemyUnit& left, const EnemyUnit& right);
+
 }
