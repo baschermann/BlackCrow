@@ -8,7 +8,6 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	Map::Map(BlackCrow &parent) : bc(parent) {
-		// Map Tiles
 		tileWidth = Broodwar->mapWidth();
 		tileHeight = Broodwar->mapHeight();
 
@@ -36,12 +35,10 @@ namespace BlackCrow {
 					getArea(areaId).associatedTiles.emplace_back(TilePosition(x, y));
 			}
 		}
-
-		width = tileWidth * TILE_SIZE;
-		height = tileHeight * TILE_SIZE;
 	}
 
 	Area& Map::getArea(int id) {
+		assert(id >= 0 && id < areas.size());
 		return areas[id - 1];
 	}
 }

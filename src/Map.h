@@ -24,8 +24,6 @@ namespace BlackCrow {
 
 		int tileWidth; // Tiles TILE_SIZE or 32 pixels per tile
 		int tileHeight;
-		int width;
-		int height;
 		std::vector<std::vector<Cell>> mapTiles;
 		std::vector<Area> areas;
 
