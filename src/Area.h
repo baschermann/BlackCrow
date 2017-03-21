@@ -15,6 +15,7 @@ namespace BlackCrow {
 		const BWEM::Area& bwemArea;
 
 		bool isEnemyOwned;
+		std::vector<BWAPI::TilePosition> associatedTiles;
 
 		void addEnemyBuilding(const EnemyUnit& enemyBuilding);
 		void removeEnemyBuilding(const EnemyUnit& enemyBuilding);

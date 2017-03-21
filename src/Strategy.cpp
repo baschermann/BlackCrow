@@ -1,6 +1,7 @@
 #include "Strategy.h"
 #include "BlackCrow.h"
 #include <BWEM/bwem.h>
+#include "Area.h"
 
 namespace BlackCrow {
 
@@ -11,12 +12,6 @@ namespace BlackCrow {
 
 	void Strategy::onStart() {
 		fillBuildOrder(getStartBuildOrder());
-
-		// Area
-		for (const BWEM::Area& bwemArea : bc.bwem.Areas()) {
-			Area ad(bc, bwemArea);
-			areas.push_back(ad);
-		}
 	}
 
 	void Strategy::update() {

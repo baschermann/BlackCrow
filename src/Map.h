@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <vector>
+#include "Area.h"
 
 namespace BlackCrow {
 
@@ -26,12 +27,13 @@ namespace BlackCrow {
 		int width;
 		int height;
 		std::vector<std::vector<Cell>> mapTiles;
+		std::vector<Area> areas;
 
 		Map(BlackCrow &parent);
 		void onStart();
+		Area& getArea(int id);
 
 	private:
 		BlackCrow &bc;
-
 	};
 }
