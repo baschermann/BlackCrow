@@ -9,10 +9,6 @@ namespace BlackCrow {
 		this->unit = unit;
 	}
 
-
-	SquadUnit::~SquadUnit() {
-	}
-
 	void SquadUnit::move(BWAPI::Position position, bool queue) {
 		unit->move(position, queue);
 	}

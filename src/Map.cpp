@@ -13,8 +13,6 @@ namespace BlackCrow {
 		mapTiles = std::vector<std::vector<Cell>>(tileWidth, std::vector<Cell>(tileHeight));
 	}
 
-	Map::~Map() {}
-
 	void Map::onStart() {
 		for (int x = 0; x < tileWidth; x++) {
 			for (int y = 0; y < tileHeight; y++) {

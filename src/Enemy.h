@@ -9,7 +9,6 @@ namespace BlackCrow {
 	class Enemy {
 	public:
 		Enemy(BlackCrow &parent);
-		~Enemy();
 
 		void onStart();
 		void onFrame();

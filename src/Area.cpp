@@ -10,11 +10,6 @@ namespace BlackCrow {
 		occupied = false;
 		enemyBuildings = new std::list<EnemyUnit*>();
 	}
-
-
-	Area::~Area() {
-	}
-
 	void Area::addEnemyBuilding(EnemyUnit* enemyBuilding) {
 		enemyBuildings->push_back(enemyBuilding);
 	}

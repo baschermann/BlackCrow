@@ -28,7 +28,6 @@ namespace BlackCrow {
 		std::vector<std::vector<Cell>> mapTiles;
 
 		Map(BlackCrow &parent);
-		~Map();
 		void onStart();
 
 	private:

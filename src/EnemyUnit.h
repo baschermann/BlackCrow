@@ -6,7 +6,6 @@ namespace BlackCrow {
 	class EnemyUnit {
 	public:
 		EnemyUnit();
-		~EnemyUnit();
 
 		int id;
 		int areaId;

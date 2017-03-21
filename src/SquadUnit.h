@@ -6,7 +6,6 @@ namespace BlackCrow {
 	class SquadUnit {
 	public:
 		SquadUnit(BWAPI::Unit unit);
-		~SquadUnit();
 
 		BWAPI::Unit unit;
 

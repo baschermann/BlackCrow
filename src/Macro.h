@@ -54,7 +54,6 @@ namespace BlackCrow {
 		BaseInformation* firstBase;
 
 		Macro(BlackCrow &bc);
-		~Macro();
 		void onStart();
 		void update();
 		void onUnitComplete(BWAPI::Unit unit);

@@ -17,8 +17,6 @@ namespace BlackCrow {
 		reservedLarvae = new BWAPI::Unitset();
 	}
 
-	Macro::~Macro() {}
-
 	void Macro::onStart() {
 		for (const BWEM::Area& area : bc.bwem.Areas()) {
 			for (const BWEM::Base& base : area.Bases()) {

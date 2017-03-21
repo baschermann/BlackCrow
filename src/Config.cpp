@@ -6,8 +6,6 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Config* config = new Config();
-
 	Config::Config() {
 		localSpeed = 6;
 		maxDrones = 200;

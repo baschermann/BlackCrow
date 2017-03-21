@@ -8,7 +8,6 @@ namespace BlackCrow {
 	class Builder {
 	public:
 		Builder(BlackCrow &crow);
-		~Builder();
 
 		struct AdditionalDimensions {
 			int left = 0;

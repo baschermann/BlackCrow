@@ -9,8 +9,6 @@ namespace BlackCrow {
 
 	Builder::Builder(BlackCrow &parent) : bc(parent) {}
 
-	Builder::~Builder() {}
-
 	void Builder::onStart() {
 
 		for (const BWEM::Area& area : bc.bwem.Areas()) {

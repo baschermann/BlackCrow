@@ -11,7 +11,6 @@ namespace BlackCrow {
 
 	public:
 		Debug(BlackCrow &parent);
-		~Debug();
 
 		void onStart();
 		void drawOnFrame();

@@ -29,8 +29,6 @@ namespace BlackCrow {
 		highestFrameTimeAgo = 0;
 	}
 
-	Debug::~Debug() {}
-
 	void Debug::onStart() {}
 
 	bool Debug::command(std::string text) {

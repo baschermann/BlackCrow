@@ -11,7 +11,6 @@ namespace BlackCrow {
 	class Area {
 	public:
 		Area(BlackCrow &parent, const BWEM::Area& bwemArea);
-		~Area();
 
 
 		const BWEM::Area& bwemArea;

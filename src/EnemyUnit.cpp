@@ -6,6 +6,4 @@ namespace BlackCrow {
 		int lastSeen = 0;
 		bool isVisible = true;
 	}
-
-	EnemyUnit::~EnemyUnit() {}
 }
