@@ -41,8 +41,7 @@ namespace BlackCrow {
 				const BWEM::Area* a = bc.bwem.GetNearestArea(enemy->tilePosition);
 				enemy->areaId = a->Id();
 			}
-		}
-		else {
+		} else {
 			enemy->position = unit->getPosition();
 		}
 	}
@@ -56,8 +55,7 @@ namespace BlackCrow {
 				if (eu->type.isBuilding() && (unit->getTilePosition().x != eu->tilePosition.x || unit->getTilePosition().y != eu->tilePosition.y)) {
 					eu->tilePosition.x = unit->getTilePosition().x;
 					eu->tilePosition.y = unit->getTilePosition().y;
-				}
-				else {
+				} else {
 					eu->position.x = unit->getPosition().x;
 					eu->position.y = unit->getPosition().y;
 				}

@@ -102,8 +102,7 @@ namespace BlackCrow {
 		if (path.empty()) { // no ChokePoint between a and b: 
 			// just draw a single line between them:
 			Broodwar->drawLineMap(left, right, BWAPI::Colors::Cyan);
-		}
-		else {
+		} else {
 			// draw a line between each ChokePoint in Path:
 			const BWEM::ChokePoint * cpPrevious = nullptr;
 			for (const BWEM::ChokePoint * cp : path) {
@@ -183,8 +182,7 @@ namespace BlackCrow {
 			strategy.onUnitDestroyed(unit);
 			macro.onUnitDestroyed(unit);
 
-		}
-		catch (const std::exception & e) {
+		} catch (const std::exception & e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
 		}
 

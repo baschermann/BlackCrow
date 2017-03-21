@@ -33,7 +33,6 @@ namespace BlackCrow {
 		void onPlannedDestroyed(PlannedUnit& plannedUnit);
 		void onUnitDiscovered(BWAPI::Unit unit);
 		void onUnitDestroyed(BWAPI::Unit unit);
-		
 
 	private:
 		BlackCrow &bc;

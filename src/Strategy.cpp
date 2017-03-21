@@ -139,25 +139,25 @@ namespace BlackCrow {
 
 		switch (build) {
 		case Strategy::BuildOrder::NINE_POOL:
-					
+
 			// Drone @4
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-			
+
 			// Drone @5
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-			
+
 			// Drone @6
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-			
+
 			// Drone @7
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-			
+
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-			
+
 			// Spawning Pool @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Spawning_Pool);
-			
+
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 
@@ -169,11 +169,11 @@ namespace BlackCrow {
 
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-			
+
 			break;
-		
+
 		case Strategy::BuildOrder::OVERPOOL:
-		
+
 			// Drone @4
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 
@@ -191,13 +191,13 @@ namespace BlackCrow {
 
 			// Overlord @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Overlord);
-			
+
 			// Spawning Pool @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Spawning_Pool);
 
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-			
+
 			// Drone @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 
@@ -214,9 +214,9 @@ namespace BlackCrow {
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
 
 			break;
-		
+
 		case Strategy::BuildOrder::TWELVE_HATCH:
-		
+
 			// Drone @4
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
 
@@ -262,7 +262,7 @@ namespace BlackCrow {
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
 
 			break;
-		
+
 		}
 	}
 

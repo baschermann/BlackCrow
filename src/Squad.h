@@ -19,8 +19,8 @@ namespace BlackCrow {
 
 		void add(const SquadUnit& unit);
 		void remove(const SquadUnit& unit);
-		void moveAll(BWAPI::Position position, bool queue); 
-		
+		void moveAll(BWAPI::Position position, bool queue);
+
 	protected:
 		BlackCrow &bc;
 		Squad(BlackCrow &parent);

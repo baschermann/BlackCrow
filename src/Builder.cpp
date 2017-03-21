@@ -23,7 +23,7 @@ namespace BlackCrow {
 				for (const BWEM::Mineral* mineral : base.Minerals()) {
 					setBuildable(mineral->TopLeft().x, mineral->BottomRight().x, mineral->TopLeft().y, mineral->BottomRight().y, false);
 					setResourceBuildable(mineral->TopLeft().x - 3, mineral->BottomRight().x + 3, mineral->TopLeft().y - 3, mineral->BottomRight().y + 3, false);
-					setMineralLine(base.Center(), mineral->Pos(), mineral->TopLeft().x -3, mineral->BottomRight().x + 3, mineral->TopLeft().y - 3, mineral->BottomRight().y + 3, false);
+					setMineralLine(base.Center(), mineral->Pos(), mineral->TopLeft().x - 3, mineral->BottomRight().x + 3, mineral->TopLeft().y - 3, mineral->BottomRight().y + 3, false);
 				}
 
 				// Block for Geysirs
@@ -86,11 +86,10 @@ namespace BlackCrow {
 		for (int i = 0; i < bc.map.tileWidth * bc.map.tileHeight; i++) {
 			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y, inMineralLine)) {
 				return TilePosition(spiral.x + searchPosition.x, spiral.y + searchPosition.y);
-			}
-			else
+			} else
 				spiral.goNext();
 		}
-		
+
 		assert(!"No Building Position found!");
 		return TilePosition();
 	}

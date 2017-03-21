@@ -67,8 +67,7 @@ namespace BlackCrow {
 							if (pu->type == BWAPI::UnitTypes::Zerg_Extractor) {
 								pu->extractorTilePosition = (*pu->base->base->Geysers().begin())->TopLeft();
 								pu->buildLocation = pu->extractorTilePosition;
-							}
-							else {
+							} else {
 								//pu->buildLocation = Broodwar->getBuildLocation(pu->type, pu->base->base->Location(), 250, true);
 								pu->buildLocation = bc.builder.getBuildingSpot(pu->type, pu->base->base->Location(), false);
 							}
@@ -82,8 +81,7 @@ namespace BlackCrow {
 							}
 						}
 					}
-				}
-				else {
+				} else {
 					// Assign renegade Extractor to planned unit
 					if (pu->type == BWAPI::UnitTypes::Zerg_Extractor && pu->larvaEgg->getType() != BWAPI::UnitTypes::Zerg_Extractor) {
 						BWAPI::Unit extractorBuilding = *Broodwar->getUnitsOnTile(pu->extractorTilePosition, IsBuilding).begin(); // TODO Can Nullpointer if no units are found? Change on Unit Complete too
@@ -285,8 +283,7 @@ namespace BlackCrow {
 				if (pu->larvaEgg == nullptr || !pu->larvaEgg->getType().isBuilding()) {
 					minerals += pu->type.mineralPrice();
 				}
-			}
-			else {
+			} else {
 				if (pu->larvaEgg == nullptr || pu->larvaEgg->getType() == BWAPI::UnitTypes::Zerg_Larva) {
 					minerals += pu->type.mineralPrice();
 				}
@@ -313,8 +310,7 @@ namespace BlackCrow {
 				} else {
 					++i;
 				}
-			}
-			else {
+			} else {
 				if (pu->larvaEgg != nullptr && pu->larvaEgg->getID() == unit->getID() && pu->type == unit->getType()) {
 					i = plannedUnits->erase(i);
 
@@ -326,7 +322,7 @@ namespace BlackCrow {
 
 							if (!pu->base) {
 								pu->base = findClosestMiningBase(unit->getPosition());
-								
+
 								auto minerals = pu->base->base->Minerals();
 								if (minerals.size() > 0)
 									unit->gather(minerals.front()->Unit());
@@ -552,8 +548,7 @@ namespace BlackCrow {
 			BWAPI::Unit closestLarva = Util::findClosestUnit(larvae, position);
 			reservedLarvae->insert(closestLarva);
 			return closestLarva;
-		}
-		else {
+		} else {
 			return nullptr;
 		}
 	}
@@ -568,8 +563,7 @@ namespace BlackCrow {
 				worker = *base->workersOnMinerals.begin();
 				base->workersOnMinerals.erase(worker);
 				return worker;
-			}
-			else if (base->workersOnGas.size() > 0) {
+			} else if (base->workersOnGas.size() > 0) {
 				worker = *base->workersOnGas.begin();
 				base->workersOnMinerals.erase(worker);
 				return worker;
