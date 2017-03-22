@@ -16,7 +16,7 @@ namespace BlackCrow {
 		fillBuildOrder(getStartBuildOrder());
 
 		plannedStuff.push_back(std::make_shared<PlannedUnitt>(bc, UnitTypes::Zerg_Zergling));
-		plannedStuff.back()->getGasCost();
+		plannedStuff.back()->getGasPrice();
 	}
 
 	void Strategy::update() {

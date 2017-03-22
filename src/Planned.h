@@ -15,8 +15,8 @@ namespace BlackCrow {
 
 		Planned() = delete;
 		virtual ~Planned() = default;
-		virtual int getMineralCost() = 0;
-		virtual int getGasCost() = 0;
+		virtual int getMineralPrice() = 0;
+		virtual int getGasPrice() = 0;
 		virtual void onFrame() = 0;
 		Status getStatus() { return status; };
 
@@ -30,36 +30,45 @@ namespace BlackCrow {
 	public:
 		PlannedUnitt(BlackCrow& parent, BWAPI::UnitType type);
 
-		int getMineralCost() override;
-		int getGasCost() override;
-		void onFrame() override {};
+		BWAPI::UnitType type;
+
+		int getMineralPrice() override;
+		int getGasPrice() override;
+		void onFrame() override;
 	};
 
 	class PlannedBuilding : public Planned {
 	public:
-		PlannedBuilding(BlackCrow& parent, BWAPI::UnitType type);
+		PlannedBuilding(BlackCrow& parent, BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
 
-		int getMineralCost() override;
-		int getGasCost() override;
-		void onFrame() override {};
+		BWAPI::UnitType type;
+		BWAPI::TilePosition buildPosition;
+
+		int getMineralPrice() override;
+		int getGasPrice() override;
+		void onFrame() override;
 	};
 
 	class PlannedTech : public Planned {
 	public:
 		PlannedTech(BlackCrow& parent, BWAPI::TechType type);
 
-		int getMineralCost() override;
-		int getGasCost() override;
-		void onFrame() override {};
+		BWAPI::TechType type;
+
+		int getMineralPrice() override;
+		int getGasPrice() override;
+		void onFrame() override;
 	};
 
 	class PlannedUpgrade : public Planned {
 	public:
 		PlannedUpgrade(BlackCrow& parent, BWAPI::UpgradeType type);
 
-		int getMineralCost() override;
-		int getGasCost() override;
-		void onFrame() override {};
+		BWAPI::UpgradeType type;
+
+		int getMineralPrice() override;
+		int getGasPrice() override;
+		void onFrame() override;
 	};
 
 }
