@@ -323,9 +323,11 @@ namespace BlackCrow {
 							if (!pu->base) {
 								pu->base = findClosestMiningBase(unit->getPosition());
 
-								auto minerals = pu->base->base->Minerals();
-								if (minerals.size() > 0)
-									unit->gather(minerals.front()->Unit());
+								if (pu->base) {
+									auto minerals = pu->base->base->Minerals();
+									if (minerals.size() > 0)
+										unit->gather(minerals.front()->Unit());
+								}
 							}
 
 							pu->base->workersOnMinerals.insert(unit);
