@@ -112,6 +112,8 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Geyser.cpp" />
+    <ClCompile Include="src\Mineral.cpp" />
     <ClCompile Include="src\Base.cpp" />
     <ClCompile Include="src\Planned.cpp" />
     <ClCompile Include="src\Area.cpp" />
@@ -128,8 +130,11 @@
     <ClCompile Include="src\SquadUnit.cpp" />
     <ClCompile Include="src\Strategy.cpp" />
     <ClCompile Include="src\Util.cpp" />
+    <ClCompile Include="src\Worker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Geyser.h" />
+    <ClInclude Include="src\Mineral.h" />
     <ClInclude Include="src\Base.h" />
     <ClInclude Include="src\Planned.h" />
     <ClInclude Include="src\Area.h" />
@@ -145,6 +150,7 @@
     <ClInclude Include="src\SquadUnit.h" />
     <ClInclude Include="src\Strategy.h" />
     <ClInclude Include="src\Util.h" />
+    <ClInclude Include="src\Worker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
