@@ -8,18 +8,18 @@ namespace BlackCrow {
 
 	class Geyser {
 	public:
-		Geyser(BWEM::Geyser& geyser);
+		Geyser(const BWEM::Geyser* geyser);
 
-		BWEM::Geyser& bwemGeyser;
+		const BWEM::Geyser* bwemGeyser;
 		std::vector<Worker> workers;
 		BWAPI::Unit geyserUnit;
 
 		bool isMineable();
 		bool workerNeeded();
 		int workersNeeded();
-		void addWorker(Worker& worker);
-		Worker removeWorker();
-		void removeWorker(Worker& worker);
+		void registerWorker(Worker& worker);
+		//Worker removeWorker();
+		void unregisterWorker(Worker& worker);
 	};
 }
 

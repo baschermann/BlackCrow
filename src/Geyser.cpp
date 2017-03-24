@@ -2,10 +2,10 @@
 #include "Worker.h"
 
 namespace BlackCrow {
-	Geyser::Geyser(BWEM::Geyser& geyser) : bwemGeyser(geyser) {}
+	Geyser::Geyser(const BWEM::Geyser* geyser) : bwemGeyser(geyser) {}
 
 	bool Geyser::isMineable() {
-		return geyserUnit && geyserUnit->exists() && geyserUnit->isCompleted() && bwemGeyser.Amount() > 0;
+		return geyserUnit && geyserUnit->exists() && geyserUnit->isCompleted() && bwemGeyser->Amount() > 0;
 	}
 
 	bool Geyser::workerNeeded() {
@@ -16,17 +16,19 @@ namespace BlackCrow {
 		return 3 - workers.size();
 	}
 
-	void Geyser::addWorker(Worker& worker) {
+	void Geyser::registerWorker(Worker& worker) {
 		workers.push_back(worker);
 	}
 
+	/*
 	Worker Geyser::removeWorker() {
 		Worker worker = workers.back();
 		workers.pop_back();
 		return worker;
 	}
+	*/
 
-	void Geyser::removeWorker(Worker& worker) {
+	void Geyser::unregisterWorker(Worker& worker) {
 		workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
 	}
 }

@@ -13,6 +13,10 @@ namespace BlackCrow {
 			return sqrt((diffY * diffY) + (diffX * diffX));
 		}
 
+		double distance(BWAPI::Position p1, BWAPI::Position p2) {
+			return distance(p1.x, p1.y, p2.x, p2.y);
+		}
+
 		BWAPI::Unit findClosestUnit(BWAPI::Unitset* units, BWAPI::Position position) {
 			double closestDistance = 99999999999;
 			BWAPI::Unit closestUnit = nullptr;

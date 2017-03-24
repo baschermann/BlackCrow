@@ -2,17 +2,16 @@
 #include <BWAPI.h>
 #include "Mineral.h"
 #include "Geyser.h"
+#include "Base.h"
 
 namespace BlackCrow {
 
-	class Base;
 	class Mineral;
 	class Geyser;
 
 	class Worker {
 	public:
 		Worker(BWAPI::Unit worker, Base& base);
-
 
 		enum class MiningTarget {
 			MINERAL,
@@ -21,7 +20,7 @@ namespace BlackCrow {
 		};
 
 		BWAPI::Unit unit;
-		Base& base;
+		std::reference_wrapper<Base> base;
 		MiningTarget miningTarget = MiningTarget::NONE;
 		Mineral* mineral = nullptr;
 		Geyser* geyser = nullptr;

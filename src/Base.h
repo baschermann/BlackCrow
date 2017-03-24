@@ -1,7 +1,6 @@
 #pragma once
 #include <BWAPI.h>
 #include <BWEM/bwem.h>
-#include "Worker.h"
 #include "Geyser.h"
 #include "Mineral.h"
 
@@ -16,6 +15,7 @@ namespace BlackCrow {
 	class Base {
 	public:
 		Base(BlackCrow& parent, BWEM::Base& bwemBase, Area& area);
+		void onFrame();
 
 		BWEM::Base& bwemBase;
 		BWAPI::Unit hatchery;
@@ -31,9 +31,13 @@ namespace BlackCrow {
 
 		bool workerNeeded();
 		int workersNeeded();
+		std::vector<Worker> getMineralWorkers();
+		std::vector<Worker> getGasWorkers();
 
 	private:
 		BlackCrow& bc;
 		Mineral& findMineralForWorker();
+		int totalMineralWorkers();
+		int totalGasWorkers();
 	};
 }

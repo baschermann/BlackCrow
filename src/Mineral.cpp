@@ -3,23 +3,23 @@
 #include "Worker.h"
 
 namespace BlackCrow {
-	Mineral::Mineral(BWEM::Mineral& mineral) : bwemMineral(&mineral) {}
-
-	bool Mineral::exists() {
-		return bwemMineral;
+	Mineral::Mineral(const BWEM::Mineral* mineral) : bwemMineral(mineral) {
+		id = mineral->Unit()->getID();
 	}
 
-	void Mineral::addWorker(Worker& worker) {
+	bool Mineral::exists() {
+		return bwemMineral !=0;
+	}
+
+	void Mineral::registerWorker(Worker& worker) {
 		workers.push_back(worker);
 	}
 
-	Worker Mineral::removeWorker() {
-		Worker worker = workers.back();
-		workers.pop_back();
-		return worker;
+	void Mineral::unregisterWorker(Worker& worker) {
+		workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
 	}
 
-	void Mineral::removeWorker(Worker& worker) {
-		workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
+	bool operator==(const Mineral& left, const Mineral& right) {
+		return left.id == right.id;
 	}
 }

@@ -34,13 +34,15 @@ namespace BlackCrow {
 		return false;
 	}
 
-	bool Worker::setMineral(Mineral& mineral) {
+	bool Worker::setMineral(Mineral& pMineral) {
 		miningTarget = MiningTarget::MINERAL;
+		mineral = &pMineral;
 		return continueMining();
 	}
 
-	bool Worker::setGeyser(Geyser& geyser) {
+	bool Worker::setGeyser(Geyser& pGeyser) {
 		miningTarget = MiningTarget::GEYSER;
+		geyser = &pGeyser;
 		return continueMining();
 	}
 
@@ -51,13 +53,13 @@ namespace BlackCrow {
 		case MiningTarget::MINERAL:
 			assert(mineral);
 
-			mineral->removeWorker(*this);
+			mineral->unregisterWorker(*this);
 
 			break;
 		case MiningTarget::GEYSER:
 			assert(geyser);
 
-			geyser->removeWorker(*this);
+			geyser->unregisterWorker(*this);
 
 			break;
 		}

@@ -8,15 +8,17 @@ namespace BlackCrow {
 
 	class Mineral {
 	public:
-		Mineral(BWEM::Mineral& mineral);
+		Mineral(const BWEM::Mineral* mineral);
 
-		BWEM::Mineral* bwemMineral;
+		int id = -1;
+		const BWEM::Mineral* bwemMineral;
 		std::vector<Worker> workers;
 		
 		bool exists();
-		void addWorker(Worker& worker);
-		Worker removeWorker();
-		void removeWorker(Worker& worker);
+		void registerWorker(Worker& worker);
+		void unregisterWorker(Worker& worker);
 	};
+
+	bool operator==(const Mineral& left, const Mineral& right);
 }
 
