@@ -46,12 +46,16 @@ namespace BlackCrow {
 		for (Mineral& mineral : minerals) {
 			if (mineral.workers.size() == highestWorkerCount) {
 				Worker& worker = mineral.workers.back();
+				mineral.unregisterWorker(worker);
 				worker.removeFromResource();
 				return worker;
 			}
 		}
 		
+		// TODO Take from Gas
+
 		assert(!"Worker was not found");
+		// TODO How to handle when there are no workers?
 	}
 
 	Worker Base::removeWorker(BWAPI::Position closestTo) {
@@ -77,7 +81,10 @@ namespace BlackCrow {
 			return *minWorker;
 		}
 
+		// TODO Take from Gas
+
 		assert(!"Worker was not found");
+		// TODO How to handle when there are no workers?
 	}
 
 	bool Base::workerNeeded() {
