@@ -1,9 +1,10 @@
 #include "Worker.h"
 #include "Mineral.h"
+#include "Geyser.h"
 
 namespace BlackCrow {
 
-	Worker::Worker(BWAPI::Unit worker, Base& base) : unit(worker), base(base) {}
+	Worker::Worker(BWAPI::Unit worker, Base& base) : unit(worker), base(&base) {}
 
 	void Worker::stopMining() {
 		unit->stop();

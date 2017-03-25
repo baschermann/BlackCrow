@@ -20,7 +20,7 @@ namespace BlackCrow {
 	}
 
 	void Base::onFrame() {
-		// Check if the minerals exist
+		// Remove empty minerals and put the drones on another mineral
 		for (Mineral& mineral : minerals) {
 			if (!mineral.exists()) {
 				std::vector<Worker> workers = mineral.workers;
@@ -37,7 +37,8 @@ namespace BlackCrow {
 		worker.setMineral(findMineralForWorker());
 	}
 
-	Worker Base::removeWorker() {
+	// Can return nullptr
+	std::unique_ptr<Worker> Base::removeWorker() {
 		int highestWorkerCount = 0;
 		for (Mineral& mineral : minerals) {
 			highestWorkerCount = std::max(highestWorkerCount, (int) mineral.workers.size());
@@ -45,20 +46,18 @@ namespace BlackCrow {
 
 		for (Mineral& mineral : minerals) {
 			if (mineral.workers.size() == highestWorkerCount) {
-				Worker& worker = mineral.workers.back();
-				mineral.unregisterWorker(worker);
-				worker.removeFromResource();
+				auto worker = std::make_unique<Worker>(mineral.workers.back());
+				worker->removeFromResource();
 				return worker;
 			}
 		}
 		
 		// TODO Take from Gas
-
-		assert(!"Worker was not found");
-		// TODO How to handle when there are no workers?
+		return nullptr;
 	}
 
-	Worker Base::removeWorker(BWAPI::Position closestTo) {
+	// Can return nullptr
+	std::unique_ptr<Worker> Base::removeWorker(BWAPI::Position closestTo) {
 		double minDistance = std::numeric_limits < double >::max() ;
 		Worker* minWorker = nullptr;
 
@@ -77,14 +76,14 @@ namespace BlackCrow {
 				}
 			}
 
-			minWorker->removeFromResource();
-			return *minWorker;
+			auto uWorker = std::make_unique<Worker>(*minWorker);
+			uWorker->removeFromResource();
+
+			return uWorker;
 		}
 
 		// TODO Take from Gas
-
-		assert(!"Worker was not found");
-		// TODO How to handle when there are no workers?
+		return nullptr;
 	}
 
 	bool Base::workerNeeded() {

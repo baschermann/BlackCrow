@@ -1,7 +1,5 @@
 #pragma once
 #include <BWAPI.h>
-#include "Mineral.h"
-#include "Geyser.h"
 #include "Base.h"
 
 namespace BlackCrow {
@@ -20,7 +18,7 @@ namespace BlackCrow {
 		};
 
 		BWAPI::Unit unit;
-		std::reference_wrapper<Base> base;
+		Base* base;
 		MiningTarget miningTarget = MiningTarget::NONE;
 		Mineral* mineral = nullptr;
 		Geyser* geyser = nullptr;

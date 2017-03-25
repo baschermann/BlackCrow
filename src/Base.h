@@ -26,8 +26,8 @@ namespace BlackCrow {
 		std::vector<Mineral> minerals;
 
 		void addWorker(Worker worker);
-		Worker removeWorker();
-		Worker removeWorker(BWAPI::Position closestTo);
+		std::unique_ptr<Worker> removeWorker();
+		std::unique_ptr<Worker> removeWorker(BWAPI::Position closestTo);
 
 		bool workerNeeded();
 		int workersNeeded();
