@@ -27,13 +27,13 @@ namespace BlackCrow {
 		void onBuildingDetected(BWAPI::Unit unit);
 		void onBuildingDestroyed(BWAPI::Unit unit);
 		bool canBuildTypeAt(BWAPI::UnitType type, int x, int y, bool inMineralLine);
-		void Builder::setMineralLine(BWAPI::Position base, BWAPI::Position resource, int xStart, int xEnd, int yStart, int yEnd, bool buildable);
 
 	private:
 		BlackCrow &bc;
 
 		void setBuildable(int xStart, int xEnd, int yStart, int yEnd, bool buildable);
 		void setResourceBuildable(int xStart, int xEnd, int yStart, int yEnd, bool buildable);
+		void setMineralLine(BWAPI::Position base, BWAPI::Position resource, int xStart, int xEnd, int yStart, int yEnd, bool buildable);
 		void recheckNearbyBuildings(BWAPI::Unit building, AdditionalDimensions ad);
 		AdditionalDimensions getAdditionalDimensions(BWAPI::UnitType buildingType);
 	};

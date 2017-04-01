@@ -43,12 +43,6 @@ namespace BlackCrow {
 		if (buildOrder.size() > 0) {
 			followBuildOrder();
 		} else {
-
-			// Dynamics time!
-			if (buildOrder.size() == 0) {
-				bc.macro.autoBuildOverlords = true;
-			}
-
 			dynamicDecision();
 		}
 
@@ -63,32 +57,22 @@ namespace BlackCrow {
 
 	void Strategy::followBuildOrder() {
 		UnitType type = buildOrder.front();
-
-		// Check if there are enough ressources to build it
 		Resources unreservedResources = bc.macro.getUnreservedResources();
+
 		if (unreservedResources.minerals >= type.mineralPrice() && unreservedResources.gas >= type.gasPrice()) {
 			if (type.isBuilding()) {
 				if (type == UnitTypes::Zerg_Extractor) {
 					bc.macro.buildExtractor();
+				} else if (type == UnitTypes::Zerg_Hatchery) {
+					bc.macro.expand();
 				} else {
-					bc.macro.planBuilding(type, bc.builder.)
+					bc.macro.planBuilding(type, bc.builder.getBuildingSpot);
 				}
 			} else {
-				bc.macro.planUnit(type);
+				if (bc.macro.getUnreservedLarvaeAmount() > 0)
+					bc.macro.planUnit(type);
 			}
-
-
-			if (bc.macro.getNonReservedLarvaeAmount() > 0) {
-
-				if (type == UnitTypes::Zerg_Hatchery)
-					bc.macro.buildExpansion();
-				else {
-					assert(bc.macro.firstBase->hatchery); // TODO Crash when the first hatchery is being destroyed and the build order wants to build a building
-					bc.macro.planBuilding(type, bc.macro.firstBase->hatchery->getPosition(), bc.macro.firstBase);
-				}
-
-				buildOrder.pop();
-			}
+			buildOrder.pop();
 		}
 	}
 

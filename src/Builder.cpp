@@ -81,7 +81,7 @@ namespace BlackCrow {
 	}
 
 	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, BWAPI::Position searchPosition, bool inMineralLine) {
-		return getBuildingSpot(type, TilePosition(searchPosition.x / 32, searchPosition.y / 32), inMineralLine);
+		return getBuildingSpot(type, TilePosition(searchPosition), inMineralLine);
 	}
 
 	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, BWAPI::TilePosition searchPosition, bool inMineralLine) {
@@ -90,12 +90,12 @@ namespace BlackCrow {
 
 		Util::SpiralOut spiral;
 
-		positions.clear();
+		positions.clear(); // DEBUG
 
 		for (int i = 0; i < bc.map.tileWidth * bc.map.tileHeight; i++) {
-			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y, inMineralLine)) {
+			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y, inMineralLine))
 				return TilePosition(spiral.x + searchPosition.x, spiral.y + searchPosition.y);
-			} else
+			else
 				spiral.goNext();
 		}
 

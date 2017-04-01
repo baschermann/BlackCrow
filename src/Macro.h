@@ -57,6 +57,7 @@ namespace BlackCrow {
 
 		// Larva
 		BWAPI::Unit getUnreservedLarva();
+		int getUnreservedLarvaeAmount();
 
 		// Statistics and Numbers
 		Resources getUnreservedResources();
