@@ -10,9 +10,9 @@ namespace BlackCrow {
 	public:
 		Geyser(const BWEM::Geyser* geyser);
 
-		const BWEM::Geyser* bwemGeyser;
+		const BWEM::Geyser* bwemGeyser = nullptr;
 		std::vector<Worker> workers;
-		BWAPI::Unit geyserUnit;
+		BWAPI::Unit geyserUnit = nullptr;
 
 		bool isMineable();
 		bool workerNeeded();

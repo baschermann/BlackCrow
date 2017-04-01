@@ -1,7 +1,6 @@
 #pragma once
 #include <BWAPI.h>
 #include <queue>
-#include <memory>
 #include "Squad.h"
 
 namespace BlackCrow {
@@ -23,26 +22,29 @@ namespace BlackCrow {
 			TWELVE_HATCH
 		};
 
+		// Variables
 		std::queue<BWAPI::UnitType> buildOrder;
 		std::vector<ScoutSquad> scoutSquads;
-		std::vector<std::shared_ptr<Planned>> plannedStuff;
 		BuildOrder bo;
 
+		// General
 		Strategy(BlackCrow &parent);
 		void onStart();
-		void update();
+		void onFrame();
 		void onUnitDiscovered(BWAPI::Unit unit);
 		void onUnitDestroyed(BWAPI::Unit unit);
+		void dynamicDecision();
 
 	private:
 		BlackCrow &bc;
 
+		// Buildorder
 		BuildOrder getStartBuildOrder();
 		void fillBuildOrder(BuildOrder build);
 		void fillBuildOrderItem(BWAPI::UnitType item);
-		void buildDrone();
-		BaseInformation* getSafestEstablishedBase();
-		void dynamicDecision();
+		void followBuildOrder();
+
+		
 		void startInitialScout();
 	};
 }

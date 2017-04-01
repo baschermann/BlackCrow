@@ -30,6 +30,7 @@ namespace BlackCrow {
 		Map(BlackCrow &parent);
 		void onStart();
 		Area& getArea(int id);
+		Area& getArea(const BWEM::Area bwemArea);
 
 	private:
 		BlackCrow &bc;

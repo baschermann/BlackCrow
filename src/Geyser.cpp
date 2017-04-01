@@ -20,14 +20,6 @@ namespace BlackCrow {
 		workers.push_back(worker);
 	}
 
-	/*
-	Worker Geyser::removeWorker() {
-		Worker worker = workers.back();
-		workers.pop_back();
-		return worker;
-	}
-	*/
-
 	void Geyser::unregisterWorker(Worker& worker) {
 		workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
 	}

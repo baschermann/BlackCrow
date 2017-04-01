@@ -40,4 +40,8 @@ namespace BlackCrow {
 	Area& Map::getArea(int id) {
 		return areas[id - 1];
 	}
+
+	Area& Map::getArea(const BWEM::Area bwemArea) {
+		return areas[bwemArea.Id() - 1];
+	}
 }

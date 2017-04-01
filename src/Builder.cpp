@@ -1,6 +1,7 @@
 #include "Builder.h"
 #include <BWEM/bwem.h>
 #include "BlackCrow.h"
+#include "Base.h"
 
 namespace BlackCrow {
 
@@ -69,6 +70,14 @@ namespace BlackCrow {
 						bc.map.mapTiles[x][y].mineralLine = buildable;
 			}
 		}
+	}
+
+	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, bool inMineralLine) {
+		return getBuildingSpot(type, bc.macro.getSafestEstablishedBase().bwemBase.Location(), inMineralLine);
+	}
+
+	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, Base& base, bool inMineralLine) {
+		return getBuildingSpot(type, base.bwemBase.Location(), inMineralLine);
 	}
 
 	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, BWAPI::Position searchPosition, bool inMineralLine) {

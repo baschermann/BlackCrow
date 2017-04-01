@@ -4,13 +4,15 @@
 namespace BlackCrow {
 
 	class BlackCrow;
+	class Geyser;
 
 	class Planned {
 	public:
 
 		enum class Status {
 			ACTIVE,
-			FAILED
+			FAILED,
+			COMPLETED
 		};
 
 		Planned() = delete;
@@ -26,15 +28,20 @@ namespace BlackCrow {
 		Planned(BlackCrow& parent);
 	};
 
-	class PlannedUnitt : public Planned {
+	class PlannedUnit : public Planned {
 	public:
-		PlannedUnitt(BlackCrow& parent, BWAPI::UnitType type);
+		PlannedUnit(BlackCrow& parent, BWAPI::UnitType type);
 
 		BWAPI::UnitType type;
+		BWAPI::Unit unit = nullptr;
 
 		int getMineralPrice() override;
 		int getGasPrice() override;
 		void onFrame() override;
+		BWAPI::Unit reservedLarva();
+
+	private:
+		bool alreadyGrabbedLarva = false;
 	};
 
 	class PlannedBuilding : public Planned {
@@ -43,10 +50,27 @@ namespace BlackCrow {
 
 		BWAPI::UnitType type;
 		BWAPI::TilePosition buildPosition;
+		BWAPI::Unit droneOrBuilding = nullptr;
 
 		int getMineralPrice() override;
 		int getGasPrice() override;
 		void onFrame() override;
+	};
+
+	class PlannedExtractor : public Planned {
+	public:
+		PlannedExtractor(BlackCrow& parent, Geyser& geyser);
+
+		Geyser& geyser;
+		BWAPI::Unit drone = nullptr;
+
+		int getMineralPrice() override;
+		int getGasPrice() override;
+		void onFrame() override;
+
+	private:
+		bool alreadyGrabbedDrone = false;
+		bool alreadyBuiltExtractor = false;
 	};
 
 	class PlannedTech : public Planned {

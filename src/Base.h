@@ -18,16 +18,17 @@ namespace BlackCrow {
 		void onFrame();
 
 		BWEM::Base& bwemBase;
-		BWAPI::Unit hatchery;
+		BWAPI::Unit hatchery = nullptr;
 		Area& area;
 		bool isIsland;
 		bool isExpanding = false;
+		bool selfSustained = false;
 		std::vector<Geyser> geysers;
 		std::vector<Mineral> minerals;
 
-		void addWorker(Worker worker);
-		std::unique_ptr<Worker> removeWorker();
-		std::unique_ptr<Worker> removeWorker(BWAPI::Position closestTo);
+		void addWorker(BWAPI::Unit drone);
+		BWAPI::Unit removeWorker();
+		BWAPI::Unit removeWorker(BWAPI::Position closestTo);
 
 		bool workerNeeded();
 		int workersNeeded();

@@ -4,6 +4,7 @@
 namespace BlackCrow {
 
 	class BlackCrow;
+	class Base;
 
 	class Builder {
 	public:
@@ -19,6 +20,8 @@ namespace BlackCrow {
 		std::list<BWAPI::TilePosition> positions;
 
 		void onStart();
+		BWAPI::TilePosition getBuildingSpot(BWAPI::UnitType type, bool inMineralLine);
+		BWAPI::TilePosition getBuildingSpot(BWAPI::UnitType type, Base& base, bool inMineralLine);
 		BWAPI::TilePosition getBuildingSpot(BWAPI::UnitType type, BWAPI::Position searchPosition, bool inMineralLine);
 		BWAPI::TilePosition getBuildingSpot(BWAPI::UnitType type, BWAPI::TilePosition searchPosition, bool inMineralLine);
 		void onBuildingDetected(BWAPI::Unit unit);

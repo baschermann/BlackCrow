@@ -65,8 +65,8 @@ namespace BlackCrow {
 
 			// All of them hardwork
 			enemy.onFrame();
-			macro.update();
-			strategy.update();
+			macro.onFrame();
+			strategy.onFrame();
 			// End of them hardwork
 
 			auto end = std::chrono::high_resolution_clock::now();
@@ -180,7 +180,6 @@ namespace BlackCrow {
 			// Other
 			builder.onBuildingDestroyed(unit);
 			strategy.onUnitDestroyed(unit);
-			macro.onUnitDestroyed(unit);
 
 		} catch (const std::exception & e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;

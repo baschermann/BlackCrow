@@ -33,12 +33,13 @@ namespace BlackCrow {
 		}
 	}
 
-	void Base::addWorker(Worker worker) {
-		worker.setMineral(findMineralForWorker());
+	void Base::addWorker(BWAPI::Unit unit) {
+		Worker cWorker(unit, *this);
+		cWorker.setMineral(findMineralForWorker());
 	}
 
 	// Can return nullptr
-	std::unique_ptr<Worker> Base::removeWorker() {
+	BWAPI::Unit Base::removeWorker() {
 		int highestWorkerCount = 0;
 		for (Mineral& mineral : minerals) {
 			highestWorkerCount = std::max(highestWorkerCount, (int) mineral.workers.size());
@@ -46,9 +47,9 @@ namespace BlackCrow {
 
 		for (Mineral& mineral : minerals) {
 			if (mineral.workers.size() == highestWorkerCount) {
-				auto worker = std::make_unique<Worker>(mineral.workers.back());
-				worker->removeFromResource();
-				return worker;
+				Worker worker = mineral.workers.back();
+				worker.removeFromResource();
+				return worker.unit;
 			}
 		}
 		
@@ -57,7 +58,7 @@ namespace BlackCrow {
 	}
 
 	// Can return nullptr
-	std::unique_ptr<Worker> Base::removeWorker(BWAPI::Position closestTo) {
+	BWAPI::Unit Base::removeWorker(BWAPI::Position closestTo) {
 		double minDistance = std::numeric_limits < double >::max() ;
 		Worker* minWorker = nullptr;
 
@@ -76,10 +77,9 @@ namespace BlackCrow {
 				}
 			}
 
-			auto uWorker = std::make_unique<Worker>(*minWorker);
-			uWorker->removeFromResource();
-
-			return uWorker;
+			Worker worker = *minWorker;
+			worker.removeFromResource();
+			return worker.unit;
 		}
 
 		// TODO Take from Gas

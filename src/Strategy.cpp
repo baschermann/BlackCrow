@@ -3,6 +3,7 @@
 #include <BWEM/bwem.h>
 #include "Area.h"
 #include "Planned.h"
+#include "Macro.h"
 
 
 namespace BlackCrow {
@@ -15,12 +16,13 @@ namespace BlackCrow {
 	void Strategy::onStart() {
 		fillBuildOrder(getStartBuildOrder());
 
-		plannedStuff.push_back(std::make_shared<PlannedUnitt>(bc, UnitTypes::Zerg_Zergling));
-		plannedStuff.back()->getGasPrice();
+		//plannedStuff.push_back(std::make_shared<PlannedUnitt>(bc, UnitTypes::Zerg_Zergling));
+		//plannedStuff.back()->getGasPrice();
 	}
 
-	void Strategy::update() {
+	void Strategy::onFrame() {
 
+		/*
 		for (auto planned : plannedStuff) {
 			if (planned->getStatus() == Planned::Status::FAILED) {
 				if (typeid(planned) == typeid(PlannedUnitt)) {
@@ -34,28 +36,12 @@ namespace BlackCrow {
 				}
 			}
 		}
+		*/
 
 
 		// Build the Buildorder
 		if (buildOrder.size() > 0) {
-			UnitType type = buildOrder.front();
-
-			// Check if there are enough ressources to build it
-			if (bc.macro.getUnreservedMinerals() >= type.mineralPrice()) {
-				if (bc.macro.getNonReservedLarvaeAmount() > 0) {
-					if (type.isBuilding()) {
-						if (type == UnitTypes::Zerg_Hatchery)
-							bc.macro.buildExpansion();
-						else {
-							assert(bc.macro.firstBase->hatchery); // TODO Crash when the first hatchery is being destroyed and the build order wants to build a building
-							bc.macro.planBuilding(type, bc.macro.firstBase->hatchery->getPosition(), bc.macro.firstBase);
-						}
-					} else {
-						bc.macro.planUnit(type, bc.macro.firstBase->hatchery->getPosition());
-					}
-					buildOrder.pop();
-				}
-			}
+			followBuildOrder();
 		} else {
 
 			// Dynamics time!
@@ -72,6 +58,37 @@ namespace BlackCrow {
 
 		for (ScoutSquad& ss : scoutSquads) {
 			ss.onFrame();
+		}
+	}
+
+	void Strategy::followBuildOrder() {
+		UnitType type = buildOrder.front();
+
+		// Check if there are enough ressources to build it
+		Resources unreservedResources = bc.macro.getUnreservedResources();
+		if (unreservedResources.minerals >= type.mineralPrice() && unreservedResources.gas >= type.gasPrice()) {
+			if (type.isBuilding()) {
+				if (type == UnitTypes::Zerg_Extractor) {
+					bc.macro.buildExtractor();
+				} else {
+					bc.macro.planBuilding(type, bc.builder.)
+				}
+			} else {
+				bc.macro.planUnit(type);
+			}
+
+
+			if (bc.macro.getNonReservedLarvaeAmount() > 0) {
+
+				if (type == UnitTypes::Zerg_Hatchery)
+					bc.macro.buildExpansion();
+				else {
+					assert(bc.macro.firstBase->hatchery); // TODO Crash when the first hatchery is being destroyed and the build order wants to build a building
+					bc.macro.planBuilding(type, bc.macro.firstBase->hatchery->getPosition(), bc.macro.firstBase);
+				}
+
+				buildOrder.pop();
+			}
 		}
 	}
 

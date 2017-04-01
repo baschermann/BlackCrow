@@ -112,6 +112,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Macro.cpp" />
     <ClCompile Include="src\Geyser.cpp" />
     <ClCompile Include="src\Mineral.cpp" />
     <ClCompile Include="src\Base.cpp" />
@@ -124,7 +125,7 @@
     <ClCompile Include="src\Dll.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\EnemyUnit.cpp" />
-    <ClCompile Include="src\Macro.cpp" />
+    <ClCompile Include="src\MacroOld.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Squad.cpp" />
     <ClCompile Include="src\SquadUnit.cpp" />
@@ -133,6 +134,7 @@
     <ClCompile Include="src\Worker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Macro.h" />
     <ClInclude Include="src\Geyser.h" />
     <ClInclude Include="src\Mineral.h" />
     <ClInclude Include="src\Base.h" />
@@ -144,7 +146,7 @@
     <ClInclude Include="src\Debug.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\EnemyUnit.h" />
-    <ClInclude Include="src\Macro.h" />
+    <ClInclude Include="src\MacroOld.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Squad.h" />
     <ClInclude Include="src\SquadUnit.h" />
