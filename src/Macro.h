@@ -22,6 +22,7 @@ namespace BlackCrow {
 		void onFrame();
 
 		// Variables
+		BWAPI::Position startPosition;
 		std::vector<Base> bases;
 		std::vector<std::shared_ptr<Planned>> plannedStuff;
 
@@ -30,6 +31,7 @@ namespace BlackCrow {
 		std::shared_ptr<PlannedBuilding> planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
 		std::shared_ptr<PlannedExtractor> planExtractor(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
 		void onUnitComplete(BWAPI::Unit unit);
+		int typeCurrentlyPlanned(UnitType type);
 		
 		// Expansions
 		Base& getSafestToExpand();
@@ -45,6 +47,7 @@ namespace BlackCrow {
 		int gasWorkers();
 		bool workerNeededForSaturation();
 		int workersNeededForSaturation();
+		void buildWorkerDrone();
 		BWAPI::Unit getDroneForBuilding(BWAPI::Position position);
 
 		// Gas
@@ -56,6 +59,7 @@ namespace BlackCrow {
 		void removeGasWorker();
 
 		// Larva
+		int getTotalLarvaeAmount();
 		BWAPI::Unit getUnreservedLarva();
 		int getUnreservedLarvaeAmount();
 

@@ -79,40 +79,21 @@ namespace BlackCrow {
 	void Strategy::dynamicDecision() {
 
 		// Lets do the macro first
-		if (bc.macro.totalDronesNeeded() > 0) {
-			if (bc.macro.getUnreservedMinerals() >= 50 && bc.macro.getNonReservedLarvaeAmount() > 0)
-				bc.macro.buildDrone();
+		if (bc.macro.workerNeededForSaturation()) {
+			if (bc.macro.getUnreservedResources().minerals >= 50 && bc.macro.getUnreservedLarvaeAmount() > 0)
+				bc.macro.buildWorkerDrone();
 		}
 
-		if (bc.macro.expansionNeeded() || bc.macro.getUnreservedMinerals() > 400) {
-			bc.macro.buildExpansion();
-		}
 
-		if (bc.macro.getUnreservedMinerals() >= 300 && bc.macro.getLarvaeAmount() <= 0) {
-			if (bc.macro.amountMacroHatcheriesBeingBuilt() < 1) {
-				bc.macro.buildMacroHatchery(getSafestEstablishedBase());
+		if (bc.macro.getUnreservedResources().minerals >= 300 && bc.macro.getTotalLarvaeAmount()<= 0) {
+			if (bc.macro.typeCurrentlyPlanned(UnitTypes::Zerg_Hatchery) < 1) {
+				bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery, false));
 			}
 		}
-	}
-
-	BaseInformation* Strategy::getSafestEstablishedBase() {
-		// TODO get the safest base depending where the fight is
-		// for now just get the first base with a hatchery
-
-		for (BaseInformation* baseInformation : *bc.macro.bases) {
-			if (baseInformation->hatchery) {
-				return baseInformation;
-			}
-		}
-
-		// TODO FIX wenn keine basis
-		return *(bc.macro.bases->begin());
 	}
 
 	void Strategy::onUnitDiscovered(BWAPI::Unit unit) {
-		if (Broodwar->self()->isEnemy(unit->getPlayer())) {
-			bc.enemy.enemyDiscovered(unit);
-		}
+		
 	}
 
 	void Strategy::onUnitDestroyed(BWAPI::Unit unit) {
@@ -137,15 +118,14 @@ namespace BlackCrow {
 
 	void Strategy::startInitialScout() {
 		ScoutSquad scoutSquad(bc);
-		BWAPI::Unit worker = bc.macro.getDroneForBuilding(bc.macro.firstBase->hatchery->getPosition());
-		assert(worker);
+		BWAPI::Unit worker = bc.macro.getDroneForBuilding(bc.macro.startPosition);
+		if (worker) {
+			SquadUnit su(worker);
+			scoutSquad.add(su);
 
-		SquadUnit su(worker);
-		scoutSquad.add(su);
-
-		scoutSquad.addStartLocations();
-		scoutSquads.push_back(scoutSquad);
-
+			scoutSquad.addStartLocations();
+			scoutSquads.push_back(scoutSquad);
+		}
 	}
 
 	void Strategy::fillBuildOrder(BuildOrder build) {

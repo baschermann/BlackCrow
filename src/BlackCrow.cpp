@@ -147,6 +147,7 @@ namespace BlackCrow {
 	void BlackCrow::onUnitDiscover(BWAPI::Unit unit) {
 		builder.onBuildingDetected(unit);
 		strategy.onUnitDiscovered(unit);
+		enemy.enemyDiscovered(unit);
 
 		//if (Broodwar->getFrameCount() != 0)
 		//Broodwar->sendText("Unit %s with id %i discovered!", unit->getType().c_str(), unit->getID());

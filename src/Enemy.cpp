@@ -17,32 +17,34 @@ namespace BlackCrow {
 	}
 
 	void Enemy::enemyDiscovered(BWAPI::Unit unit) {
-		EnemyUnit* enemy = findEnemy(unit->getID());
+		if (Broodwar->self()->isEnemy(unit->getPlayer())) {
+			EnemyUnit* enemy = findEnemy(unit->getID());
 
-		if (!enemy) {
-			enemy = new EnemyUnit();
-			enemy->id = unit->getID();
-			enemy->isVisible = true;
-			enemy->lastSeen = Broodwar->getFrameCount();
-			enemy->type = unit->getType();
-			enemy->tilePosition.x = -1;
-			enemy->tilePosition.y = -1;
+			if (!enemy) {
+				enemy = new EnemyUnit();
+				enemy->id = unit->getID();
+				enemy->isVisible = true;
+				enemy->lastSeen = Broodwar->getFrameCount();
+				enemy->type = unit->getType();
+				enemy->tilePosition.x = -1;
+				enemy->tilePosition.y = -1;
 
-			enemies->push_front(enemy);
-		}
-
-		if (enemy->type.isBuilding()) {
-			if (enemy->tilePosition.x != unit->getTilePosition().x || enemy->tilePosition.y != unit->getTilePosition().y) {
-				enemy->tilePosition = unit->getTilePosition();
-
-				assert(enemy->tilePosition.x != 1);
-				assert(enemy->tilePosition.y != 1);
-
-				const BWEM::Area* a = bc.bwem.GetNearestArea(enemy->tilePosition);
-				enemy->areaId = a->Id();
+				enemies->push_front(enemy);
 			}
-		} else {
-			enemy->position = unit->getPosition();
+
+			if (enemy->type.isBuilding()) {
+				if (enemy->tilePosition.x != unit->getTilePosition().x || enemy->tilePosition.y != unit->getTilePosition().y) {
+					enemy->tilePosition = unit->getTilePosition();
+
+					assert(enemy->tilePosition.x != 1);
+					assert(enemy->tilePosition.y != 1);
+
+					const BWEM::Area* a = bc.bwem.GetNearestArea(enemy->tilePosition);
+					enemy->areaId = a->Id();
+				}
+			} else {
+				enemy->position = unit->getPosition();
+			}
 		}
 	}
 

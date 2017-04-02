@@ -13,6 +13,7 @@ namespace BlackCrow {
 
 	void Macro::onStart() {
 		initBases();
+		startPosition = getStartingHatchery()->getPosition();
 	}
 
 	void Macro::onFrame() {
