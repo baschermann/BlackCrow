@@ -200,7 +200,6 @@ namespace BlackCrow {
 
 	void BlackCrow::onUnitComplete(BWAPI::Unit unit) {
 		builder.onBuildingDetected(unit);
-		macro.onUnitComplete(unit);
 
 		//if (Broodwar->getFrameCount() != 0)
 		//Broodwar->sendText("Unit %s complete!", unit->getType().c_str());

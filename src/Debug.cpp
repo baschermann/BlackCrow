@@ -43,12 +43,10 @@ namespace BlackCrow {
 		if (text == "test") {
 			//Broodwar << bc.macro.getNonReservedLarvae()->size() << std::endl;
 			//Broodwar << bc.macro.getNonReservedLarva((*bc.macro.bases->begin())->hatchery->getPosition())->getID() << std::endl;
-			bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.macro.firstBase->hatchery->getPosition(), bc.macro.firstBase);
 			return true;
 		}
 
 		if (text == "test2") {
-			Broodwar << bc.macro.reservedLarvae->size() << std::endl;
 			//Broodwar << bc.macro.getNonReservedLarva((*bc.macro.bases->begin())->hatchery->getPosition())->getID() << std::endl;
 			return true;
 		}
@@ -239,30 +237,7 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawBaseInformation() {
-		std::list<BaseInformation*> *allBaseInformation = bc.macro.getAllBaseInformation();
-
-		for (BaseInformation *baseInformation : *allBaseInformation) {
-			int x = baseInformation->base->Center().x - 55;
-			int y = baseInformation->base->Center().y - 20;
-
-			Broodwar->drawBoxMap(x - 3, y, x + 114, y + 43, BWAPI::Colors::Black, true);
-			//Broodwar->drawTextMap(x, y, "Position: %i, %i", x, y);
-
-			Broodwar->drawTextMap(x, y, "isExpanding: %i", (int)baseInformation->isExpanding);
-
-			int totalMinerals = 0;
-			for (BWEM::Mineral* mineral : baseInformation->base->Minerals()) {
-				totalMinerals += mineral->Amount();
-			}
-			Broodwar->drawTextMap(x, y + 10, "Minerals left: %i", totalMinerals);
-
-			int totalGas = 0;
-			for (BWEM::Geyser* geyser : baseInformation->base->Geysers()) {
-				totalGas += geyser->Amount();
-			}
-			Broodwar->drawTextMap(x, y + 20, "Vespin-Gas left: %i", totalGas);
-			Broodwar->drawTextMap(x, y + 30, "M: %i, Gas: %i", baseInformation->workersOnMinerals.size(), baseInformation->workersOnGas.size());
-		}
+		// TODO
 	}
 
 	void Debug::drawBuildable() {
@@ -344,6 +319,8 @@ namespace BlackCrow {
 			Broodwar->drawTextScreen(xStart + 33, yStart, "Planned Units");
 			Broodwar->drawLineScreen(xStart, yStart + 15, xStart + 120, yStart + 15, BWAPI::Colors::Yellow);
 
+			// TODO
+			/*
 			int i = 1;
 			for (PlannedUnit* pu : *bc.macro.plannedUnits) {
 				//Broodwar->drawTextScreen(xStart, yStart + 5 + 9 * i, std::to_string(i).c_str());
@@ -359,12 +336,15 @@ namespace BlackCrow {
 
 				i++;
 			}
+			*/
 		}
 	}
 
 
 	// Plannet Building Locations
 	void Debug::drawPlacementInfo() {
+		// TODO
+		/*
 		for (PlannedUnit* pu : *bc.macro.plannedUnits) {
 			if (pu->type.isBuilding()) {
 				if (pu->buildLocation) {
@@ -376,6 +356,7 @@ namespace BlackCrow {
 				}
 			}
 		}
+		*/
 	}
 
 	void Debug::drawBwem() {

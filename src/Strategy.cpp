@@ -79,14 +79,14 @@ namespace BlackCrow {
 	void Strategy::dynamicDecision() {
 
 		// Lets do the macro first
-		if (bc.macro.workerNeededForSaturation()) {
+		if (bc.macro.isWorkerNeededForSaturation()) {
 			if (bc.macro.getUnreservedResources().minerals >= 50 && bc.macro.getUnreservedLarvaeAmount() > 0)
 				bc.macro.buildWorkerDrone();
 		}
 
 
 		if (bc.macro.getUnreservedResources().minerals >= 300 && bc.macro.getTotalLarvaeAmount()<= 0) {
-			if (bc.macro.typeCurrentlyPlanned(UnitTypes::Zerg_Hatchery) < 1) {
+			if (bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery) < 1) {
 				bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery, false));
 			}
 		}

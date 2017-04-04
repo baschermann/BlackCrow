@@ -7,6 +7,7 @@ namespace BlackCrow {
 	class BlackCrow;
 	class Base;
 	class Planned;
+	class PlannedUnit;
 	class PlannedBuilding;
 	class PlannedExtractor;
 	class Geyser;
