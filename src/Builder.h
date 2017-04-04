@@ -17,7 +17,7 @@ namespace BlackCrow {
 			int bottom = 0;
 		};
 
-		std::list<BWAPI::TilePosition> positions;
+		std::list<BWAPI::TilePosition> positions; // DEBUG
 
 		void onStart();
 		BWAPI::TilePosition getBuildingSpot(BWAPI::UnitType type, bool inMineralLine);

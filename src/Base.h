@@ -23,9 +23,11 @@ namespace BlackCrow {
 		bool isIsland;
 		bool isExpanding = false;
 		bool selfSustained = false;
+		
 		std::vector<Geyser> geysers;
 		std::vector<Mineral> minerals;
 
+		bool isEstablished();
 		void addWorker(BWAPI::Unit drone);
 		BWAPI::Unit removeWorker();
 		BWAPI::Unit removeWorker(BWAPI::Position closestTo);
@@ -34,11 +36,12 @@ namespace BlackCrow {
 		int workersNeeded();
 		std::vector<Worker> getMineralWorkers();
 		std::vector<Worker> getGasWorkers();
+		int totalMineralWorkers();
+		int totalGasWorkers();
+		int totalWorkers();
 
 	private:
 		BlackCrow& bc;
 		Mineral& findMineralForWorker();
-		int totalMineralWorkers();
-		int totalGasWorkers();
 	};
 }

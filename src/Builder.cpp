@@ -107,7 +107,7 @@ namespace BlackCrow {
 		if (x < 0 || x >= bc.map.tileWidth || y < 0 || y >= bc.map.tileHeight || !bc.map.mapTiles[x][y].buildable)
 			return false;
 
-		positions.push_back(TilePosition(x, y));
+		positions.push_back(TilePosition(x, y)); // DEBUG
 
 		bool canBuild = true;
 		// for every tile of the size of building

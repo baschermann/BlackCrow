@@ -21,76 +21,87 @@ namespace BlackCrow {
 	}
 
 	// Planned
-	std::shared_ptr<Planned> Macro::planUnit(BlackCrow& parent, BWAPI::UnitType type) {
-		plannedStuff.push_back(std::make_shared<PlannedUnit>(parent, type));
+	std::shared_ptr<PlannedUnit> Macro::planUnit(BWAPI::UnitType type) {
+		auto unit = std::make_shared<PlannedUnit>(bc, type);
+		plannedStuff.push_back(unit);
+		return unit;
 	}
 
-	std::shared_ptr<Planned> Macro::planBuilding(BlackCrow& parent, BWAPI::UnitType type, BWAPI::TilePosition buildPosition) {
-		plannedStuff.push_back(std::make_shared<PlannedBuilding>(parent, type, buildPosition));
+	std::shared_ptr<PlannedBuilding> Macro::planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition) {
+		auto building = std::make_shared<PlannedBuilding>(bc, type, buildPosition);
+		plannedStuff.push_back(building);
+		return building;
 	}
 
-	void Macro::onUnitComplete(BWAPI::Unit unit) {
-		
+	std::shared_ptr<PlannedExtractor> Macro::planExtractor(Geyser& geyser) {
+		auto extractor = std::make_shared<PlannedExtractor>(geyser);
+		plannedStuff.push_back(extractor);
+		return extractor;
 	}
 
-	// Expansions
-	int Macro::numberOfEstablishedBases() {
-		int amount = 0;
-		for(Base& base : bases) {
-			if (base.hatchery && base.hatchery->isCompleted())
-				amount++;
-		}
-		return amount;
-	}
-
-	int Macro::numberOfCurrentExpansions() {
-
+	// Expansions and Bases // TODO Need enemy information to do this
+	Base& Macro::getSafestToExpand() {
+		return bases.front();
 	}
 
 	void Macro::expand() {
 
 	}
 
-	Base& Macro::getSafestExpansion() {
+	int Macro::getNumberOfCurrentlyExpandingBases() {
 
+	}
+
+	int Macro::getNumberOfEstablishedBases() {
+
+	}
+
+	Base& Macro::getSafestEstablishedBase() {
+		return bases.front();
+	}
+	// TODO end
+
+	Base& Macro::getNearestBase(BWAPI::Position position) { // Is there a better, or templatey/lambda way?
+		Base* closestBase = nullptr;
+		double closestDistance = std::numeric_limits<double>::max();
+		for(Base& base : bases) {
+			if (base.isEstablished()) {
+				double distance = Util::distance(base.bwemBase.Center(), position);
+				if (distance < closestDistance) {
+					closestDistance = distance;
+					closestBase = &base;
+				}
+			}
+		}
+		return *closestBase;
 	}
 
 	// Worker
-	int Macro::totalWorkers() {
+	int Macro::getTotalWorkers() {
 		int amount = 0;
 		for (Base& base : bases) {
-			for (Mineral& mineral : base.minerals) {
-				amount += mineral.workers.size();
-			}
-
-			for (Geyser& geyser : base.geysers) {
-				amount += geyser.workers.size();
-			}
+			amount += base.totalWorkers();
 		}
 		return amount;
 	}
 
-	int Macro::mineralWorkers() {
+	int Macro::getMineralWorkers() {
 		int amount = 0;
 		for (Base& base : bases) {
-			for (Mineral& mineral : base.minerals) {
-				amount += mineral.workers.size();
-			}
+			amount += base.totalMineralWorkers();
 		}
 		return amount;
 	}
 
-	int Macro::gasWorkers() {
+	int Macro::getGasWorkers() {
 		int amount = 0;
 		for (Base& base : bases) {
-			for (Geyser& geyser : base.geysers) {
-				amount += geyser.workers.size();
-			}
+			amount += base.totalGasWorkers();
 		}
 		return amount;
 	}
 
-	bool Macro::workerNeededForSaturation() {
+	bool Macro::isWorkerNeededForSaturation() {
 		for (Base& base : bases) {
 			if (base.workerNeeded())
 				return true;
@@ -98,17 +109,21 @@ namespace BlackCrow {
 		return false;
 	}
 
-	int Macro::workersNeededForSaturation() {
+	int Macro::getWorkersNeededForSaturation() {
 		int amount = 0;
 		for (Base& base : bases) {
 			amount += base.workersNeeded();
 		}
 		return amount;
+	}
+
+	BWAPI::Unit Macro::getDroneForBuilding(BWAPI::Position position) {
+		return getNearestBase(position).removeWorker(position);
 	}
 
 
 	// Gas
-	int Macro::gasWorkerSlotsAvailable() {
+	int Macro::getGasWorkerSlotsAvailable() {
 		int amount = 0;
 		for (Base& base : bases) {
 			amount += base.workersNeeded();
@@ -116,34 +131,38 @@ namespace BlackCrow {
 		return amount;
 	}
 
-	int Macro::extractorsAbleToBuild(bool expansionsFinished) {
+	int Macro::getExtractorsAbleToBuild(bool expansionsFinished) {
 		int amount = 0;
 		for (Base& base : bases) {
-			for (Geyser& geyser : base.geysers) {
-				if (geyser.geyserUnit && geyser.geyserUnit->isCompleted())
-					amount++;
+			if (base.isEstablished()) {
+				for (Geyser& geyser : base.geysers) {
+					if (geyser.isBuildable())
+						amount++;
+				}
 			}
 		}
 		return amount;
 	}
 
-	void Macro::buildExtractor() {
+	void Macro::buildExtractor() { // TODO build extractor at safeset base
 		for (Base& base : bases) {
-			for (Geyser& geyser : base.geysers) {
-				if (!geyser.geyserUnit) {
-					planBuilding(bc, BWAPI::UnitTypes::Zerg_Extractor, geyser.bwemGeyser->TopLeft());
-					return;
+			if (base.isEstablished()) {
+				for (Geyser& geyser : base.geysers) {
+					if (geyser.isBuildable()) {
+						planExtractor(geyser);
+							return;
+					}
 				}
 			}
 		}
 	}
 
-	int Macro::extractorsCurrentlyBuilt() {
+	int Macro::getExtractorsCurrentlyBuilding() {
 		int amount = 0;
 
 		for (Base& base : bases) {
 			for (Geyser& geyser : base.geysers) {
-				if (geyser.geyserUnit && !geyser.geyserUnit->isCompleted()) {
+				if (geyser.isCurrentlyBuilding()) {
 					amount++;
 				}
 			}
@@ -160,15 +179,15 @@ namespace BlackCrow {
 
 
 	// Estimates
-	double Macro::averageMineralsPerFrame() {
-
+	double Macro::getAverageMineralsPerFrame() {
+		return 0;
 	}
 
-	double Macro::averageGasPerFrame() {
-
+	double Macro::getAverageGasPerFrame() {
+		return 0;
 	}
 
-	 // Private
+	// Private
 	void Macro::initBases() {
 		for (auto bwemArea : bc.bwem.Areas()) {
 			auto area = bc.map.getArea(bwemArea);

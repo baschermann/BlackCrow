@@ -17,6 +17,9 @@ namespace BlackCrow {
 		for (const BWEM::Geyser* bwemGeyser : bwemBase.Geysers()) {
 			geysers.emplace_back(bwemGeyser);
 		}
+
+		// Is Island
+		//TODO
 	}
 
 	void Base::onFrame() {
@@ -31,6 +34,12 @@ namespace BlackCrow {
 				}
 			}
 		}
+	}
+
+	bool Base::isEstablished() {
+		if (hatchery && hatchery->exists() && hatchery->isCompleted())
+			return true;
+		return false;
 	}
 
 	void Base::addWorker(BWAPI::Unit unit) {
@@ -87,11 +96,17 @@ namespace BlackCrow {
 	}
 
 	bool Base::workerNeeded() {
-		return totalMineralWorkers() < bc.config.mineralSaturationMultiplier * minerals.size() || totalGasWorkers() < (int)(geysers.size() * 3);
+		if (hatchery && hatchery->exists() && hatchery->isCompleted())
+			return totalMineralWorkers() < bc.config.mineralSaturationMultiplier * minerals.size() || totalGasWorkers() < (int)(geysers.size() * 3);
+		else
+			return false;
 	}
 
 	int Base::workersNeeded() {
-		return (int)(bc.config.mineralSaturationMultiplier * minerals.size() - totalMineralWorkers() + geysers.size() * 3 - totalGasWorkers());
+		if (hatchery && hatchery->exists() && hatchery->isCompleted())
+			return (int)(bc.config.mineralSaturationMultiplier * minerals.size() - totalMineralWorkers() + geysers.size() * 3 - totalGasWorkers());
+		else
+			return 0;
 	}
 
 	Mineral& Base::findMineralForWorker() {
@@ -103,12 +118,24 @@ namespace BlackCrow {
 		}
 	}
 
+	int Base::totalWorkers() {
+		return totalMineralWorkers() + totalGasWorkers();
+	}
+
 	int Base::totalMineralWorkers() {
-		return getMineralWorkers().size();
+		int amount = 0;
+		for (Mineral& mineral : minerals) {
+			amount += mineral.workers.size();
+		}
+		return amount;
 	}
 
 	int Base::totalGasWorkers() {
-		return getGasWorkers().size();
+		int amount = 0;
+		for (Geyser& geyser : geysers) {
+			amount += geyser.workers.size();
+		}
+		return amount;
 	}
 
 	std::vector<Worker> Base::getMineralWorkers() {

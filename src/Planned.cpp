@@ -116,7 +116,9 @@ namespace BlackCrow {
 	}
 
 	// Planned Extractor
-	PlannedExtractor::PlannedExtractor(BlackCrow &parent, Geyser& geyser) : Planned(parent), geyser(geyser) {}
+	PlannedExtractor::PlannedExtractor(BlackCrow &parent, Geyser& geyser) : Planned(parent), geyser(geyser) {
+		geyser.registerPlannedExtractor(*this);
+	}
 
 	int PlannedExtractor::getMineralPrice() {
 		return UnitTypes::Zerg_Extractor.mineralPrice();
@@ -127,8 +129,10 @@ namespace BlackCrow {
 	}
 
 	void PlannedExtractor::onFrame() {
-		if (status == Status::FAILED || status == Status::COMPLETED)
+		if (status == Status::FAILED || status == Status::COMPLETED) {
+			geyser.unregisterPlannedExtractor(*this);
 			return;
+		}
 
 		if (!drone) {
 			drone = bc.macro.getDroneForBuilding(geyser.bwemGeyser->Pos());

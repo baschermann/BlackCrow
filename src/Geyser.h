@@ -5,6 +5,7 @@
 namespace BlackCrow {
 
 	class Worker;
+	class PlannedExtractor;
 
 	class Geyser {
 	public:
@@ -13,13 +14,20 @@ namespace BlackCrow {
 		const BWEM::Geyser* bwemGeyser = nullptr;
 		std::vector<Worker> workers;
 		BWAPI::Unit geyserUnit = nullptr;
+		
 
 		bool isMineable();
+		bool isBuildable();
+		bool isCurrentlyBuilding();
 		bool workerNeeded();
 		int workersNeeded();
 		void registerWorker(Worker& worker);
-		//Worker removeWorker();
 		void unregisterWorker(Worker& worker);
+		void registerPlannedExtractor(PlannedExtractor& pu);
+		void unregisterPlannedExtractor(PlannedExtractor& pu);
+
+	private:
+		PlannedExtractor* plannedExtractor = nullptr;
 	};
 }
 

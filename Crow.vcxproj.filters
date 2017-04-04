@@ -99,9 +99,6 @@
     <ClCompile Include="src\Geyser.cpp">
       <Filter>Source Files\Macro</Filter>
     </ClCompile>
-    <ClCompile Include="src\MacroOld.cpp">
-      <Filter>Source Files\Macro</Filter>
-    </ClCompile>
     <ClCompile Include="src\Macro.cpp">
       <Filter>Source Files\Macro</Filter>
     </ClCompile>
@@ -156,9 +153,6 @@
       <Filter>Header Files\Macro</Filter>
     </ClInclude>
     <ClInclude Include="src\Geyser.h">
-      <Filter>Header Files\Macro</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MacroOld.h">
       <Filter>Header Files\Macro</Filter>
     </ClInclude>
     <ClInclude Include="src\Macro.h">

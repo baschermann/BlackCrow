@@ -9,6 +9,7 @@ namespace BlackCrow {
 	class Planned;
 	class PlannedBuilding;
 	class PlannedExtractor;
+	class Geyser;
 
 	struct Resources {
 		int minerals;
@@ -29,32 +30,31 @@ namespace BlackCrow {
 		// Planned
 		std::shared_ptr<PlannedUnit> planUnit(BWAPI::UnitType type);
 		std::shared_ptr<PlannedBuilding> planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
-		std::shared_ptr<PlannedExtractor> planExtractor(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
-		void onUnitComplete(BWAPI::Unit unit);
-		int typeCurrentlyPlanned(UnitType type);
+		std::shared_ptr<PlannedExtractor> planExtractor(Geyser& geyser);
+		int getTypeCurrentlyPlanned(BWAPI::UnitType type);
 		
-		// Expansions
+		// Expansions and Bases
 		Base& getSafestToExpand();
 		void expand();
-		int getNumberOfEstablishedBases();
 		int getNumberOfCurrentlyExpandingBases();
+		int getNumberOfEstablishedBases();
 		Base& getSafestEstablishedBase();
+		Base& getNearestBase(BWAPI::Position position);
 		
-
 		// Worker
-		int totalWorkers();
-		int mineralWorkers();
-		int gasWorkers();
-		bool workerNeededForSaturation();
-		int workersNeededForSaturation();
+		int getTotalWorkers();
+		int getMineralWorkers();
+		int getGasWorkers();
+		bool isWorkerNeededForSaturation();
+		int getWorkersNeededForSaturation();
 		void buildWorkerDrone();
 		BWAPI::Unit getDroneForBuilding(BWAPI::Position position);
 
 		// Gas
-		int gasWorkerSlotsAvailable();
-		int extractorsAbleToBuild(bool expansionsFinished);
+		int getGasWorkerSlotsAvailable();
+		int getExtractorsAbleToBuild(bool expansionsFinished);
 		void buildExtractor();
-		int extractorsCurrentlyBuilding();
+		int getExtractorsCurrentlyBuilding();
 		void addGasWorker();
 		void removeGasWorker();
 
