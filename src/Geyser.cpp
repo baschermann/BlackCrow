@@ -1,5 +1,4 @@
 #include "Geyser.h"
-#include "Worker.h"
 #include "Planned.h"
 
 namespace BlackCrow {

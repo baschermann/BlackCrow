@@ -1,6 +1,7 @@
 #include "Worker.h"
 #include "Mineral.h"
 #include "Geyser.h"
+#include "Base.h"
 
 namespace BlackCrow {
 

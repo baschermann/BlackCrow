@@ -1,9 +1,9 @@
 #pragma once
 #include <BWAPI.h>
-#include "Base.h"
 
 namespace BlackCrow {
 
+	class Base;
 	class Mineral;
 	class Geyser;
 
