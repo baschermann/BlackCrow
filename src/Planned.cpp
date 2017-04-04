@@ -33,7 +33,7 @@ namespace BlackCrow {
 
 		// Was unit/larva/egg killed?
 		if (status == Status::ACTIVE && unit && !unit->exists() && alreadyGrabbedLarva) {
-			status == Status::FAILED;
+			status = Status::FAILED;
 			return;
 		}
 

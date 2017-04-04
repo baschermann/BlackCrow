@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <memory>
+#include "Base.h"
 
 namespace BlackCrow {
 

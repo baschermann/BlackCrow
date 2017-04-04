@@ -34,7 +34,7 @@ namespace BlackCrow {
 
 		BWAPI::Position middleOfBuilding(BWAPI::UnitType building) {
 			assert(building.isBuilding());
-			return Position(building.tileWidth * 32 / 2, building.tileHeight * 32 / 2);
+			return Position(building.tileWidth() * 32 / 2, building.tileHeight() * 32 / 2);
 		}
 
 		// From Leszek Z at http://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both

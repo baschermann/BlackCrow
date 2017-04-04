@@ -1,7 +1,6 @@
 #include "Macro.h"
 #include "BlackCrow.h"
 #include "Planned.h"
-#include "Base.h"
 #include "Worker.h"
 
 namespace BlackCrow {
@@ -34,7 +33,7 @@ namespace BlackCrow {
 	}
 
 	std::shared_ptr<PlannedExtractor> Macro::planExtractor(Geyser& geyser) {
-		auto extractor = std::make_shared<PlannedExtractor>(geyser);
+		auto extractor = std::make_shared<PlannedExtractor>(bc, geyser);
 		plannedStuff.push_back(extractor);
 		return extractor;
 	}
@@ -49,11 +48,11 @@ namespace BlackCrow {
 	}
 
 	int Macro::getNumberOfCurrentlyExpandingBases() {
-
+		return 0;
 	}
 
 	int Macro::getNumberOfEstablishedBases() {
-
+		return 0;
 	}
 
 	Base& Macro::getSafestEstablishedBase() {
@@ -167,6 +166,7 @@ namespace BlackCrow {
 				}
 			}
 		}
+		return amount;
 	}
 
 	void Macro::addGasWorker() {

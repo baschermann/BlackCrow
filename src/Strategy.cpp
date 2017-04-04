@@ -66,7 +66,7 @@ namespace BlackCrow {
 				} else if (type == UnitTypes::Zerg_Hatchery) {
 					bc.macro.expand();
 				} else {
-					bc.macro.planBuilding(type, bc.builder.getBuildingSpot);
+					bc.macro.planBuilding(type, bc.builder.getBuildingSpot(type, false));
 				}
 			} else {
 				if (bc.macro.getUnreservedLarvaeAmount() > 0)
