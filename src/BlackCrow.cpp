@@ -28,10 +28,10 @@ namespace BlackCrow {
 
 			map.onStart();
 			macro.onStart();
-			//strategy.onStart();
-			//enemy.onStart();
-			//builder.onStart();
-			//debug.onStart();
+			strategy.onStart();
+			enemy.onStart();
+			builder.onStart();
+			debug.onStart();
 
 			auto end = std::chrono::high_resolution_clock::now();
 
@@ -64,9 +64,9 @@ namespace BlackCrow {
 				return;
 
 			// All of them hardwork
-			//enemy.onFrame();
-			//macro.onFrame();
-			//strategy.onFrame();
+			enemy.onFrame();
+			macro.onFrame();
+			strategy.onFrame();
 			// End of them hardwork
 
 			auto end = std::chrono::high_resolution_clock::now();
