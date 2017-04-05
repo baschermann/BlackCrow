@@ -33,7 +33,7 @@ namespace BlackCrow {
 		std::vector<BWAPI::Unit> hatcheries;
 
 		// Planned
-		std::shared_ptr<PlannedUnit> planUnit(BWAPI::UnitType type);
+		std::shared_ptr<PlannedUnit> planUnit(BWAPI::UnitType type, BWAPI::Position nearTo);
 		std::shared_ptr<PlannedBuilding> planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
 		std::shared_ptr<PlannedExtractor> planExtractor(Geyser& geyser);
 		int getTypeCurrentlyPlanned(BWAPI::UnitType type);
@@ -65,7 +65,7 @@ namespace BlackCrow {
 
 		// Larva
 		int getTotalLarvaeAmount();
-		BWAPI::Unit getUnreservedLarva();
+		BWAPI::Unit getUnreservedLarva(BWAPI::Position nearTo);
 		int getUnreservedLarvaeAmount();
 
 		// Statistics and Numbers
@@ -79,6 +79,10 @@ namespace BlackCrow {
 
 		void initBases();
 		BWAPI::Unit Macro::getStartingHatchery();
+		std::vector<BWAPI::Unit> getAllLarvae();
+		std::vector<BWAPI::Unit> getReservedLarvae();
+		std::vector<BWAPI::Unit> getUnreservedLarvae();
+		
 	};
 
 }

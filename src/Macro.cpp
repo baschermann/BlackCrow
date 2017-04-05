@@ -33,8 +33,8 @@ namespace BlackCrow {
 	}
 
 	// Planned
-	std::shared_ptr<PlannedUnit> Macro::planUnit(BWAPI::UnitType type) {
-		auto unit = std::make_shared<PlannedUnit>(bc, type);
+	std::shared_ptr<PlannedUnit> Macro::planUnit(BWAPI::UnitType type, BWAPI::Position nearTo) {
+		auto unit = std::make_shared<PlannedUnit>(bc, type, nearTo);
 		plannedStuff.push_back(unit);
 		return unit;
 	}
@@ -203,18 +203,29 @@ namespace BlackCrow {
 		return 0;
 	}
 
-	BWAPI::Unit Macro::getUnreservedLarva() {
+	BWAPI::Unit Macro::getUnreservedLarva(Position nearTo) {
+		std::vector<BWAPI::Unit> url = getUnreservedLarvae();
+		if (url.size() > 0)
+			return Util::findClosestUnit(url, nearTo);
+		else
 		return nullptr;
 	}
 
 	int Macro::getUnreservedLarvaeAmount() {
-		return 0;
+		return getUnreservedLarvae().size();
 	}
 
 
 	// Estimates
 	Resources Macro::getUnreservedResources() {
-		return Resources() = { 0, 0 };
+		Resources resources = { 0, 0 };
+
+		for (std::shared_ptr<Planned> planned : plannedStuff) {
+			resources.minerals += planned->getMineralPrice();
+			resources.gas += planned->getGasPrice();
+		}
+
+		return resources;
 	}
 
 	double Macro::getAverageMineralsPerFrame() {
@@ -259,5 +270,45 @@ namespace BlackCrow {
 			}
 		}
 		return nullptr;
+	}
+
+	std::vector<BWAPI::Unit> Macro::getAllLarvae() {
+		std::vector<BWAPI::Unit> allLarvae;
+
+		for (Unit hatchery : hatcheries) {
+			Unitset hatchLarvae = hatchery->getLarva();
+			std::copy(hatchLarvae.begin(), hatchLarvae.end(), std::back_inserter(allLarvae));
+		}
+		return allLarvae;
+	}
+
+	std::vector<BWAPI::Unit> Macro::getReservedLarvae() {
+		std::vector<BWAPI::Unit> reservedLarvae;
+
+		// TODO this doesn't look good
+		for (std::shared_ptr<Planned> planned : plannedStuff) {
+			PlannedUnit* pu = dynamic_cast<PlannedUnit*>(planned.get()); // TODO Dynamic Cast is bad?
+			if (pu) {
+				Unit larva = pu->reservedLarva();
+				if (larva)
+					reservedLarvae.push_back(larva); // Can you push a nullptr?
+			}
+		}
+
+		return reservedLarvae;
+	}
+
+	std::vector<BWAPI::Unit> Macro::getUnreservedLarvae() {
+		std::vector<BWAPI::Unit> allLarvae = getAllLarvae();
+		//Broodwar->sendText("Total Larvae: %i", allLarvae.size());
+		std::vector<BWAPI::Unit> reservedLarvae = getReservedLarvae();
+		//Broodwar->sendText("Total Larvae: %i", reservedLarvae.size());
+		std::vector<BWAPI::Unit> unreservedLarvae;
+
+		std::sort(allLarvae.begin(), allLarvae.end());
+		std::sort(reservedLarvae.begin(), reservedLarvae.end());
+		std::set_difference(allLarvae.begin(), allLarvae.end(), reservedLarvae.begin(), reservedLarvae.end(), std::inserter(unreservedLarvae, unreservedLarvae.begin()));
+
+		return unreservedLarvae;
 	}
 }

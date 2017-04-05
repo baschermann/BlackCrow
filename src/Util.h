@@ -32,7 +32,7 @@ namespace BlackCrow {
 
 		double distance(int x1, int y1, int x2, int y2);
 		double distance(BWAPI::Position p1, BWAPI::Position p2);
-		BWAPI::Unit findClosestUnit(BWAPI::Unitset* units, BWAPI::Position position);
+		BWAPI::Unit findClosestUnit(std::vector<BWAPI::Unit> units, BWAPI::Position position);
 
 		BWAPI::Position middleOfBuilding(BWAPI::UnitType building);
 	}

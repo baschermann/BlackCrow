@@ -15,31 +15,12 @@ namespace BlackCrow {
 
 	void Strategy::onStart() {
 		fillBuildOrder(getStartBuildOrder());
-
-		//plannedStuff.push_back(std::make_shared<PlannedUnitt>(bc, UnitTypes::Zerg_Zergling));
-		//plannedStuff.back()->getGasPrice();
 	}
 
 	void Strategy::onFrame() {
 
-		/*
-		for (auto planned : plannedStuff) {
-			if (planned->getStatus() == Planned::Status::FAILED) {
-				if (typeid(planned) == typeid(PlannedUnitt)) {
+		//Broodwar->sendText("Total Unreserved Larvae: %i", bc.macro.getUnreservedLarvaeAmount());
 
-				} else if (typeid(planned) == typeid(PlannedBuilding)) {
-
-				} else if (typeid(planned) == typeid(PlannedTech)) {
-
-				} else if (typeid(planned) == typeid(PlannedUpgrade)) {
-
-				}
-			}
-		}
-		*/
-
-
-		// Build the Buildorder
 		if (buildOrder.size() > 0) {
 			followBuildOrder();
 		} else {
@@ -70,7 +51,7 @@ namespace BlackCrow {
 				}
 			} else {
 				if (bc.macro.getUnreservedLarvaeAmount() > 0)
-					bc.macro.planUnit(type);
+					bc.macro.planUnit(type, bc.macro.startPosition);
 			}
 			buildOrder.pop();
 		}

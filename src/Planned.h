@@ -30,9 +30,10 @@ namespace BlackCrow {
 
 	class PlannedUnit : public Planned {
 	public:
-		PlannedUnit(BlackCrow& parent, BWAPI::UnitType type);
+		PlannedUnit(BlackCrow& parent, BWAPI::UnitType type, BWAPI::Position nearTo);
 
 		BWAPI::UnitType type;
+		BWAPI::Position nearTo;
 		BWAPI::Unit unit = nullptr;
 
 		int getMineralPrice() override;

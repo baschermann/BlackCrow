@@ -12,7 +12,7 @@ namespace BlackCrow {
 	Planned::Planned(BlackCrow &parent) : bc(parent), status(Status::ACTIVE) {}
 
 	// Planned Unit
-	PlannedUnit::PlannedUnit(BlackCrow &parent, BWAPI::UnitType type) : Planned(parent), type(type) {}
+	PlannedUnit::PlannedUnit(BlackCrow &parent, BWAPI::UnitType type, BWAPI::Position nearTo) : Planned(parent), type(type), nearTo(nearTo) {}
 
 	int PlannedUnit::getMineralPrice() {
 		if (!unit || unit->getType() == UnitTypes::Zerg_Larva)
@@ -40,7 +40,7 @@ namespace BlackCrow {
 
 		// When we have no larva, grab one
 		if (!unit) {
-			unit = bc.macro.getUnreservedLarva();
+			unit = bc.macro.getUnreservedLarva(nearTo);
 			if (unit) {
 				alreadyGrabbedLarva = true;
 			} else {

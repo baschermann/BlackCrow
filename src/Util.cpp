@@ -17,11 +17,12 @@ namespace BlackCrow {
 			return distance(p1.x, p1.y, p2.x, p2.y);
 		}
 
-		BWAPI::Unit findClosestUnit(BWAPI::Unitset* units, BWAPI::Position position) {
-			double closestDistance = 99999999999;
+		
+		BWAPI::Unit findClosestUnit(std::vector<BWAPI::Unit> units, BWAPI::Position position) {
+			double closestDistance = std::numeric_limits<double>::max();
 			BWAPI::Unit closestUnit = nullptr;
 
-			for (BWAPI::Unit unit : *units) {
+			for (BWAPI::Unit unit : units) {
 				double dst = distance(position.x, position.y, unit->getPosition().x, unit->getPosition().y);
 				if (dst < closestDistance) {
 					closestDistance = dst;
