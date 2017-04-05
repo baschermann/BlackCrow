@@ -16,7 +16,20 @@ namespace BlackCrow {
 	}
 
 	void Macro::onFrame() {
+		for (std::shared_ptr<Planned> planned : plannedStuff) {
+			planned->onFrame();
+		}
+	}
 
+
+	void Macro::onUnitCompleted(BWAPI::Unit unit) {
+		if (unit->getType() == UnitTypes::Zerg_Hatchery)
+			hatcheries.push_back(unit);
+	}
+
+	void Macro::onUnitDestroyed(BWAPI::Unit unit) {
+		if (unit->getType() == UnitTypes::Zerg_Hatchery || unit->getType() == UnitTypes::Zerg_Lair || unit->getType() == UnitTypes::Zerg_Hive)
+			hatcheries.erase(std::remove(hatcheries.begin(), hatcheries.end(), unit), hatcheries.end());
 	}
 
 	// Planned
@@ -36,6 +49,10 @@ namespace BlackCrow {
 		auto extractor = std::make_shared<PlannedExtractor>(bc, geyser);
 		plannedStuff.push_back(extractor);
 		return extractor;
+	}
+
+	int Macro::getTypeCurrentlyPlanned(BWAPI::UnitType type) {
+		return 0;
 	}
 
 	// Expansions and Bases // TODO Need enemy information to do this
@@ -115,6 +132,10 @@ namespace BlackCrow {
 		}
 		return amount;
 	}
+	
+	void Macro::buildWorkerDrone() {
+
+	}
 
 	BWAPI::Unit Macro::getDroneForBuilding(BWAPI::Position position) {
 		return getNearestBase(position).removeWorker(position);
@@ -177,8 +198,25 @@ namespace BlackCrow {
 
 	}
 
+	// Larva
+	int Macro::getTotalLarvaeAmount() {
+		return 0;
+	}
+
+	BWAPI::Unit Macro::getUnreservedLarva() {
+		return nullptr;
+	}
+
+	int Macro::getUnreservedLarvaeAmount() {
+		return 0;
+	}
+
 
 	// Estimates
+	Resources Macro::getUnreservedResources() {
+		return Resources() = { 0, 0 };
+	}
+
 	double Macro::getAverageMineralsPerFrame() {
 		return 0;
 	}

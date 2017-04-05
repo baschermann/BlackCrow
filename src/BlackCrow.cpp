@@ -181,6 +181,7 @@ namespace BlackCrow {
 			// Other
 			builder.onBuildingDestroyed(unit);
 			strategy.onUnitDestroyed(unit);
+			macro.onUnitDestroyed(unit);
 
 		} catch (const std::exception & e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
@@ -200,6 +201,7 @@ namespace BlackCrow {
 
 	void BlackCrow::onUnitComplete(BWAPI::Unit unit) {
 		builder.onBuildingDetected(unit);
+		macro.onUnitCompleted(unit);
 
 		//if (Broodwar->getFrameCount() != 0)
 		//Broodwar->sendText("Unit %s complete!", unit->getType().c_str());

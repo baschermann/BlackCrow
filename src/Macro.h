@@ -23,11 +23,14 @@ namespace BlackCrow {
 		Macro(BlackCrow &parent);
 		void onStart();
 		void onFrame();
+		void onUnitCompleted(BWAPI::Unit unit);
+		void onUnitDestroyed(BWAPI::Unit unit);
 
 		// Variables
 		BWAPI::Position startPosition;
 		std::vector<Base> bases;
 		std::vector<std::shared_ptr<Planned>> plannedStuff;
+		std::vector<BWAPI::Unit> hatcheries;
 
 		// Planned
 		std::shared_ptr<PlannedUnit> planUnit(BWAPI::UnitType type);

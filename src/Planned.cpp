@@ -2,6 +2,7 @@
 #include "BlackCrow.h"
 #include <BWEM/bwem.h>
 #include "Geyser.h"
+#include "Macro.h"
 
 namespace BlackCrow {
 
