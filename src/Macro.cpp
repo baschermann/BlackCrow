@@ -227,10 +227,10 @@ namespace BlackCrow {
 
 	// Private
 	void Macro::initBases() {
-		for (auto bwemArea : bc.bwem.Areas()) {
-			auto area = bc.map.getArea(bwemArea);
-			for (auto bwemBase : bwemArea.Bases()) {
-
+		for (const BWEM::Area& bwemArea : bc.bwem.Areas()) {
+			
+			Area& area = bc.map.getArea(bwemArea);
+			for (const BWEM::Base& bwemBase : bwemArea.Bases()) {
 				Base base(bc, bwemBase, area);
 
 				// Starting Base
@@ -247,7 +247,7 @@ namespace BlackCrow {
 					}
 				}
 
-				bases.push_back(base);
+				bases.push_back(base);	
 			}
 		}
 	}

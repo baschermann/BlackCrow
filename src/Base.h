@@ -14,10 +14,10 @@ namespace BlackCrow {
 
 	class Base {
 	public:
-		Base(BlackCrow& parent, BWEM::Base& bwemBase, Area& area);
+		Base(BlackCrow& parent, const BWEM::Base& bwemBase, Area& area);
 		void onFrame();
 
-		BWEM::Base& bwemBase;
+		const BWEM::Base& bwemBase;
 		BWAPI::Unit hatchery = nullptr;
 		Area& area;
 		bool isIsland;
