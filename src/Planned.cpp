@@ -52,6 +52,14 @@ namespace BlackCrow {
 		if (unit && unit->getType() == UnitTypes::Zerg_Larva)
 			if (Broodwar->self()->minerals() >= type.mineralPrice() && Broodwar->self()->gas() >= type.gasPrice())
 				unit->morph(type);
+
+		// Is it finished?
+		if (unit && unit->getType() == type && unit->isCompleted()) {
+			status = Status::COMPLETED;
+			if (type == UnitTypes::Zerg_Drone) {
+				bc.macro.addDrone(unit);
+			}
+		}
 	}
 
 	BWAPI::Unit PlannedUnit::reservedLarva() {
@@ -60,6 +68,21 @@ namespace BlackCrow {
 		else
 			return nullptr;
 	}
+
+	float PlannedUnit::progressPercent() {
+		if (unit) {
+			if (unit->getType() == UnitTypes::Zerg_Egg) {
+				return ((float)unit->getRemainingBuildTime() / (float)type.buildTime());
+			}
+		}
+		return 0;
+	}
+
+	std::string PlannedUnit::getName() {
+		return type.getName();
+	}
+
+
 
 	// Planned Building
 	PlannedBuilding::PlannedBuilding(BlackCrow &parent, BWAPI::UnitType type, BWAPI::TilePosition buildPosition) : Planned(parent), type(type), buildPosition(buildPosition) {
@@ -87,6 +110,8 @@ namespace BlackCrow {
 
 		if (!droneOrBuilding) {
 			droneOrBuilding = bc.macro.getDroneForBuilding(Position(buildPosition));
+			if (!droneOrBuilding)
+				return;
 		}
 
 		if (status == Status::ACTIVE && droneOrBuilding && !droneOrBuilding->exists()) {
@@ -115,6 +140,16 @@ namespace BlackCrow {
 				status = Status::COMPLETED;
 		}
 	}
+
+	float PlannedBuilding::progressPercent() {
+		return 0;
+	}
+
+	std::string PlannedBuilding::getName() {
+		return type.getName();
+	}
+
+
 
 	// Planned Extractor
 	PlannedExtractor::PlannedExtractor(BlackCrow &parent, Geyser& geyser) : Planned(parent), geyser(geyser) {
@@ -161,6 +196,16 @@ namespace BlackCrow {
 			return;
 		}
 	}
+	
+	float PlannedExtractor::progressPercent() {
+		return 0;
+	}
+
+	std::string PlannedExtractor::getName() {
+		return UnitTypes::Zerg_Extractor.getName();
+	}
+
+
 
 	// Planned Tech
 	PlannedTech::PlannedTech(BlackCrow& parent, BWAPI::TechType type) : Planned(parent), type(type) {}
@@ -177,6 +222,14 @@ namespace BlackCrow {
 
 	}
 
+	float PlannedTech::progressPercent() {
+		return 0;
+	}
+
+	std::string PlannedTech::getName() {
+		return type.getName();
+	}
+
 	// Planned Upgrade
 	PlannedUpgrade::PlannedUpgrade(BlackCrow& parent, BWAPI::UpgradeType type) : Planned(parent), type(type) {}
 
@@ -190,6 +243,14 @@ namespace BlackCrow {
 
 	void PlannedUpgrade::onFrame() {
 
+	}
+
+	float PlannedUpgrade::progressPercent() {
+		return 0;
+	}
+
+	std::string PlannedUpgrade::getName() {
+		return type.getName();
 	}
 
 }

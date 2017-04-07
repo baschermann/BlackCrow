@@ -96,17 +96,29 @@ namespace BlackCrow {
 	}
 
 	bool Base::workerNeeded() {
-		if (hatchery && hatchery->exists() && hatchery->isCompleted())
-			return totalMineralWorkers() < bc.config.mineralSaturationMultiplier * minerals.size() || totalGasWorkers() < (int)(geysers.size() * 3);
-		else
-			return false;
+		if (hatchery && hatchery->exists() && hatchery->isCompleted()) {
+			if (totalMineralWorkers() < bc.config.mineralSaturationMultiplier * minerals.size())
+				return true;
+
+			for (Geyser& geyser : geysers) {
+				if (geyser.workerNeeded())
+					return true;
+			}
+		}
+		return false;
 	}
 
 	int Base::workersNeeded() {
-		if (hatchery && hatchery->exists() && hatchery->isCompleted())
-			return (int)(bc.config.mineralSaturationMultiplier * minerals.size() - totalMineralWorkers() + geysers.size() * 3 - totalGasWorkers());
-		else
-			return 0;
+		int amount = 0;
+		if (hatchery && hatchery->exists() && hatchery->isCompleted()) {
+			amount += (int)(bc.config.mineralSaturationMultiplier * minerals.size() - totalMineralWorkers());
+
+			for (Geyser& geyser : geysers) {
+				amount += geyser.workersNeeded();
+			}
+		}
+		
+		return amount;
 	}
 
 	Mineral& Base::findMineralForWorker() {
@@ -134,6 +146,14 @@ namespace BlackCrow {
 		int amount = 0;
 		for (Geyser& geyser : geysers) {
 			amount += geyser.workers.size();
+		}
+		return amount;
+	}
+
+	int Base::gasWorkersNeeded() {
+		int amount = 0;
+		for (Geyser& geyser : geysers) {
+			amount += geyser.workersNeeded();
 		}
 		return amount;
 	}

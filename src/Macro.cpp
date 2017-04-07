@@ -16,8 +16,14 @@ namespace BlackCrow {
 	}
 
 	void Macro::onFrame() {
-		for (std::shared_ptr<Planned> planned : plannedStuff) {
+		for (auto it = plannedStuff.begin(); it != plannedStuff.end();) {
+			std::shared_ptr<Planned> planned = *it;
 			planned->onFrame();
+			if (planned->getStatus() == Planned::Status::FAILED || planned->getStatus() == Planned::Status::COMPLETED) {
+				it = plannedStuff.erase(it);
+			} else {
+				it++;
+			}
 		}
 	}
 
@@ -137,6 +143,49 @@ namespace BlackCrow {
 
 	}
 
+	void Macro::addDrone(BWAPI::Unit drone) {
+		Base* closestEstablished = nullptr;
+		double closestEstablishedDistance = std::numeric_limits<double>::max();
+
+		Base* closestEstablishedWorkerNeeded = nullptr;
+		double closestEstablishedWorkerNeededDistance = std::numeric_limits<double>::max();
+
+		for (Base& base : bases) {
+			if (base.isEstablished()) {
+
+				// Get any base where we can put a worker if we have no base that needs a worker
+				if (!closestEstablished) {
+					closestEstablished = &base;
+					closestEstablishedDistance = Util::distance(closestEstablished->bwemBase.Center(), drone->getPosition());
+				}
+
+				// If the base needs worker and is closer, use it
+				if (base.workerNeeded()) {
+					double distance = Util::distance(base.bwemBase.Center(), drone->getPosition());
+					if (distance < closestEstablishedWorkerNeededDistance) {
+						closestEstablishedWorkerNeeded = &base;
+						closestEstablishedWorkerNeededDistance = distance;
+					}
+				}
+
+				// If we have no closest base that needs worker, check if the current established base is closest and if yes, use it
+				if (!closestEstablishedWorkerNeeded) {
+					double distance = Util::distance(base.bwemBase.Center(), drone->getPosition());
+					if (distance < closestEstablishedDistance) {
+						closestEstablishedDistance = distance;
+						closestEstablished = &base;
+					}
+				}
+			}
+		}
+
+		if (closestEstablishedWorkerNeeded)
+			closestEstablishedWorkerNeeded->addWorker(drone);
+		else if(closestEstablished)
+			closestEstablished->addWorker(drone);
+			// If not, I guess we are dead
+	}
+
 	BWAPI::Unit Macro::getDroneForBuilding(BWAPI::Position position) {
 		return getNearestBase(position).removeWorker(position);
 	}
@@ -218,11 +267,11 @@ namespace BlackCrow {
 
 	// Estimates
 	Resources Macro::getUnreservedResources() {
-		Resources resources = { 0, 0 };
+		Resources resources = { Broodwar->self()->minerals(), Broodwar->self()->gas() };
 
 		for (std::shared_ptr<Planned> planned : plannedStuff) {
-			resources.minerals += planned->getMineralPrice();
-			resources.gas += planned->getGasPrice();
+			resources.minerals -= planned->getMineralPrice();
+			resources.gas -= planned->getGasPrice();
 		}
 
 		return resources;
@@ -300,9 +349,7 @@ namespace BlackCrow {
 
 	std::vector<BWAPI::Unit> Macro::getUnreservedLarvae() {
 		std::vector<BWAPI::Unit> allLarvae = getAllLarvae();
-		//Broodwar->sendText("Total Larvae: %i", allLarvae.size());
 		std::vector<BWAPI::Unit> reservedLarvae = getReservedLarvae();
-		//Broodwar->sendText("Total Larvae: %i", reservedLarvae.size());
 		std::vector<BWAPI::Unit> unreservedLarvae;
 
 		std::sort(allLarvae.begin(), allLarvae.end());

@@ -27,6 +27,10 @@ namespace BlackCrow {
 		elapsedMs = 0;
 		highestFrameTime = 0;
 		highestFrameTimeAgo = 0;
+
+		plannedStatusStrings.emplace(Planned::Status::ACTIVE, "Active");
+		plannedStatusStrings.emplace(Planned::Status::COMPLETED, "Completed");
+		plannedStatusStrings.emplace(Planned::Status::FAILED, "Failed");
 	}
 
 	void Debug::onStart() {}
@@ -315,28 +319,19 @@ namespace BlackCrow {
 			int xStart = 500;
 			int yStart = 20;
 
-			Broodwar->drawTextScreen(xStart + 8, yStart, "L/D");
-			Broodwar->drawTextScreen(xStart + 33, yStart, "Planned Units");
-			Broodwar->drawLineScreen(xStart, yStart + 15, xStart + 120, yStart + 15, BWAPI::Colors::Yellow);
+			Broodwar->drawTextScreen(xStart + 1, yStart, "Planned Units");
+			Broodwar->drawLineScreen(xStart, yStart + 13, xStart + 120, yStart + 13, BWAPI::Colors::Yellow);
 
-			// TODO
-			/*
 			int i = 1;
-			for (PlannedUnit* pu : *bc.macro.plannedUnits) {
-				//Broodwar->drawTextScreen(xStart, yStart + 5 + 9 * i, std::to_string(i).c_str());
-				//Broodwar->drawTextScreen(xStart + 8, yStart + 5 + 9 * i, pu->larvaEgg == nullptr ? " No" : "Yes");
-				Broodwar->drawTextScreen(xStart, yStart + 5 + 13 * i, pu->larvaEgg == nullptr ? "-" : std::to_string(pu->larvaEgg->getID()).c_str());
-				Broodwar->drawTextScreen(xStart + 27, yStart + 5 + 13 * i, pu->type.c_str());
+			for (std::shared_ptr<Planned> planned : bc.macro.plannedStuff) {
+				float percentage = planned->progressPercent();
+				if (percentage > 0)
+					Broodwar->drawBoxScreen(xStart, yStart + 11 + 13 * i, xStart + (int)(120.0 * percentage), yStart + 14 + 13 * i, BWAPI::Colors::White, true);
 
-				if (pu->larvaEgg) {
-					float percentageFinished = (float)pu->larvaEgg->getRemainingBuildTime() / (float)pu->type.buildTime();
-					Broodwar->drawLineScreen(xStart, yStart + 6 + 13 * i, xStart + (int)(120.0 * percentageFinished), yStart + 6 + 13 * i, BWAPI::Colors::White);
-					Broodwar->drawLineScreen(xStart, yStart + 17 + 13 * i, xStart + (int)(120.0 * percentageFinished), yStart + 17 + 13 * i, BWAPI::Colors::White);
-				}
-
+				Broodwar->drawTextScreen(xStart + 1, yStart + 13 * i, planned->getName().c_str());
+				
 				i++;
 			}
-			*/
 		}
 	}
 

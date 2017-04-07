@@ -17,9 +17,13 @@ namespace BlackCrow {
 
 		Planned() = delete;
 		virtual ~Planned() = default;
+		
 		virtual int getMineralPrice() = 0;
 		virtual int getGasPrice() = 0;
 		virtual void onFrame() = 0;
+		virtual float progressPercent() = 0;
+		virtual std::string getName() = 0;
+
 		Status getStatus() { return status; };
 
 	protected:
@@ -36,10 +40,14 @@ namespace BlackCrow {
 		BWAPI::Position nearTo;
 		BWAPI::Unit unit = nullptr;
 
+		operator std::string() const;
 		int getMineralPrice() override;
 		int getGasPrice() override;
 		void onFrame() override;
+		float progressPercent() override;
+		std::string getName() override;
 		BWAPI::Unit reservedLarva();
+		
 
 	private:
 		bool alreadyGrabbedLarva = false;
@@ -53,9 +61,12 @@ namespace BlackCrow {
 		BWAPI::TilePosition buildPosition;
 		BWAPI::Unit droneOrBuilding = nullptr;
 
+		operator std::string() const;
 		int getMineralPrice() override;
 		int getGasPrice() override;
 		void onFrame() override;
+		float progressPercent() override;
+		std::string getName() override;
 	};
 
 	class PlannedExtractor : public Planned {
@@ -65,13 +76,16 @@ namespace BlackCrow {
 		Geyser& geyser;
 		BWAPI::Unit drone = nullptr;
 
+		operator std::string() const;
 		int getMineralPrice() override;
 		int getGasPrice() override;
 		void onFrame() override;
+		float progressPercent() override;
 
 	private:
 		bool alreadyGrabbedDrone = false;
 		bool alreadyBuiltExtractor = false;
+		std::string getName() override;
 	};
 
 	class PlannedTech : public Planned {
@@ -80,9 +94,12 @@ namespace BlackCrow {
 
 		BWAPI::TechType type;
 
+		operator std::string() const;
 		int getMineralPrice() override;
 		int getGasPrice() override;
 		void onFrame() override;
+		float progressPercent() override;
+		std::string getName() override;
 	};
 
 	class PlannedUpgrade : public Planned {
@@ -91,9 +108,12 @@ namespace BlackCrow {
 
 		BWAPI::UpgradeType type;
 
+		operator std::string() const;
 		int getMineralPrice() override;
 		int getGasPrice() override;
 		void onFrame() override;
+		float progressPercent() override;
+		std::string getName() override;
 	};
 
 }

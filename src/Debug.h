@@ -1,6 +1,8 @@
 #pragma once
 #include <BWAPI.h>
+#include "Planned.h"
 //#include <BW/Offsets.h>
+
 
 namespace BlackCrow {
 
@@ -24,6 +26,7 @@ namespace BlackCrow {
 
 	private:
 		BlackCrow &bc;
+		std::unordered_map<Planned::Status, std::string> plannedStatusStrings;
 
 		bool showBaseInfo;
 		bool showBuildable;

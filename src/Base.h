@@ -43,5 +43,6 @@ namespace BlackCrow {
 	private:
 		BlackCrow& bc;
 		Mineral& findMineralForWorker();
+		int gasWorkersNeeded();
 	};
 }

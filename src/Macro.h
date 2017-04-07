@@ -53,6 +53,7 @@ namespace BlackCrow {
 		bool isWorkerNeededForSaturation();
 		int getWorkersNeededForSaturation();
 		void buildWorkerDrone();
+		void addDrone(BWAPI::Unit drone);
 		BWAPI::Unit getDroneForBuilding(BWAPI::Position position);
 
 		// Gas

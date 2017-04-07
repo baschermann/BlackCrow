@@ -17,7 +17,8 @@ namespace BlackCrow {
 			assert(mineral);
 
 			if (mineral->exists()) {
-				unit->gather(mineral->bwemMineral->Unit());
+				bool a = unit->gather(mineral->bwemMineral->Unit());
+				bool b = !a;
 				return true;
 			}
 
