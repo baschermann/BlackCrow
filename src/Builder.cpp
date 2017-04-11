@@ -99,7 +99,7 @@ namespace BlackCrow {
 				spiral.goNext();
 		}
 
-		assert(!"No Building Position found!");
+		//assert(!"No Building Position found!");
 		return TilePosition();
 	}
 

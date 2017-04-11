@@ -2,6 +2,7 @@
 #include "BlackCrow.h"
 #include "Planned.h"
 #include "Worker.h"
+#include <numeric>
 
 namespace BlackCrow {
 
@@ -36,6 +37,11 @@ namespace BlackCrow {
 	void Macro::onUnitDestroyed(BWAPI::Unit unit) {
 		if (unit->getType() == UnitTypes::Zerg_Hatchery || unit->getType() == UnitTypes::Zerg_Lair || unit->getType() == UnitTypes::Zerg_Hive)
 			hatcheries.erase(std::remove(hatcheries.begin(), hatcheries.end(), unit), hatcheries.end());
+
+		for (Base& base : bases) {
+			if (base.onUnitDestroyed(unit))
+				break;
+		}
 	}
 
 	// Planned
@@ -113,6 +119,8 @@ namespace BlackCrow {
 			amount += base.totalMineralWorkers();
 		}
 		return amount;
+
+		//return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) {return sum + base.totalMineralWorkers(); });
 	}
 
 	int Macro::getGasWorkers() {
@@ -187,6 +195,7 @@ namespace BlackCrow {
 	}
 
 	BWAPI::Unit Macro::getDroneForBuilding(BWAPI::Position position) {
+		// Predicates for getNearestBase, we want to have workers here
 		return getNearestBase(position).removeWorker(position);
 	}
 
@@ -291,7 +300,8 @@ namespace BlackCrow {
 			
 			Area& area = bc.map.getArea(bwemArea);
 			for (const BWEM::Base& bwemBase : bwemArea.Bases()) {
-				Base base(bc, bwemBase, area);
+				bases.emplace_back(bc, bwemBase, area);
+				Base& base = bases.back();
 
 				// Starting Base
 				if (bwemBase.Starting()) {
@@ -306,10 +316,16 @@ namespace BlackCrow {
 						}
 					}
 				}
-
-				bases.push_back(base);	
 			}
 		}
+		
+		for (Base& base : bases)
+			if (base.hatchery)
+				for (Worker& worker : base.workers)
+					if (worker.mineral && worker.mineral->id <= 0)
+						assert(!"Wrong mineral ids!");
+
+		Broodwar->sendText("Debug Anchor");
 	}
 
 	BWAPI::Unit Macro::getStartingHatchery() {

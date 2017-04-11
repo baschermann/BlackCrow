@@ -23,11 +23,11 @@ namespace BlackCrow {
 		Mineral* mineral = nullptr;
 		Geyser* geyser = nullptr;
 
+		void onFrame();
 		void stopMining();
 		bool continueMining();
-		bool setMineral(Mineral& mineral);
-		bool setGeyser(Geyser& geyser);
-		void removeFromResource();
+		void setMineral(Mineral& mineral);
+		void setGeyser(Geyser& geyser);
 	};
 
 	bool operator==(const Worker& left, const Worker& right);

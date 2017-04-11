@@ -7,6 +7,10 @@ namespace BlackCrow {
 
 	Worker::Worker(BWAPI::Unit worker, Base& base) : unit(worker), base(&base) {}
 
+	void Worker::onFrame() {
+
+	}
+
 	void Worker::stopMining() {
 		unit->stop();
 	}
@@ -17,12 +21,11 @@ namespace BlackCrow {
 			assert(mineral);
 
 			if (mineral->exists()) {
-				bool a = unit->gather(mineral->bwemMineral->Unit());
-				bool b = !a;
+				unit->gather(mineral->bwemMineral->Unit());
 				return true;
 			}
-
 			break;
+
 		case MiningTarget::GEYSER:
 			assert(geyser);
 
@@ -30,42 +33,19 @@ namespace BlackCrow {
 				unit->gather(geyser->geyserUnit);
 				return true;
 			}
-
 			break;
 		}
-
 		return false;
 	}
 
-	bool Worker::setMineral(Mineral& pMineral) {
+	void Worker::setMineral(Mineral& pMineral) {
 		miningTarget = MiningTarget::MINERAL;
 		mineral = &pMineral;
-		return continueMining();
 	}
 
-	bool Worker::setGeyser(Geyser& pGeyser) {
+	void Worker::setGeyser(Geyser& pGeyser) {
 		miningTarget = MiningTarget::GEYSER;
 		geyser = &pGeyser;
-		return continueMining();
-	}
-
-	void Worker::removeFromResource() {
-		stopMining();
-
-		switch (miningTarget) {
-		case MiningTarget::MINERAL:
-			assert(mineral);
-
-			mineral->unregisterWorker(*this);
-
-			break;
-		case MiningTarget::GEYSER:
-			assert(geyser);
-
-			geyser->unregisterWorker(*this);
-
-			break;
-		}
 	}
 
 	bool operator==(const Worker& left, const Worker& right) {

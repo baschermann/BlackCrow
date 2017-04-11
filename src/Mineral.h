@@ -12,7 +12,7 @@ namespace BlackCrow {
 
 		int id = -1;
 		const BWEM::Mineral* bwemMineral;
-		std::vector<Worker> workers;
+		std::vector<Worker*> workers;
 		
 		bool exists();
 		void registerWorker(Worker& worker);

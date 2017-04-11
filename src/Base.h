@@ -16,6 +16,7 @@ namespace BlackCrow {
 	public:
 		Base(BlackCrow& parent, const BWEM::Base& bwemBase, Area& area);
 		void onFrame();
+		bool onUnitDestroyed(BWAPI::Unit unit);
 
 		const BWEM::Base& bwemBase;
 		BWAPI::Unit hatchery = nullptr;
@@ -24,25 +25,24 @@ namespace BlackCrow {
 		bool isExpanding = false;
 		bool selfSustained = false;
 		
+		std::vector<Worker> workers;
 		std::vector<Geyser> geysers;
 		std::vector<Mineral> minerals;
 
-		bool isEstablished();
+		const bool isEstablished();
 		void addWorker(BWAPI::Unit drone);
 		BWAPI::Unit removeWorker();
 		BWAPI::Unit removeWorker(BWAPI::Position closestTo);
 
-		bool workerNeeded();
-		int workersNeeded();
-		std::vector<Worker> getMineralWorkers();
-		std::vector<Worker> getGasWorkers();
-		int totalMineralWorkers();
-		int totalGasWorkers();
-		int totalWorkers();
+		const bool workerNeeded();
+		const int workersNeeded();
+		const int totalWorkers();
+		const int totalMineralWorkers();
+		const int totalGasWorkers();
 
 	private:
 		BlackCrow& bc;
 		Mineral& findMineralForWorker();
-		int gasWorkersNeeded();
+		const int gasWorkersNeeded();
 	};
 }

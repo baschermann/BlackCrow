@@ -1,12 +1,16 @@
+#define NOMINMAX
 #include "BlackCrow.h"
 #include "Base.h"
 #include "Area.h"
 #include "Worker.h"
-
+#include <numeric>
+#include <algorithm>
+#include <Filter.h>
 
 namespace BlackCrow {
 
-	
+	static int a = 0;
+
 	Base::Base(BlackCrow& parent, const BWEM::Base& bwemBase, Area& area) : bc(parent), bwemBase(bwemBase), area(area) {
 		// Minerals
 		for (const BWEM::Mineral* bwemMineral : bwemBase.Minerals()) {
@@ -23,79 +27,82 @@ namespace BlackCrow {
 	}
 
 	void Base::onFrame() {
-		// Remove empty minerals and put the drones on another mineral
-		for (Mineral& mineral : minerals) {
-			if (!mineral.exists()) {
-				std::vector<Worker> workers = mineral.workers;
-				minerals.erase(std::remove(minerals.begin(), minerals.end(), mineral), minerals.end());
-				for (Worker& worker : workers) {
-					worker.removeFromResource();
-					worker.setMineral(findMineralForWorker());
-				}
-			}
+		for (Worker& worker : workers) {
+			if (worker.mineral && worker.mineral->id <= 0)
+				assert(!"Wrong mineral ids!");
+			worker.onFrame();
 		}
 	}
 
-	bool Base::isEstablished() {
+	bool Base::onUnitDestroyed(BWAPI::Unit unit) {
+		if (unit->getType() == BWAPI::UnitTypes::Resource_Mineral_Field) {
+			auto it = std::find_if(minerals.begin(), minerals.end(), [&](Mineral& mineral) { return mineral.bwemMineral->Unit() == unit; });
+			if (it != minerals.end() && it->workers.size() > 0) {
+				for (Worker* worker : it->workers) {
+					Mineral& mineral = findMineralForWorker();
+					worker->setMineral(mineral);
+					mineral.registerWorker(*worker);
+				}
+				minerals.erase(it);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	const bool Base::isEstablished() {
 		if (hatchery && hatchery->exists() && hatchery->isCompleted())
 			return true;
 		return false;
 	}
 
 	void Base::addWorker(BWAPI::Unit unit) {
-		Worker cWorker(unit, *this);
-		cWorker.setMineral(findMineralForWorker());
+		//In c++17, emplace_back returns the created element.
+		workers.emplace_back(unit, *this);
+
+		Worker& worker = workers.back();
+		Mineral& mineral = findMineralForWorker();
+
+		worker.setMineral(mineral);
+		mineral.registerWorker(worker);
+		worker.continueMining();
 	}
 
 	// Can return nullptr
 	BWAPI::Unit Base::removeWorker() {
-		int highestWorkerCount = 0;
-		for (Mineral& mineral : minerals) {
-			highestWorkerCount = std::max(highestWorkerCount, (int) mineral.workers.size());
-		}
+		int highestWorkerCount = std::accumulate(minerals.begin(), minerals.end(), 0, [](int highest, Mineral& mineral) { return highest = std::max(highest, (int)mineral.workers.size()); });
 
-		for (Mineral& mineral : minerals) {
-			if (mineral.workers.size() == highestWorkerCount) {
-				Worker worker = mineral.workers.back();
-				worker.removeFromResource();
-				return worker.unit;
+		if (highestWorkerCount > 0) {
+			for (Mineral& mineral : minerals) {
+				if (mineral.workers.size() == highestWorkerCount) {
+					Worker& worker = *mineral.workers.back();
+
+					mineral.unregisterWorker(worker);
+					workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
+
+					return worker.unit;
+				}
 			}
 		}
-		
 		// TODO Take from Gas
 		return nullptr;
 	}
 
 	// Can return nullptr
 	BWAPI::Unit Base::removeWorker(BWAPI::Position closestTo) {
-		double minDistance = std::numeric_limits < double >::max() ;
-		Worker* minWorker = nullptr;
+		// TODO this is calculating to much DISTANCE!!
+		auto worker = std::min_element(workers.begin(), workers.end(), [&](Worker& left, Worker& right) { return Util::distance(left.unit->getPosition(), closestTo) < Util::distance(right.unit->getPosition(), closestTo); });
 
-
-		std::vector<Worker> mineralWorkers = getMineralWorkers();
-		if (mineralWorkers.size() > 0) {
-
-			for (Worker& worker : mineralWorkers) {
-				double distance = Util::distance(closestTo, worker.unit->getPosition());
-				if (!minWorker) {
-					minWorker = &worker;
-					minDistance = distance;
-				} else if (distance < minDistance) {
-					minWorker = &worker;
-					minDistance = distance;
-				}
-			}
-
-			Worker worker = *minWorker;
-			worker.removeFromResource();
-			return worker.unit;
-		}
-
-		// TODO Take from Gas
-		return nullptr;
+		if (worker != workers.end()) {
+			BWAPI::Unit unit = worker->unit;
+			worker->mineral->unregisterWorker(*worker);
+			workers.erase(worker);
+			return unit;
+		} else 
+			return nullptr;
 	}
 
-	bool Base::workerNeeded() {
+	const bool Base::workerNeeded() {
 		if (hatchery && hatchery->exists() && hatchery->isCompleted()) {
 			if (totalMineralWorkers() < bc.config.mineralSaturationMultiplier * minerals.size())
 				return true;
@@ -108,17 +115,12 @@ namespace BlackCrow {
 		return false;
 	}
 
-	int Base::workersNeeded() {
-		int amount = 0;
+	const int Base::workersNeeded() {
 		if (hatchery && hatchery->exists() && hatchery->isCompleted()) {
-			amount += (int)(bc.config.mineralSaturationMultiplier * minerals.size() - totalMineralWorkers());
-
-			for (Geyser& geyser : geysers) {
-				amount += geyser.workersNeeded();
-			}
+			return (int)(bc.config.mineralSaturationMultiplier * minerals.size() - totalMineralWorkers())
+				+ std::accumulate(geysers.begin(), geysers.end(), 0, [](int sum, Geyser& geyser) { return sum += geyser.workersNeeded(); });
 		}
-		
-		return amount;
+		return 0;
 	}
 
 	Mineral& Base::findMineralForWorker() {
@@ -130,47 +132,15 @@ namespace BlackCrow {
 		}
 	}
 
-	int Base::totalWorkers() {
+	const int Base::totalWorkers() {
 		return totalMineralWorkers() + totalGasWorkers();
 	}
 
-	int Base::totalMineralWorkers() {
-		int amount = 0;
-		for (Mineral& mineral : minerals) {
-			amount += mineral.workers.size();
-		}
-		return amount;
+	const int Base::totalMineralWorkers() {
+		return std::accumulate(workers.begin(), workers.end(), 0, [](int sum, Worker& worker) { return worker.miningTarget == Worker::MiningTarget::MINERAL ? ++sum : sum; });
 	}
 
-	int Base::totalGasWorkers() {
-		int amount = 0;
-		for (Geyser& geyser : geysers) {
-			amount += geyser.workers.size();
-		}
-		return amount;
-	}
-
-	int Base::gasWorkersNeeded() {
-		int amount = 0;
-		for (Geyser& geyser : geysers) {
-			amount += geyser.workersNeeded();
-		}
-		return amount;
-	}
-
-	std::vector<Worker> Base::getMineralWorkers() {
-		std::vector<Worker> mineralWorkers;
-		for (Mineral& mineral : minerals) {
-			mineralWorkers.insert(mineralWorkers.end(), mineral.workers.begin(), mineral.workers.end());
-		}
-		return mineralWorkers;
-	}
-
-	std::vector<Worker> Base::getGasWorkers() {
-		std::vector<Worker> gasWorkers;
-		for (Geyser& geyser : geysers) {
-			gasWorkers.insert(gasWorkers.end(), geyser.workers.begin(), geyser.workers.end());
-		}
-		return gasWorkers;
+	const int Base::totalGasWorkers() {
+		return std::accumulate(workers.begin(), workers.end(), 0, [](int sum, Worker& worker) { return worker.miningTarget == Worker::MiningTarget::GEYSER ? ++sum : sum; });
 	}
 }

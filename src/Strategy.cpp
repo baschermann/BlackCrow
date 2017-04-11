@@ -28,7 +28,7 @@ namespace BlackCrow {
 		}
 
 		if (scoutSquads.size() <= 0) {
-			startInitialScout();
+			//startInitialScout();
 		}
 
 		for (ScoutSquad& ss : scoutSquads) {

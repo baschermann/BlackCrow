@@ -29,11 +29,11 @@ namespace BlackCrow {
 	}
 
 	void Geyser::registerWorker(Worker& worker) {
-		workers.push_back(worker);
+		workers.push_back(&worker);
 	}
 
 	void Geyser::unregisterWorker(Worker& worker) {
-		workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
+		workers.erase(std::remove(workers.begin(), workers.end(), &worker), workers.end());
 	}
 	
 	void Geyser::registerPlannedExtractor(PlannedExtractor& pu) {

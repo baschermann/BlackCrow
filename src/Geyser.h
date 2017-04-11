@@ -13,7 +13,7 @@ namespace BlackCrow {
 		Geyser(const BWEM::Geyser* geyser);
 
 		const BWEM::Geyser* bwemGeyser = nullptr;
-		std::vector<Worker> workers;
+		std::vector<Worker*> workers;
 		BWAPI::Unit geyserUnit = nullptr;
 		
 

@@ -133,6 +133,8 @@ namespace BlackCrow {
 			Broodwar->drawTextMap(Position(p), std::to_string(i++).c_str());
 		}
 
+		Broodwar->drawTextScreen(180, 20, "Total Mineral Workers: %i", bc.macro.getMineralWorkers());
+
 		if (showBaseInfo)
 			drawBaseInformation();
 
@@ -242,6 +244,12 @@ namespace BlackCrow {
 
 	void Debug::drawBaseInformation() {
 		// TODO
+		for (Base& base : bc.macro.bases) {
+			for (Mineral& mineral : base.minerals) {
+				Broodwar->drawBoxMap(Position(mineral.bwemMineral->TopLeft()), Position(mineral.bwemMineral->TopLeft()) + Position(10, 10), Colors::Black);
+				Broodwar->drawTextMap(Position(mineral.bwemMineral->TopLeft()), std::to_string(mineral.workers.size()).c_str());
+			}
+		}
 	}
 
 	void Debug::drawBuildable() {
