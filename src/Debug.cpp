@@ -122,18 +122,18 @@ namespace BlackCrow {
 
 	void Debug::drawOnFrame() {
 
-		BWAPI::TilePosition prev;
-		prev.x = 0;
-		prev.y = 0;
-
-		int i = 0;
+		/*int i = 0;
 		for (BWAPI::TilePosition p : bc.builder.positions) {
-			//Broodwar->drawLineMap(prev.x, prev.y, p.x, p.y, Colors::Cyan);
-			//prev = p;
 			Broodwar->drawTextMap(Position(p), std::to_string(i++).c_str());
-		}
+		}*/
 
-		Broodwar->drawTextScreen(180, 20, "Total Mineral Workers: %i", bc.macro.getMineralWorkers());
+		/*Broodwar->drawTextScreen(180, 20, "%i Planned Drones", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Drone));
+		Broodwar->drawTextScreen(180, 40, "%i Planned Spawning Pool", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Spawning_Pool));
+		Broodwar->drawTextScreen(180, 60, "%i Planned Extractor", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Extractor));
+		Broodwar->drawTextScreen(180, 80, "%i Planned Hatchery", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery));*/
+
+		// Draw Mouse Tile Position
+		//Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
 
 		if (showBaseInfo)
 			drawBaseInformation();

@@ -1,5 +1,4 @@
 #pragma once
-#include <BWAPI.h>
 #include <BWEM/bwem.h>
 #include "Geyser.h"
 #include "Mineral.h"

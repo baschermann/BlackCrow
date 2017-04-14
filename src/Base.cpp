@@ -9,8 +9,6 @@
 
 namespace BlackCrow {
 
-	static int a = 0;
-
 	Base::Base(BlackCrow& parent, const BWEM::Base& bwemBase, Area& area) : bc(parent), bwemBase(bwemBase), area(area) {
 		// Minerals
 		for (const BWEM::Mineral* bwemMineral : bwemBase.Minerals()) {
@@ -77,7 +75,7 @@ namespace BlackCrow {
 				if (mineral.workers.size() == highestWorkerCount) {
 					Worker& worker = *mineral.workers.back();
 
-					mineral.unregisterWorker(worker);
+					//mineral.unregisterWorker(worker);
 					workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
 
 					return worker.unit;
@@ -95,7 +93,7 @@ namespace BlackCrow {
 
 		if (worker != workers.end()) {
 			BWAPI::Unit unit = worker->unit;
-			worker->mineral->unregisterWorker(*worker);
+			//worker->mineral->unregisterWorker(*worker);
 			workers.erase(worker);
 			return unit;
 		} else 

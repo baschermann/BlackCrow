@@ -64,7 +64,33 @@ namespace BlackCrow {
 	}
 
 	int Macro::getTypeCurrentlyPlanned(BWAPI::UnitType type) {
-		return 0;
+		return std::accumulate(plannedStuff.begin(), plannedStuff.end(), 0, [&](int sum, std::shared_ptr<Planned> planned) { 
+
+			if (type == UnitTypes::Zerg_Extractor) {
+				// TODO typeof comparison here?
+				std::shared_ptr<PlannedExtractor> plannedExtractor = std::dynamic_pointer_cast<PlannedExtractor>(planned);
+				if (plannedExtractor)
+					return ++sum;
+			}
+
+			std::shared_ptr<PlannedUnit> plannedUnit = std::dynamic_pointer_cast<PlannedUnit>(planned);
+			if (plannedUnit && plannedUnit->type == type)
+				return ++sum;
+
+			std::shared_ptr<PlannedBuilding> plannedBuilding = std::dynamic_pointer_cast<PlannedBuilding>(planned);
+			if (plannedBuilding && plannedBuilding->type == type)
+				return ++sum;
+
+			std::shared_ptr<PlannedUpgrade> plannedUpgrade = std::dynamic_pointer_cast<PlannedUpgrade>(planned);
+			if (plannedUpgrade && plannedUpgrade->type == type)
+				return ++sum;
+
+			std::shared_ptr<PlannedTech> plannedTech = std::dynamic_pointer_cast<PlannedTech>(planned);
+			if (plannedTech && plannedTech->type == type)
+				return ++sum;
+			
+			return sum;
+		});
 	}
 
 	// Expansions and Bases // TODO Need enemy information to do this
@@ -85,6 +111,10 @@ namespace BlackCrow {
 	}
 
 	Base& Macro::getSafestEstablishedBase() {
+		for (Base& base : bases) {
+			if (base.isEstablished())
+				return base;
+		}
 		return bases.front();
 	}
 	// TODO end
@@ -106,21 +136,11 @@ namespace BlackCrow {
 
 	// Worker
 	int Macro::getTotalWorkers() {
-		int amount = 0;
-		for (Base& base : bases) {
-			amount += base.totalWorkers();
-		}
-		return amount;
+		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) {return sum + base.totalWorkers(); });
 	}
 
 	int Macro::getMineralWorkers() {
-		int amount = 0;
-		for (Base& base : bases) {
-			amount += base.totalMineralWorkers();
-		}
-		return amount;
-
-		//return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) {return sum + base.totalMineralWorkers(); });
+		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) {return sum + base.totalMineralWorkers(); });
 	}
 
 	int Macro::getGasWorkers() {
@@ -322,10 +342,11 @@ namespace BlackCrow {
 		for (Base& base : bases)
 			if (base.hatchery)
 				for (Worker& worker : base.workers)
-					if (worker.mineral && worker.mineral->id <= 0)
-						assert(!"Wrong mineral ids!");
-
-		Broodwar->sendText("Debug Anchor");
+					if (worker.mineral && worker.mineral->id <= 0) {
+						// TODO BIG BIG ERROR
+						//assert(!"Wrong mineral ids!");
+						Broodwar->sendText("!!!!! Error! Wrong Mineral IDs! !!!!!");
+					}
 	}
 
 	BWAPI::Unit Macro::getStartingHatchery() {
