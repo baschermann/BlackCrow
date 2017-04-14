@@ -142,6 +142,9 @@ namespace BlackCrow {
 	}
 
 	float PlannedBuilding::progressPercent() {
+		if (droneOrBuilding && droneOrBuilding->getType().isBuilding()) {
+			return ((float)droneOrBuilding->getRemainingBuildTime() / (float)droneOrBuilding->getType().buildTime());
+		}
 		return 0;
 	}
 
@@ -170,19 +173,19 @@ namespace BlackCrow {
 			return;
 		}
 
-		if (!drone) {
+		if (!drone)
 			drone = bc.macro.getDroneForBuilding(geyser.bwemGeyser->Pos());
-			alreadyGrabbedDrone = true;
-		}
 
-		if (drone) {
-			drone->build(UnitTypes::Zerg_Extractor, geyser.bwemGeyser->TopLeft());
-			alreadyBuiltExtractor = true;
-		} else if(alreadyBuiltExtractor && !drone->exists()) {
+		if (drone && drone->exists()) {
+			if(drone->build(UnitTypes::Zerg_Extractor, geyser.bwemGeyser->TopLeft()))
+				alreadyBuiltExtractor = true;
+		} else if(alreadyBuiltExtractor) {
 			if (!geyser.geyserUnit || !geyser.geyserUnit->exists()) {
 				auto unitsOnGeyser = Broodwar->getUnitsOnTile(geyser.bwemGeyser->TopLeft(), IsRefinery && IsBuilding);
-				if (unitsOnGeyser.size() > 0)
+				if (unitsOnGeyser.size() > 0) {
 					geyser.geyserUnit = *unitsOnGeyser.begin();
+					geyserUnitFound = true;
+				}
 
 				if (unitsOnGeyser.size() > 1)
 					Broodwar->sendText("Found more than 1 building for extractor");
@@ -191,13 +194,18 @@ namespace BlackCrow {
 			}
 		}
 
-		if (status == Status::ACTIVE && alreadyGrabbedDrone && alreadyBuiltExtractor && drone && !drone->exists()) {
+		if ((status == Status::ACTIVE && drone && !drone->exists() && !alreadyBuiltExtractor) // Drone died during building
+			|| (status == Status::ACTIVE && alreadyBuiltExtractor && geyserUnitFound && !geyser.geyserUnit->exists()) // Extractor was killed while constructing
+			) {
 			status = Status::FAILED;
 			return;
 		}
 	}
 	
 	float PlannedExtractor::progressPercent() {
+		if (geyser.geyserUnit) {
+			return ((float)geyser.geyserUnit->getRemainingBuildTime() / (float)geyser.geyserUnit->getType().buildTime());
+		}
 		return 0;
 	}
 

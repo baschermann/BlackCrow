@@ -83,8 +83,8 @@ namespace BlackCrow {
 		float progressPercent() override;
 
 	private:
-		bool alreadyGrabbedDrone = false;
 		bool alreadyBuiltExtractor = false;
+		bool geyserUnitFound = false;
 		std::string getName() override;
 	};
 
