@@ -5,10 +5,21 @@
 
 namespace BlackCrow {
 
+	using namespace BWAPI;
+	using namespace Filter;
+
 	Worker::Worker(BWAPI::Unit worker, Base& base) : unit(worker), base(&base) {}
 
 	void Worker::onFrame() {
 
+
+		if (miningTarget == MiningTarget::MINERAL) {
+			Unit orderTarget = unit->getOrderTarget();
+
+			if (orderTarget && orderTarget->getType().isRefinery()) {
+				continueMining();
+			}
+		}
 	}
 
 	void Worker::stopMining() {
@@ -41,11 +52,13 @@ namespace BlackCrow {
 	void Worker::setMineral(Mineral& pMineral) {
 		miningTarget = MiningTarget::MINERAL;
 		mineral = &pMineral;
+		geyser = nullptr;
 	}
 
 	void Worker::setGeyser(Geyser& pGeyser) {
 		miningTarget = MiningTarget::GEYSER;
 		geyser = &pGeyser;
+		mineral = nullptr;
 	}
 
 	bool operator==(const Worker& left, const Worker& right) {

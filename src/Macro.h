@@ -47,9 +47,9 @@ namespace BlackCrow {
 		Base& getNearestBase(BWAPI::Position position);
 		
 		// Worker
-		int getTotalWorkers();
-		int getMineralWorkers();
-		int getGasWorkers();
+		int getTotalWorkerAmount();
+		int getTotalMineralWorkerAmount();
+		int getTotalGasWorkerAmount();
 		bool isWorkerNeededForSaturation();
 		int getWorkersNeededForSaturation();
 		void buildWorkerDrone();
@@ -60,7 +60,7 @@ namespace BlackCrow {
 		int getGasWorkerSlotsAvailable();
 		int getExtractorsAbleToBuild();
 		void buildExtractor();
-		void addGasWorker();
+		bool addGasWorker();
 		void removeGasWorker();
 
 		// Larva

@@ -13,7 +13,7 @@ namespace BlackCrow {
 
 	Debug::Debug(BlackCrow &parent) : bc(parent) {
 
-		showBaseInfo = false;
+		showBaseInfo = true;
 		showBuildable = false;
 		fastDrawBuildable = false;
 		showManagerInfos = true;
@@ -45,13 +45,14 @@ namespace BlackCrow {
 		}
 
 		if (text == "test") {
-			//Broodwar << bc.macro.getNonReservedLarvae()->size() << std::endl;
-			//Broodwar << bc.macro.getNonReservedLarva((*bc.macro.bases->begin())->hatchery->getPosition())->getID() << std::endl;
+			bool a = bc.macro.addGasWorker();
+			Broodwar->sendText(a ? "Sucessfull shift" : "Failed");
 			return true;
 		}
 
 		if (text == "test2") {
-			//Broodwar << bc.macro.getNonReservedLarva((*bc.macro.bases->begin())->hatchery->getPosition())->getID() << std::endl;
+			bc.macro.removeGasWorker();
+			Broodwar->sendText("Send remove from gas command");
 			return true;
 		}
 
@@ -249,6 +250,16 @@ namespace BlackCrow {
 				Broodwar->drawBoxMap(Position(mineral.bwemMineral->TopLeft()), Position(mineral.bwemMineral->TopLeft()) + Position(10, 10), Colors::Black);
 				Broodwar->drawTextMap(Position(mineral.bwemMineral->TopLeft()), std::to_string(mineral.workers.size()).c_str());
 			}
+
+			for (Geyser& geyser : base.geysers) {
+				Broodwar->drawBoxMap(Position(geyser.bwemGeyser->TopLeft()), Position(geyser.bwemGeyser->TopLeft()) + Position(10, 10), Colors::Black);
+				Broodwar->drawTextMap(Position(geyser.bwemGeyser->TopLeft()), std::to_string(geyser.workers.size()).c_str());
+			}
+
+			Broodwar->drawBoxMap(Position(base.bwemBase.Location()) + Position(5, 15), Position(base.bwemBase.Location()) + Position(100, 60), Colors::Black, true);
+			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 15), "Total: %i (+%i)", base.getTotalWorkers(), base.getWorkersNeeded());
+			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 30), "Mineral: %i", base.getTotalMineralWorkers());
+			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 45), "Gas: %i (+%i)", base.getTotalGasWorkers(), base.getGasWorkerSlotsAvailable());
 		}
 	}
 

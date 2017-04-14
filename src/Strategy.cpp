@@ -65,7 +65,6 @@ namespace BlackCrow {
 				bc.macro.buildWorkerDrone();
 		}
 
-
 		if (bc.macro.getUnreservedResources().minerals >= 300 && bc.macro.getTotalLarvaeAmount()<= 0) {
 			if (bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery) < 1) {
 				bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery, false));

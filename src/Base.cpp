@@ -9,6 +9,9 @@
 
 namespace BlackCrow {
 
+	using namespace BWAPI;
+	using namespace Filter;
+
 	Base::Base(BlackCrow& parent, const BWEM::Base& bwemBase, Area& area) : bc(parent), bwemBase(bwemBase), area(area) {
 		// Minerals
 		for (const BWEM::Mineral* bwemMineral : bwemBase.Minerals()) {
@@ -26,9 +29,11 @@ namespace BlackCrow {
 
 	void Base::onFrame() {
 		for (Worker& worker : workers) {
-			if (worker.mineral && worker.mineral->id <= 0)
-				assert(!"Wrong mineral ids!");
 			worker.onFrame();
+
+			// The big problem :(
+			//if (worker.mineral && worker.mineral->id <= 0)
+				//assert(!"Wrong mineral ids!");
 		}
 	}
 
@@ -119,6 +124,44 @@ namespace BlackCrow {
 				+ std::accumulate(geysers.begin(), geysers.end(), 0, [](int sum, Geyser& geyser) { return sum += geyser.workersNeeded(); });
 		}
 		return 0;
+	}
+
+	bool Base::shiftWorkerToGas() {
+		
+		auto geyser = std::find_if(geysers.begin(), geysers.end(), [](Geyser& geyser) { return geyser.workerNeeded(); });
+		if (geyser != geysers.end()) {
+			BWAPI::Position closestTo = BWAPI::Position(geyser->bwemGeyser->TopLeft());
+
+			// TODO Get the closest drone instead of a random one
+			// TODO this is calculating to much DISTANCE!!
+			//auto worker = std::min_element(workers.begin(), workers.end(), [&](Worker& left, Worker& right) { return Util::distance(left.unit->getPosition(), closestTo) < Util::distance(right.unit->getPosition(), closestTo); });
+			auto worker = std::find_if(workers.begin(), workers.end(), [](Worker& worker) { return worker.miningTarget == Worker::MiningTarget::MINERAL; });
+			if (worker != workers.end()) {
+				Broodwar->sendText("Worker ID: %i", worker->unit->getID());
+				worker->setGeyser((*geyser));
+				geyser->registerWorker((*worker));
+				worker->continueMining();
+				return true;
+			}
+			Broodwar->sendText("No worker could be shifted from minerals to gas. This should not happen");
+		}
+		// TODO Part of the big bug :(
+		Broodwar->sendText("Could not find geyser that needs worker for the chosen base. This should not happen");
+		return false;
+	}
+
+	void Base::shiftWorkerFromGas() {
+		auto worker = std::find_if(workers.begin(), workers.end(), [](Worker& worker) { return worker.miningTarget == Worker::MiningTarget::GEYSER; });
+		if (worker != workers.end()) {
+			worker->geyser->unregisterWorker(*worker);
+
+			Mineral& mineral = findMineralForWorker();
+			worker->setMineral(mineral);
+			mineral.registerWorker(*worker);
+			worker->continueMining();
+			return;
+		}
+		Broodwar->sendText("No worker could be shifted from gas to minerals. This should not happen");
 	}
 
 	Mineral& Base::findMineralForWorker() {

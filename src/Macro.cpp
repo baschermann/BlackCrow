@@ -26,6 +26,9 @@ namespace BlackCrow {
 				it++;
 			}
 		}
+
+		for (Base& base : bases)
+			base.onFrame();
 	}
 
 
@@ -135,15 +138,15 @@ namespace BlackCrow {
 	}
 
 	// Worker
-	int Macro::getTotalWorkers() {
+	int Macro::getTotalWorkerAmount() {
 		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getTotalWorkers(); });
 	}
 
-	int Macro::getMineralWorkers() {
+	int Macro::getTotalMineralWorkerAmount() {
 		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getTotalMineralWorkers(); });
 	}
 
-	int Macro::getGasWorkers() {
+	int Macro::getTotalGasWorkerAmount() {
 		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getTotalGasWorkers(); });
 	}
 
@@ -231,12 +234,20 @@ namespace BlackCrow {
 		}
 	}
 
-	void Macro::addGasWorker() {
-
+	bool Macro::addGasWorker() {
+		if (getGasWorkerSlotsAvailable() > 0) {
+			auto base = find_if(bases.begin(), bases.end(), [](Base& base) { return base.getGasWorkerSlotsAvailable() > 0; });
+			return base->shiftWorkerToGas();
+		}
+		Broodwar->sendText("No gas worker slots available");
+		return false;
 	}
 
 	void Macro::removeGasWorker() {
-
+		if (getTotalGasWorkerAmount() > 0) {
+			auto base = find_if(bases.begin(), bases.end(), [](Base& base) { return base.getTotalGasWorkers() > 0; });
+			base->shiftWorkerFromGas();
+		}
 	}
 
 	// Larva
@@ -250,7 +261,7 @@ namespace BlackCrow {
 		if (url.size() > 0)
 			return Util::findClosestUnit(url, nearTo);
 		else
-		return nullptr;
+			return nullptr;
 	}
 
 	int Macro::getUnreservedLarvaeAmount() {

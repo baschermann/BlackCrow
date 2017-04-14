@@ -32,6 +32,8 @@ namespace BlackCrow {
 		void addWorker(BWAPI::Unit drone);
 		BWAPI::Unit removeWorker();
 		BWAPI::Unit removeWorker(BWAPI::Position closestTo);
+		bool shiftWorkerToGas();
+		void shiftWorkerFromGas();
 
 		const bool isWorkerNeeded();
 		const int getWorkersNeeded();
