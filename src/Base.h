@@ -33,15 +33,16 @@ namespace BlackCrow {
 		BWAPI::Unit removeWorker();
 		BWAPI::Unit removeWorker(BWAPI::Position closestTo);
 
-		const bool workerNeeded();
-		const int workersNeeded();
-		const int totalWorkers();
-		const int totalMineralWorkers();
-		const int totalGasWorkers();
+		const bool isWorkerNeeded();
+		const int getWorkersNeeded();
+		const int getTotalWorkers();
+		const int getTotalMineralWorkers();
+		const int getTotalGasWorkers();
+		const int getExtractorsAbleToBuild();
+		const int getGasWorkerSlotsAvailable();
 
 	private:
 		BlackCrow& bc;
 		Mineral& findMineralForWorker();
-		const int gasWorkersNeeded();
 	};
 }

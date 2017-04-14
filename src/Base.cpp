@@ -100,9 +100,9 @@ namespace BlackCrow {
 			return nullptr;
 	}
 
-	const bool Base::workerNeeded() {
+	const bool Base::isWorkerNeeded() {
 		if (hatchery && hatchery->exists() && hatchery->isCompleted()) {
-			if (totalMineralWorkers() < bc.config.mineralSaturationMultiplier * minerals.size())
+			if (getTotalMineralWorkers() < bc.config.mineralSaturationMultiplier * minerals.size())
 				return true;
 
 			for (Geyser& geyser : geysers) {
@@ -113,9 +113,9 @@ namespace BlackCrow {
 		return false;
 	}
 
-	const int Base::workersNeeded() {
+	const int Base::getWorkersNeeded() {
 		if (hatchery && hatchery->exists() && hatchery->isCompleted()) {
-			return (int)(bc.config.mineralSaturationMultiplier * minerals.size() - totalMineralWorkers())
+			return (int)(bc.config.mineralSaturationMultiplier * minerals.size() - getTotalMineralWorkers())
 				+ std::accumulate(geysers.begin(), geysers.end(), 0, [](int sum, Geyser& geyser) { return sum += geyser.workersNeeded(); });
 		}
 		return 0;
@@ -130,15 +130,23 @@ namespace BlackCrow {
 		}
 	}
 
-	const int Base::totalWorkers() {
-		return totalMineralWorkers() + totalGasWorkers();
+	const int Base::getTotalWorkers() {
+		return getTotalMineralWorkers() + getTotalGasWorkers();
 	}
 
-	const int Base::totalMineralWorkers() {
+	const int Base::getTotalMineralWorkers() {
 		return std::accumulate(workers.begin(), workers.end(), 0, [](int sum, Worker& worker) { return worker.miningTarget == Worker::MiningTarget::MINERAL ? ++sum : sum; });
 	}
 
-	const int Base::totalGasWorkers() {
+	const int Base::getTotalGasWorkers() {
 		return std::accumulate(workers.begin(), workers.end(), 0, [](int sum, Worker& worker) { return worker.miningTarget == Worker::MiningTarget::GEYSER ? ++sum : sum; });
+	}
+
+	const int Base::getGasWorkerSlotsAvailable() {
+		return std::accumulate(geysers.begin(), geysers.end(), 0, [](int sum, Geyser& geyser) { return geyser.isMineable() ? ++sum : sum; }) * 3 - getTotalGasWorkers();
+	}
+
+	const int Base::getExtractorsAbleToBuild() {
+		return std::accumulate(geysers.begin(), geysers.end(), 0, [](int sum, Geyser& geyser) { return geyser.isBuildable() ? ++sum : sum; });
 	}
 }

@@ -58,9 +58,8 @@ namespace BlackCrow {
 
 		// Gas
 		int getGasWorkerSlotsAvailable();
-		int getExtractorsAbleToBuild(bool expansionsFinished);
+		int getExtractorsAbleToBuild();
 		void buildExtractor();
-		int getExtractorsCurrentlyBuilding();
 		void addGasWorker();
 		void removeGasWorker();
 

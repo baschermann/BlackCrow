@@ -136,39 +136,28 @@ namespace BlackCrow {
 
 	// Worker
 	int Macro::getTotalWorkers() {
-		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) {return sum + base.totalWorkers(); });
+		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getTotalWorkers(); });
 	}
 
 	int Macro::getMineralWorkers() {
-		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) {return sum + base.totalMineralWorkers(); });
+		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getTotalMineralWorkers(); });
 	}
 
 	int Macro::getGasWorkers() {
-		int amount = 0;
-		for (Base& base : bases) {
-			amount += base.totalGasWorkers();
-		}
-		return amount;
+		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getTotalGasWorkers(); });
 	}
 
 	bool Macro::isWorkerNeededForSaturation() {
-		for (Base& base : bases) {
-			if (base.workerNeeded())
-				return true;
-		}
-		return false;
+		return std::any_of(bases.begin(), bases.end(), [](Base& base) { return base.isWorkerNeeded(); });
 	}
 
 	int Macro::getWorkersNeededForSaturation() {
-		int amount = 0;
-		for (Base& base : bases) {
-			amount += base.workersNeeded();
-		}
-		return amount;
+		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getWorkersNeeded(); });
 	}
 	
 	void Macro::buildWorkerDrone() {
-
+		auto base = std::find_if(bases.begin(), bases.end(), [](Base& base) { return base.isWorkerNeeded(); });
+		planUnit(UnitTypes::Zerg_Drone, base->bwemBase.Center());
 	}
 
 	void Macro::addDrone(BWAPI::Unit drone) {
@@ -188,7 +177,7 @@ namespace BlackCrow {
 				}
 
 				// If the base needs worker and is closer, use it
-				if (base.workerNeeded()) {
+				if (base.isWorkerNeeded()) {
 					double distance = Util::distance(base.bwemBase.Center(), drone->getPosition());
 					if (distance < closestEstablishedWorkerNeededDistance) {
 						closestEstablishedWorkerNeeded = &base;
@@ -222,24 +211,11 @@ namespace BlackCrow {
 
 	// Gas
 	int Macro::getGasWorkerSlotsAvailable() {
-		int amount = 0;
-		for (Base& base : bases) {
-			amount += base.workersNeeded();
-		}
-		return amount;
+		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getGasWorkerSlotsAvailable(); });
 	}
 
-	int Macro::getExtractorsAbleToBuild(bool expansionsFinished) {
-		int amount = 0;
-		for (Base& base : bases) {
-			if (base.isEstablished()) {
-				for (Geyser& geyser : base.geysers) {
-					if (geyser.isBuildable())
-						amount++;
-				}
-			}
-		}
-		return amount;
+	int Macro::getExtractorsAbleToBuild() {
+		return std::accumulate(bases.begin(), bases.end(), 0, [&](int sum, Base& base) { return sum + base.getExtractorsAbleToBuild(); });
 	}
 
 	void Macro::buildExtractor() { // TODO build extractor at safeset base
@@ -253,19 +229,6 @@ namespace BlackCrow {
 				}
 			}
 		}
-	}
-
-	int Macro::getExtractorsCurrentlyBuilding() {
-		int amount = 0;
-
-		for (Base& base : bases) {
-			for (Geyser& geyser : base.geysers) {
-				if (geyser.isCurrentlyBuilding()) {
-					amount++;
-				}
-			}
-		}
-		return amount;
 	}
 
 	void Macro::addGasWorker() {
