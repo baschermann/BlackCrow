@@ -241,9 +241,10 @@ namespace BlackCrow {
 
 	// Larva
 	int Macro::getTotalLarvaeAmount() {
-		return 0;
+		return getAllLarvae().size();
 	}
 
+	// Can return nullptr
 	BWAPI::Unit Macro::getUnreservedLarva(Position nearTo) {
 		std::vector<BWAPI::Unit> url = getUnreservedLarvae();
 		if (url.size() > 0)
