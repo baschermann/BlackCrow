@@ -373,7 +373,7 @@ namespace BlackCrow {
 
 		// TODO this doesn't look good
 		for (std::shared_ptr<Planned> planned : plannedStuff) {
-			PlannedUnit* pu = dynamic_cast<PlannedUnit*>(planned.get()); // TODO Dynamic Cast is bad?
+			std::shared_ptr<PlannedUnit> pu = std::dynamic_pointer_cast<PlannedUnit>(planned); // TODO Dynamic Cast is bad?
 			if (pu) {
 				Unit larva = pu->reservedLarva();
 				if (larva)
