@@ -128,10 +128,10 @@ namespace BlackCrow {
 			Broodwar->drawTextMap(Position(p), std::to_string(i++).c_str());
 		}*/
 
-		/*Broodwar->drawTextScreen(180, 20, "%i Planned Drones", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Drone));
-		Broodwar->drawTextScreen(180, 40, "%i Planned Spawning Pool", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Spawning_Pool));
-		Broodwar->drawTextScreen(180, 60, "%i Planned Extractor", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Extractor));
-		Broodwar->drawTextScreen(180, 80, "%i Planned Hatchery", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery));*/
+		Broodwar->drawTextScreen(180, 20, "%i Max Supply", bc.macro.getMaxSupply() / 2);
+		Broodwar->drawTextScreen(180, 35, "%i Used Supply", bc.macro.getUsedSupply() / 2);
+		Broodwar->drawTextScreen(180, 50, "%i Free Supply", bc.macro.getFreeSupply() / 2);
+		//Broodwar->drawTextScreen(180, 65, "%i Planned Hatchery", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery));
 
 		// Draw Mouse Tile Position
 		//Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
@@ -258,8 +258,8 @@ namespace BlackCrow {
 
 			Broodwar->drawBoxMap(Position(base.bwemBase.Location()) + Position(5, 15), Position(base.bwemBase.Location()) + Position(100, 60), Colors::Black, true);
 			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 15), "Total: %i (+%i)", base.getTotalWorkers(), base.getWorkersNeeded());
-			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 30), "Mineral: %i", base.getTotalMineralWorkers());
-			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 45), "Gas: %i (+%i)", base.getTotalGasWorkers(), base.getGasWorkerSlotsAvailable());
+			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 25), "Mineral: %i", base.getTotalMineralWorkers());
+			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 35), "Gas: %i (+%i)", base.getTotalGasWorkers(), base.getGasWorkerSlotsAvailable());
 		}
 	}
 
@@ -348,6 +348,10 @@ namespace BlackCrow {
 					Broodwar->drawBoxScreen(xStart, yStart + 11 + 13 * i, xStart + (int)(120.0 * percentage), yStart + 14 + 13 * i, BWAPI::Colors::White, true);
 
 				Broodwar->drawTextScreen(xStart + 1, yStart + 13 * i, planned->getName().c_str());
+
+				std::shared_ptr<PlannedUnit> plannedUnit = std::dynamic_pointer_cast<PlannedUnit>(planned);
+				if (plannedUnit && plannedUnit->unit)
+					Broodwar->drawTextScreen(xStart - 25, yStart + 13 * i, std::to_string(plannedUnit->unit->getID()).c_str());
 				
 				i++;
 			}

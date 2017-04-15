@@ -47,7 +47,7 @@ namespace BlackCrow {
 		}
 	}
 
-	// Planned
+	// ### Planned ###
 	std::shared_ptr<PlannedUnit> Macro::planUnit(BWAPI::UnitType type, BWAPI::Position nearTo) {
 		auto unit = std::make_shared<PlannedUnit>(bc, type, nearTo);
 		plannedStuff.push_back(unit);
@@ -96,7 +96,19 @@ namespace BlackCrow {
 		});
 	}
 
-	// Expansions and Bases // TODO Need enemy information to do this
+	std::vector<std::shared_ptr<PlannedUnit>> Macro::getPlannedUnits() {
+		std::vector<std::shared_ptr<PlannedUnit>> plannedUnits;
+
+		for (auto planned : plannedStuff) {
+			std::shared_ptr<PlannedUnit> plannedUnit = std::dynamic_pointer_cast<PlannedUnit>(planned);
+			if (plannedUnit)
+				plannedUnits.push_back(plannedUnit);
+		}
+
+		return plannedUnits;
+	}
+
+	// ### Expansions and Bases ### // TODO Need enemy information to do this
 	Base& Macro::getSafestToExpand() {
 		return bases.front();
 	}
@@ -279,6 +291,23 @@ namespace BlackCrow {
 		}
 
 		return resources;
+	}
+
+	int Macro::getUsedSupply() {
+		return Broodwar->self()->supplyUsed();
+	}
+
+	int Macro::getMaxSupply() {
+		return getTypeCurrentlyPlanned(UnitTypes::Zerg_Overlord) * UnitTypes::Zerg_Overlord.supplyProvided() + Broodwar->self()->supplyTotal();
+	}
+
+	int Macro::getFreeSupply() {
+		return getMaxSupply() - getUsedSupply();
+	}
+
+	int Macro::getPlannedSupply() {
+		auto plannedUnits = getPlannedUnits();
+		return std::accumulate(plannedUnits.begin(), plannedUnits.end(), 0, [](int sum, std::shared_ptr<PlannedUnit> plannedUnit) { return sum + plannedUnit->type.supplyRequired(); });
 	}
 
 	double Macro::getAverageMineralsPerFrame() {

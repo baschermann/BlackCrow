@@ -38,7 +38,7 @@ namespace BlackCrow {
 	}
 
 	bool Base::onUnitDestroyed(BWAPI::Unit unit) {
-		if (unit->getType() == BWAPI::UnitTypes::Resource_Mineral_Field) {
+		if (unit->getType().isMineralField()) {
 			auto it = std::find_if(minerals.begin(), minerals.end(), [&](Mineral& mineral) { return mineral.bwemMineral->Unit() == unit; });
 			if (it != minerals.end() && it->workers.size() > 0) {
 				for (Worker* worker : it->workers) {
@@ -47,6 +47,22 @@ namespace BlackCrow {
 					mineral.registerWorker(*worker);
 				}
 				minerals.erase(it);
+				return true;
+			}
+		}
+
+		if (unit->getType() == UnitTypes::Zerg_Drone) {
+			auto worker = std::find_if(workers.begin(), workers.end(), [&](Worker& worker) { return worker.unit->getID() == unit->getID(); });
+			if (worker != workers.end()) {
+
+				if (worker->miningTarget == Worker::MiningTarget::MINERAL) {
+					// TODO Big Bug here :(
+					//worker->mineral->unregisterWorker(*worker);
+				} else if (worker->miningTarget == Worker::MiningTarget::GEYSER) {
+					worker->geyser->unregisterWorker(*worker);
+				}
+
+				workers.erase(worker);
 				return true;
 			}
 		}
@@ -121,7 +137,7 @@ namespace BlackCrow {
 	const int Base::getWorkersNeeded() {
 		if (hatchery && hatchery->exists() && hatchery->isCompleted()) {
 			return (int)(bc.config.mineralSaturationMultiplier * minerals.size() - getTotalMineralWorkers())
-				+ std::accumulate(geysers.begin(), geysers.end(), 0, [](int sum, Geyser& geyser) { return sum += geyser.workersNeeded(); });
+				+ std::accumulate(geysers.begin(), geysers.end(), 0, [](int sum, Geyser& geyser) { return sum += geyser.isMineable() ? geyser.workersNeeded() : 0; });
 		}
 		return 0;
 	}
@@ -137,7 +153,6 @@ namespace BlackCrow {
 			//auto worker = std::min_element(workers.begin(), workers.end(), [&](Worker& left, Worker& right) { return Util::distance(left.unit->getPosition(), closestTo) < Util::distance(right.unit->getPosition(), closestTo); });
 			auto worker = std::find_if(workers.begin(), workers.end(), [](Worker& worker) { return worker.miningTarget == Worker::MiningTarget::MINERAL; });
 			if (worker != workers.end()) {
-				Broodwar->sendText("Worker ID: %i", worker->unit->getID());
 				worker->setGeyser((*geyser));
 				geyser->registerWorker((*worker));
 				worker->continueMining();

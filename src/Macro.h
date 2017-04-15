@@ -37,6 +37,7 @@ namespace BlackCrow {
 		std::shared_ptr<PlannedBuilding> planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
 		std::shared_ptr<PlannedExtractor> planExtractor(Geyser& geyser);
 		int getTypeCurrentlyPlanned(BWAPI::UnitType type);
+		std::vector<std::shared_ptr<PlannedUnit>> getPlannedUnits();
 		
 		// Expansions and Bases
 		Base& getSafestToExpand();
@@ -70,6 +71,10 @@ namespace BlackCrow {
 
 		// Statistics and Numbers
 		Resources getUnreservedResources();
+		int getUsedSupply();
+		int getMaxSupply();
+		int getFreeSupply();
+		int getPlannedSupply();
 		double getAverageMineralsPerFrame();
 		double getAverageGasPerFrame();
 

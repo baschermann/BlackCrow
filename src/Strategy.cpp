@@ -14,12 +14,10 @@ namespace BlackCrow {
 	Strategy::Strategy(BlackCrow &parent) : bc(parent) {}
 
 	void Strategy::onStart() {
-		fillBuildOrder(getStartBuildOrder());
+		//fillBuildOrder(getStartBuildOrder());
 	}
 
 	void Strategy::onFrame() {
-
-		//Broodwar->sendText("Total Unreserved Larvae: %i", bc.macro.getUnreservedLarvaeAmount());
 
 		if (buildOrder.size() > 0) {
 			followBuildOrder();
@@ -27,8 +25,8 @@ namespace BlackCrow {
 			dynamicDecision();
 		}
 
-		if (scoutSquads.size() <= 0) {
-			//startInitialScout();
+		if (bc.macro.getUsedSupply() >= 18 && scoutSquads.size() <= 0) {
+			startInitialScout();
 		}
 
 		for (ScoutSquad& ss : scoutSquads) {
@@ -60,9 +58,14 @@ namespace BlackCrow {
 	void Strategy::dynamicDecision() {
 
 		// Lets do the macro first
-		if (bc.macro.isWorkerNeededForSaturation()) {
+		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Drone.supplyRequired() && bc.macro.getWorkersNeededForSaturation() - bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Drone < 0)) {
 			if (bc.macro.getUnreservedResources().minerals >= 50 && bc.macro.getUnreservedLarvaeAmount() > 0)
 				bc.macro.buildWorkerDrone();
+		}
+
+		if (bc.macro.getFreeSupply() + bc.macro.getPlannedSupply() < UnitTypes::Zerg_Overlord.supplyProvided()) {
+			if (bc.macro.getUnreservedResources().minerals >= 100 && bc.macro.getUnreservedLarvaeAmount() > 0)
+				bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition);
 		}
 
 		if (bc.macro.getUnreservedResources().minerals >= 300 && bc.macro.getTotalLarvaeAmount()<= 0) {
@@ -142,6 +145,11 @@ namespace BlackCrow {
 
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
+
+			// 6 Zerglings @8
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
+			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
 
 			break;
 
