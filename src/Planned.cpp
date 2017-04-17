@@ -63,10 +63,11 @@ namespace BlackCrow {
 	}
 
 	BWAPI::Unit PlannedUnit::reservedLarva() {
-		if (unit && unit->getType() == UnitTypes::Zerg_Larva)
+		/*if (unit && unit->getType() == UnitTypes::Zerg_Larva)
 			return unit;
 		else
-			return nullptr;
+			return nullptr;*/
+		return unit;
 	}
 
 	float PlannedUnit::progressPercent() {

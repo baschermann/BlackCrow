@@ -44,15 +44,13 @@ namespace BlackCrow {
 			return true;
 		}
 
-		if (text == "test") {
-			bool a = bc.macro.addGasWorker();
-			Broodwar->sendText(a ? "Sucessfull shift" : "Failed");
+		if (text == "1") {
+			bc.macro.buildWorkerDrone();
 			return true;
 		}
 
-		if (text == "test2") {
-			bc.macro.removeGasWorker();
-			Broodwar->sendText("Send remove from gas command");
+		if (text == "2") {
+			bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition);
 			return true;
 		}
 
@@ -128,9 +126,9 @@ namespace BlackCrow {
 			Broodwar->drawTextMap(Position(p), std::to_string(i++).c_str());
 		}*/
 
-		Broodwar->drawTextScreen(180, 20, "%i Max Supply", bc.macro.getMaxSupply() / 2);
-		Broodwar->drawTextScreen(180, 35, "%i Used Supply", bc.macro.getUsedSupply() / 2);
-		Broodwar->drawTextScreen(180, 50, "%i Free Supply", bc.macro.getFreeSupply() / 2);
+		Broodwar->drawTextScreen(180, 20, "%i Total Larvae", bc.macro.getTotalLarvaeAmount());
+		Broodwar->drawTextScreen(180, 35, "%i Unreserved Larvae", bc.macro.getUnreservedLarvaeAmount());
+		//Broodwar->drawTextScreen(180, 50, "%i Free Supply", bc.macro.larv);
 		//Broodwar->drawTextScreen(180, 65, "%i Planned Hatchery", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery));
 
 		// Draw Mouse Tile Position
@@ -256,10 +254,10 @@ namespace BlackCrow {
 				Broodwar->drawTextMap(Position(geyser.bwemGeyser->TopLeft()), std::to_string(geyser.workers.size()).c_str());
 			}
 
-			Broodwar->drawBoxMap(Position(base.bwemBase.Location()) + Position(5, 15), Position(base.bwemBase.Location()) + Position(100, 60), Colors::Black, true);
-			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 15), "Total: %i (+%i)", base.getTotalWorkers(), base.getWorkersNeeded());
-			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 25), "Mineral: %i", base.getTotalMineralWorkers());
-			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(10, 35), "Gas: %i (+%i)", base.getTotalGasWorkers(), base.getGasWorkerSlotsAvailable());
+			Broodwar->drawBoxMap(Position(base.bwemBase.Location()) + Position(25, 35), Position(base.bwemBase.Location()) + Position(100, 75), Colors::Black, true);
+			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 35), "Total: %i (+%i)", base.getTotalWorkers(), base.getWorkersNeeded());
+			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 45), "Mineral: %i", base.getTotalMineralWorkers());
+			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 55), "Gas: %i (+%i)", base.getTotalGasWorkers(), base.getGasWorkerSlotsAvailable());
 		}
 	}
 
@@ -409,7 +407,7 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawLifeBars() {
-		float barSize = bc.config.barSize; // Pixel width of a single recangle of the healthbar
+		float barSize = bc.config.barSize; // Pixel width and height of a single health rectangle
 
 		for (Unit unit : Broodwar->getAllUnits()) {
 			if (!unit->getPlayer()->isNeutral()) {

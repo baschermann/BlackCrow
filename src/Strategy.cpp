@@ -14,7 +14,7 @@ namespace BlackCrow {
 	Strategy::Strategy(BlackCrow &parent) : bc(parent) {}
 
 	void Strategy::onStart() {
-		//fillBuildOrder(getStartBuildOrder());
+		fillBuildOrder(getStartBuildOrder());
 	}
 
 	void Strategy::onFrame() {
