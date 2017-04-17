@@ -10,7 +10,8 @@ namespace BlackCrow {
 	class Worker {
 	public:
 		Worker(BWAPI::Unit worker, Base& base);
-		~Worker();
+		
+		//~Worker();
 		/*Worker(Worker& worker);
 		Worker(const Worker& worker);
 		Worker(Worker&& worker);*/

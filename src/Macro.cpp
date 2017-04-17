@@ -12,7 +12,7 @@ namespace BlackCrow {
 	Macro::Macro(BlackCrow &parent) : bc(parent) {}
 
 	void Macro::onStart() {
-		bases.reserve(200);
+		bases.reserve(bc.bwem.BaseCount()); // Cause of the Big Bug of April 2017. Minerals would be copied and workers would have the wrong pointers to it
 		initBases();
 		startPosition = getStartingHatchery()->getPosition();
 	}
@@ -31,7 +31,6 @@ namespace BlackCrow {
 		for (Base& base : bases)
 			base.onFrame();
 	}
-
 
 	void Macro::onUnitCompleted(BWAPI::Unit unit) {
 		if (unit->getType() == UnitTypes::Zerg_Hatchery)
@@ -325,7 +324,7 @@ namespace BlackCrow {
 			
 			Area& area = bc.map.getArea(bwemArea);
 			for (const BWEM::Base& bwemBase : bwemArea.Bases()) {
-				bases.emplace_back(bc, bwemBase, area);
+				bases.emplace_back(bc, bwemBase, area); // Big Bug of April 2017. Remember me!
 				Base& base = bases.back();
 
 				// Starting Base
@@ -338,24 +337,11 @@ namespace BlackCrow {
 
 						for (BWAPI::Unit drone : drones) {
 							base.addWorker(drone);
-
-							if (base.workers.back().mineral && base.workers.back().mineral->id <= 0) {
-								Broodwar->sendText("!!!!! Error! Wrong Mineral IDs! !!!!!");
-							}
 						}
 					}
 				}
 			}
 		}
-		
-		for (Base& base : bases)
-			if (base.hatchery)
-				for (Worker& worker : base.workers)
-					if (worker.mineral && worker.mineral->id <= 0) {
-						// TODO BIG BIG ERROR
-						//assert(!"Wrong mineral ids!");
-						Broodwar->sendText("!!!!! Error! Wrong Mineral IDs! !!!!!");
-					}
 	}
 
 	BWAPI::Unit Macro::getStartingHatchery() {

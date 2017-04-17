@@ -10,9 +10,11 @@ namespace BlackCrow {
 
 	Worker::Worker(BWAPI::Unit worker, Base& base) : unit(worker), base(&base) {}
 
+	/*
 	Worker::~Worker() {
 		Broodwar->sendText("D");
 	}
+	*/
 
 	/*Worker::Worker(Worker& worker) {
 		Broodwar->sendText("Copy Constructor of Worker");
@@ -28,8 +30,6 @@ namespace BlackCrow {
 
 
 	void Worker::onFrame() {
-
-
 		if (miningTarget == MiningTarget::MINERAL) {
 			Unit orderTarget = unit->getOrderTarget();
 

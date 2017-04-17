@@ -25,17 +25,11 @@ namespace BlackCrow {
 
 		// Is Island
 		//TODO
-
-		workers.reserve(300);
 	}
 
 	void Base::onFrame() {
 		for (Worker& worker : workers) {
 			worker.onFrame();
-
-			// The big problem :(
-			//if (worker.mineral && worker.mineral->id <= 0)
-				//assert(!"Wrong mineral ids!");
 		}
 	}
 
@@ -58,8 +52,7 @@ namespace BlackCrow {
 			if (worker != workers.end()) {
 
 				if (worker->miningTarget == Worker::MiningTarget::MINERAL) {
-					// TODO Big Bug here :(
-					//worker->mineral->unregisterWorker(*worker);
+					worker->mineral->unregisterWorker(*worker);
 				} else if (worker->miningTarget == Worker::MiningTarget::GEYSER) {
 					worker->geyser->unregisterWorker(*worker);
 				}
@@ -99,7 +92,7 @@ namespace BlackCrow {
 				if (mineral.workers.size() == highestWorkerCount) {
 					Worker& worker = *mineral.workers.back();
 
-					//mineral.unregisterWorker(worker);
+					mineral.unregisterWorker(worker);
 					workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
 
 					return worker.unit;
@@ -117,7 +110,7 @@ namespace BlackCrow {
 
 		if (worker != workers.end()) {
 			BWAPI::Unit unit = worker->unit;
-			//worker->mineral->unregisterWorker(*worker);
+			worker->mineral->unregisterWorker(*worker);
 			workers.erase(worker);
 			return unit;
 		} else 
@@ -163,7 +156,6 @@ namespace BlackCrow {
 			}
 			Broodwar->sendText("No worker could be shifted from minerals to gas. This should not happen");
 		}
-		// TODO Part of the big bug :(
 		Broodwar->sendText("Could not find geyser that needs worker for the chosen base. This should not happen");
 		return false;
 	}
