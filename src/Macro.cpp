@@ -12,6 +12,7 @@ namespace BlackCrow {
 	Macro::Macro(BlackCrow &parent) : bc(parent) {}
 
 	void Macro::onStart() {
+		bases.reserve(200);
 		initBases();
 		startPosition = getStartingHatchery()->getPosition();
 	}
@@ -335,8 +336,12 @@ namespace BlackCrow {
 						base.hatchery = startingHatchery;
 						Unitset drones = Broodwar->getUnitsInRadius(startingHatchery->getPosition(), 350, BWAPI::Filter::IsWorker);
 
-						for (Unit drone : drones) {
+						for (BWAPI::Unit drone : drones) {
 							base.addWorker(drone);
+
+							if (base.workers.back().mineral && base.workers.back().mineral->id <= 0) {
+								Broodwar->sendText("!!!!! Error! Wrong Mineral IDs! !!!!!");
+							}
 						}
 					}
 				}

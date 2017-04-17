@@ -45,7 +45,11 @@ namespace BlackCrow {
 		}
 
 		if (text == "1") {
-			bc.macro.buildWorkerDrone();
+			for (Worker worker : bc.macro.getNearestBase(bc.macro.startPosition).workers) {
+				Broodwar->sendText("bla blub");
+			}
+
+			//bc.macro.buildWorkerDrone();
 			return true;
 		}
 

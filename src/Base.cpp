@@ -25,6 +25,8 @@ namespace BlackCrow {
 
 		// Is Island
 		//TODO
+
+		workers.reserve(300);
 	}
 
 	void Base::onFrame() {
@@ -78,7 +80,8 @@ namespace BlackCrow {
 	void Base::addWorker(BWAPI::Unit unit) {
 		//In c++17, emplace_back returns the created element.
 		workers.emplace_back(unit, *this);
-
+		Worker& bla = workers.front();
+		
 		Worker& worker = workers.back();
 		Mineral& mineral = findMineralForWorker();
 

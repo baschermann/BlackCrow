@@ -20,9 +20,9 @@ namespace BlackCrow {
 	void Strategy::onFrame() {
 
 		if (buildOrder.size() > 0) {
-			followBuildOrder();
+			//followBuildOrder();
 		} else {
-			dynamicDecision();
+			//dynamicDecision();
 		}
 
 		if (bc.macro.getUsedSupply() >= 18 && scoutSquads.size() <= 0) {
