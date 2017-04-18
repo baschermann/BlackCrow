@@ -45,11 +45,7 @@ namespace BlackCrow {
 		}
 
 		if (text == "1") {
-			for (Worker worker : bc.macro.getNearestBase(bc.macro.startPosition).workers) {
-				Broodwar->sendText("bla blub");
-			}
-
-			//bc.macro.buildWorkerDrone();
+			bc.macro.buildWorkerDrone();
 			return true;
 		}
 
@@ -249,8 +245,8 @@ namespace BlackCrow {
 		// TODO
 		for (Base& base : bc.macro.bases) {
 			for (Mineral& mineral : base.minerals) {
-				Broodwar->drawBoxMap(Position(mineral.bwemMineral->TopLeft()), Position(mineral.bwemMineral->TopLeft()) + Position(10, 10), Colors::Black);
-				Broodwar->drawTextMap(Position(mineral.bwemMineral->TopLeft()), std::to_string(mineral.workers.size()).c_str());
+				Broodwar->drawBoxMap(Position(mineral.bwemMineral->TopLeft()), Position(mineral.bwemMineral->TopLeft()) + Position(10, 10), Colors::Black, true);
+				Broodwar->drawTextMap(Position(mineral.bwemMineral->TopLeft()) + Position(3, -1), std::to_string(mineral.workers.size()).c_str());
 			}
 
 			for (Geyser& geyser : base.geysers) {

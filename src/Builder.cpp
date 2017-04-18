@@ -73,7 +73,7 @@ namespace BlackCrow {
 	}
 
 	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, bool inMineralLine) {
-		return getBuildingSpot(type, bc.macro.getSafestEstablishedBase().bwemBase.Location(), inMineralLine);
+		return getBuildingSpot(type, bc.macro.getSafestEstablishedBase()->bwemBase.Location(), inMineralLine);
 	}
 
 	BWAPI::TilePosition Builder::getBuildingSpot(BWAPI::UnitType type, Base& base, bool inMineralLine) {

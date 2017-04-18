@@ -12,11 +12,11 @@ namespace BlackCrow {
 
 		int id = -1;
 		const BWEM::Mineral* bwemMineral;
-		std::vector<Worker*> workers;
+		std::vector<std::shared_ptr<Worker>> workers;
 		
 		bool exists();
-		void registerWorker(Worker& worker);
-		void unregisterWorker(Worker& worker);
+		void registerWorker(std::shared_ptr<Worker> worker);
+		void unregisterWorker(std::shared_ptr<Worker> worker);
 	};
 
 	bool operator==(const Mineral& left, const Mineral& right);

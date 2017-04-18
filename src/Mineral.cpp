@@ -12,12 +12,12 @@ namespace BlackCrow {
 		return bwemMineral != nullptr;
 	}
 
-	void Mineral::registerWorker(Worker& worker) {
-		workers.push_back(&worker);
+	void Mineral::registerWorker(std::shared_ptr<Worker> worker) {
+		workers.push_back(worker);
 	}
 
-	void Mineral::unregisterWorker(Worker& worker) {
-		workers.erase(std::remove(workers.begin(), workers.end(), &worker), workers.end());
+	void Mineral::unregisterWorker(std::shared_ptr<Worker> worker) {
+		workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
 	}
 
 	bool operator==(const Mineral& left, const Mineral& right) {

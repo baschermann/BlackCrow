@@ -44,8 +44,8 @@ namespace BlackCrow {
 		void expand();
 		int getNumberOfCurrentlyExpandingBases();
 		int getNumberOfEstablishedBases();
-		Base& getSafestEstablishedBase();
-		Base& getNearestBase(BWAPI::Position position);
+		Base* getSafestEstablishedBase();
+		Base* getNearestBase(BWAPI::Position position);
 		
 		// Worker
 		int getTotalWorkerAmount();

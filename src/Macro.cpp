@@ -125,16 +125,16 @@ namespace BlackCrow {
 		return 0;
 	}
 
-	Base& Macro::getSafestEstablishedBase() {
+	Base* Macro::getSafestEstablishedBase() {
 		for (Base& base : bases) {
 			if (base.isEstablished())
-				return base;
+				return &base;
 		}
-		return bases.front();
+		return nullptr;
 	}
 	// TODO end
 
-	Base& Macro::getNearestBase(BWAPI::Position position) { // Is there a better, or templatey/lambda way?
+	Base* Macro::getNearestBase(BWAPI::Position position) { // Is there a better, or templatey/lambda way?
 		Base* closestBase = nullptr;
 		double closestDistance = std::numeric_limits<double>::max();
 		for(Base& base : bases) {
@@ -146,7 +146,7 @@ namespace BlackCrow {
 				}
 			}
 		}
-		return *closestBase;
+		return closestBase;
 	}
 
 	// Worker
@@ -220,7 +220,10 @@ namespace BlackCrow {
 
 	BWAPI::Unit Macro::getDroneForBuilding(BWAPI::Position position) {
 		// Predicates for getNearestBase, we want to have workers here
-		return getNearestBase(position).removeWorker(position);
+		Base* base = getNearestBase(position);
+		if (base)
+			return base->removeWorker(position);
+		return nullptr;
 	}
 
 

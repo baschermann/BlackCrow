@@ -13,7 +13,7 @@ namespace BlackCrow {
 		Geyser(const BWEM::Geyser* geyser);
 
 		const BWEM::Geyser* bwemGeyser = nullptr;
-		std::vector<Worker*> workers;
+		std::vector<std::shared_ptr<Worker>> workers;
 		BWAPI::Unit geyserUnit = nullptr;
 		
 
@@ -22,8 +22,8 @@ namespace BlackCrow {
 		bool isCurrentlyBuilding();
 		bool workerNeeded();
 		int workersNeeded();
-		void registerWorker(Worker& worker);
-		void unregisterWorker(Worker& worker);
+		void registerWorker(std::shared_ptr<Worker> worker);
+		void unregisterWorker(std::shared_ptr<Worker> worker);
 		void registerPlannedExtractor(PlannedExtractor& pu);
 		void unregisterPlannedExtractor(PlannedExtractor& pu);
 

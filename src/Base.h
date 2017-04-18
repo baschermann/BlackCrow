@@ -24,7 +24,7 @@ namespace BlackCrow {
 		bool isExpanding = false;
 		bool selfSustained = false;
 		
-		std::vector<Worker> workers;
+		std::vector<std::shared_ptr<Worker>> workers;
 		std::vector<Geyser> geysers;
 		std::vector<Mineral> minerals;
 

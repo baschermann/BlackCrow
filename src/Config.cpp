@@ -7,7 +7,7 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	Config::Config() {
-		localSpeed = 15;
+		localSpeed = 6;
 		maxDrones = 200;
 		saturationLevel = 0.5;
 		mineralSaturationMultiplier = 2;
