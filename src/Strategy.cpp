@@ -45,7 +45,9 @@ namespace BlackCrow {
 				} else if (type == UnitTypes::Zerg_Hatchery) {
 					bc.macro.expand();
 				} else {
-					bc.macro.planBuilding(type, bc.builder.getBuildingSpot(type, false));
+					TilePosition buildPosition = bc.builder.getBuildingSpot(type, false);
+					if (buildPosition != TilePositions::None)
+						bc.macro.planBuilding(type, buildPosition);
 				}
 			} else {
 				if (bc.macro.getUnreservedLarvaeAmount() > 0)
@@ -70,7 +72,10 @@ namespace BlackCrow {
 
 		if (bc.macro.getUnreservedResources().minerals >= 300 && bc.macro.getTotalLarvaeAmount()<= 0) {
 			if (bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery) < 1) {
-				bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery, false));
+
+				TilePosition buildPosition = bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery, false);
+				if (buildPosition != TilePositions::None)
+					bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, buildPosition);
 			}
 		}
 	}

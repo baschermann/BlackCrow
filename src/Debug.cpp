@@ -4,6 +4,7 @@
 #include "Squad.h"
 #include "SquadUnit.h"
 #include "EnemyUnit.h"
+#include "Tech.h"
 
 
 namespace BlackCrow {
@@ -45,12 +46,16 @@ namespace BlackCrow {
 		}
 
 		if (text == "1") {
-			bc.macro.buildWorkerDrone();
+
+			TechPath(bc, UnitTypes::Zerg_Guardian);
+
 			return true;
 		}
 
 		if (text == "2") {
-			bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition);
+			//TechPath(bc, UnitTypes::Zerg_Hive);
+
+			//Broodwar->sendText("%s", UnitTypes::Zerg_Drone)
 			return true;
 		}
 

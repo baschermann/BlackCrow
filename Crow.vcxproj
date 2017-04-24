@@ -131,6 +131,7 @@
     <ClCompile Include="src\Strategy.cpp" />
     <ClCompile Include="src\Util.cpp" />
     <ClCompile Include="src\Worker.cpp" />
+    <ClCompile Include="src\Tech.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Macro.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="src\Strategy.h" />
     <ClInclude Include="src\Util.h" />
     <ClInclude Include="src\Worker.h" />
+    <ClInclude Include="src\Tech.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

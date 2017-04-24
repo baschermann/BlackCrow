@@ -16,6 +16,12 @@ namespace BlackCrow {
 	struct Resources {
 		int minerals;
 		int gas;
+
+		Resources operator+(Resources& other) {
+			minerals += other.minerals;
+			gas += other.gas;
+			return *this;
+		}
 	};
 
 	class Macro {

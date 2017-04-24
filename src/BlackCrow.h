@@ -11,6 +11,7 @@
 #include "Config.h"
 #include "Builder.h"
 #include "Util.h"
+#include "Tech.h"
 
 
 // Remember not to use "Broodwar" in any global class constructor!
@@ -46,6 +47,7 @@ namespace BlackCrow {
 		Macro macro;
 		Map map;
 		Strategy strategy;
+		//Tech tech;
 
 		BlackCrow();
 		void emptyMethod();
