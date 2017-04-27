@@ -9,21 +9,39 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	// ### Tech Item ###
-	TechItem::TechItem(BlackCrow& blackcrow, BWAPI::UnitType) : bc(blackcrow), unit(unit) {
+	TechItem::TechItem(BlackCrow& blackcrow, BWAPI::UnitType unit) : bc(blackcrow), unit(unit) {
 		type = TechType::Unit;
 	};
 
-	TechItem::TechItem(BlackCrow& blackcrow, BWAPI::UpgradeType) : bc(blackcrow), upgrade(upgrade) {
+	TechItem::TechItem(BlackCrow& blackcrow, BWAPI::UpgradeType upgrade) : bc(blackcrow), upgrade(upgrade) {
 		type = TechType::Upgrade;
 	};
 
-	TechItem::TechItem(BlackCrow& blackcrow, BWAPI::TechType) : bc(blackcrow), tech(tech) {
+	TechItem::TechItem(BlackCrow& blackcrow, BWAPI::TechType tech) : bc(blackcrow), tech(tech) {
 		type = TechType::Tech;
 	};
 
 	TechItem::TechItem(BlackCrow& blackcrow) : bc(blackcrow) {
 		type = TechType::None;
 	};
+
+	std::string TechItem::getName() {
+		switch (type) {
+		case TechItem::TechType::Unit:
+			return "Unit: " + unit.getName();
+			break;
+		case TechItem::TechType::Upgrade:
+			return "Upgrade: " + upgrade.getName();
+			break;
+		case TechItem::TechType::Tech:
+			return "Tech: " + tech.getName();
+			break;
+		case TechItem::TechType::None:
+			return "None";
+			break;
+		}
+		return "NO TYPE!";
+	}
 
 	int TechItem::timeNeeded() {
 		switch (type) {
@@ -84,35 +102,42 @@ namespace BlackCrow {
 		return resources;
 	};
 
+	
+
 	// ### Tech Path ###
 	TechPath::TechPath(BlackCrow& blackcrow, BWAPI::UnitType unit) : bc(blackcrow) {
 		if (Broodwar->self()->hasUnitTypeRequirement(unit))
 			return;
 
-		TechItem item = getEarlierTech(unit);
-		fillTechPath(item);
+		if (unit == UnitTypes::Zerg_Zergling) {
+			items.emplace_back(bc, UnitTypes::Zerg_Spawning_Pool);
+		}
+
+		/*
+		TechItem item(bc, unit);
+		fillTechPath(item);*/
 	}
 
 	TechPath::TechPath(BlackCrow& blackcrow, BWAPI::UpgradeType upgrade) : bc(blackcrow) {
-		TechItem item = getEarlierTech(upgrade);
-		fillTechPath(item);
+		/*TechItem item(bc, upgrade);
+		fillTechPath(item);*/
 	}
 
 	TechPath::TechPath(BlackCrow& blackcrow, BWAPI::TechType tech) : bc(blackcrow) {
-		TechItem item = getEarlierTech(tech);
-		fillTechPath(item);
+		/*TechItem item(bc, tech);
+		fillTechPath(item);*/
 	}
 
 
-	int TechPath::size() { // TODO
+	int TechPath::size() {
 		return items.size();
 	}
 
-	int TechPath::timeNeeded() { // TODO
+	int TechPath::timeNeeded() {
 		return std::accumulate(items.begin(), items.end(), 0, [](int sum, TechItem& item) { return sum + item.timeNeeded(); });
 	}
 
-	Resources TechPath::cost() { // TODO
+	Resources TechPath::cost() {
 		Resources res = { 0, 0 };
 		for (TechItem item : items) {
 			res = res + item.cost();
@@ -123,7 +148,18 @@ namespace BlackCrow {
 	// Private
 	void TechPath::fillTechPath(TechItem item) {
 		while (item.type != TechItem::TechType::None) {
-			items.push_back(item);
+
+			
+			if (item.type == TechItem::TechType::Unit) {
+				if(item.unit.isBuilding())
+					items.push_back(item);
+
+				if (item.unit.requiredTech() != TechTypes::None) {
+					TechItem techItem(bc, item.unit.requiredTech());
+					items.push_back(techItem);
+				}
+			}
+
 			item = getEarlierTech(item);
 		}
 	}
@@ -149,9 +185,12 @@ namespace BlackCrow {
 	}
 
 	TechItem TechPath::getEarlierTech(BWAPI::UnitType unit) {
-		for (auto required : unit.requiredUnits()) {
-			if (required.first.isBuilding())
-				return TechItem(bc, required.first);
+		auto unitsRequired = unit.requiredUnits();
+		if (unitsRequired.size() > 0) {
+			for (auto required : unitsRequired) {
+				if (required.first.isBuilding())
+					return TechItem(bc, required.first);
+			}
 		}
 		return TechItem(bc);
 	}
@@ -163,4 +202,57 @@ namespace BlackCrow {
 	TechItem TechPath::getEarlierTech(BWAPI::TechType tech) {
 		return TechItem(bc, tech.requiredUnit());
 	}
+
+	
+	// ### Tech ###
+	Tech::Tech(BlackCrow& blackcrow) : bc(blackcrow) {}
+
+	void Tech::onStart() { // TODO
+
+	}
+
+	void Tech::onFrame() { // TODO
+
+	}
+
+	TechPath Tech::getTechPath(BWAPI::UnitType type) {
+		return TechPath(bc, type);
+	}
+
+	TechPath Tech::getTechPath(BWAPI::UpgradeType type) {
+		return TechPath(bc, type);
+	}
+
+	TechPath Tech::getTechPath(BWAPI::TechType type) {
+		return TechPath(bc, type);
+	}
+
+	const bool Tech::isAlreadyTeching(TechPath& path) {
+		return false;
+	}
+
+	int Tech::timeNeededTotal() { // TODO
+		return 0;
+	}
+
+	Resources Tech::costTotal() { // TODO
+		return { 0, 0 };
+	}
+
+	bool Tech::isPaused() { // TODO
+		return false;
+	}
+
+	void Tech::pauseTeching() { // TODO
+		
+	}
+
+	void Tech::continueTeching() { // TODO
+
+	}
+
+	void Tech::cancelAll() { // TODO
+
+	}
+	
 }

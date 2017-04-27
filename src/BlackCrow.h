@@ -47,7 +47,7 @@ namespace BlackCrow {
 		Macro macro;
 		Map map;
 		Strategy strategy;
-		//Tech tech;
+		Tech tech;
 
 		BlackCrow();
 		void emptyMethod();

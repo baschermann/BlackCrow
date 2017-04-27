@@ -6,7 +6,7 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	//BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), tech(*this), bwem(BWEM::Map::Instance()) {}
-	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), bwem(BWEM::Map::Instance()) {}
+	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), tech(*this), bwem(BWEM::Map::Instance()) {}
 
 	void BlackCrow::onStart() {
 
@@ -32,7 +32,7 @@ namespace BlackCrow {
 			strategy.onStart();
 			enemy.onStart();
 			builder.onStart();
-			//tech.onStart();
+			tech.onStart();
 			debug.onStart();
 
 			auto end = std::chrono::high_resolution_clock::now();
@@ -65,7 +65,7 @@ namespace BlackCrow {
 			enemy.onFrame();
 			macro.onFrame();
 			strategy.onFrame();
-			//tech.onFrame();
+			tech.onFrame();
 			// End of them hardwork
 
 			auto end = std::chrono::high_resolution_clock::now();

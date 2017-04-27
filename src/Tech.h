@@ -15,6 +15,14 @@ namespace BlackCrow {
 			None
 		};
 
+		TechItem& operator=(const TechItem& other) {
+			type = other.type;
+			unit = other.unit;
+			upgrade = other.upgrade;
+			tech = other.tech;
+			return *this;
+		}
+
 		TechType type;
 		BWAPI::UnitType unit;
 		BWAPI::UpgradeType upgrade;
@@ -25,6 +33,7 @@ namespace BlackCrow {
 		TechItem(BlackCrow& blackcrow, BWAPI::TechType tech);
 		TechItem(BlackCrow& blackcrow);
 
+		std::string getName();
 		int timeNeeded();
 		Resources cost();
 
@@ -53,10 +62,11 @@ namespace BlackCrow {
 		TechItem getEarlierTech(TechItem item);
 		void fillTechPath(TechItem item);
 	};
-	/*
+
+	
 	class Tech {
 	public:
-		Tech(BlackCrow &blackcrow);
+		Tech(BlackCrow& blackcrow);
 
 		std::vector<TechPath> pathes;
 
@@ -77,7 +87,7 @@ namespace BlackCrow {
 		void cancelAll();
 
 	private:
-		BlackCrow &bc;
+		BlackCrow& bc;
 	};
-	*/
+	
 }

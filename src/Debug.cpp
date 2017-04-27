@@ -46,16 +46,23 @@ namespace BlackCrow {
 		}
 
 		if (text == "1") {
+			auto aaa = bc.tech.getTechPath(UnitTypes::Zerg_Lurker);
+			Broodwar->sendText("Size is %i", aaa.size());
 
-			TechPath(bc, UnitTypes::Zerg_Guardian);
-
+			for (auto item : aaa.items) {
+				Broodwar->sendText(item.getName().c_str());
+			}
 			return true;
 		}
 
 		if (text == "2") {
-			//TechPath(bc, UnitTypes::Zerg_Hive);
+			auto aaa = bc.tech.getTechPath(UnitTypes::Zerg_Mutalisk);
+			Broodwar->sendText("Size is %i", aaa.size());
 
-			//Broodwar->sendText("%s", UnitTypes::Zerg_Drone)
+			for (auto item : aaa.items) {
+				Broodwar->sendText(item.getName().c_str());
+			}
+
 			return true;
 		}
 
