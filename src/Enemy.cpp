@@ -10,7 +10,6 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	Enemy::Enemy(BlackCrow &parent) : bc(parent) {
-		enemies = new std::list <EnemyUnit*>();
 	}
 
 	void Enemy::onStart() {
@@ -21,26 +20,26 @@ namespace BlackCrow {
 			EnemyUnit* enemy = findEnemy(unit->getID());
 
 			if (!enemy) {
-				enemy = new EnemyUnit();
-				enemy->id = unit->getID();
-				enemy->isVisible = true;
-				enemy->lastSeen = Broodwar->getFrameCount();
-				enemy->type = unit->getType();
-				enemy->tilePosition.x = -1;
-				enemy->tilePosition.y = -1;
+				enemies.emplace_back();
+				EnemyUnit& newEnemy = enemies.back();
 
-				enemies->push_front(enemy);
+				newEnemy.id = unit->getID();
+				newEnemy.isVisible = true;
+				newEnemy.lastSeen = Broodwar->getFrameCount();
+				newEnemy.type = unit->getType();
+				newEnemy.tilePosition = BWAPI::TilePositions::Invalid;
+
+				enemy = &newEnemy;
 			}
 
 			if (enemy->type.isBuilding()) {
 				if (enemy->tilePosition.x != unit->getTilePosition().x || enemy->tilePosition.y != unit->getTilePosition().y) {
 					enemy->tilePosition = unit->getTilePosition();
 
-					assert(enemy->tilePosition.x != 1);
-					assert(enemy->tilePosition.y != 1);
+					assert(enemy->tilePosition != BWAPI::TilePositions::Invalid);
 
-					const BWEM::Area* a = bc.bwem.GetNearestArea(enemy->tilePosition);
-					enemy->areaId = a->Id();
+					const BWEM::Area* area = bc.bwem.GetNearestArea(enemy->tilePosition);
+					enemy->areaId = area->Id();
 				}
 			} else {
 				enemy->position = unit->getPosition();
@@ -49,17 +48,16 @@ namespace BlackCrow {
 	}
 
 	void Enemy::onFrame() {
-		for (EnemyUnit* eu : *enemies) {
-			Unit unit = Broodwar->getUnit(eu->id);
-			bool a = unit->isVisible();
+		for (EnemyUnit eu : enemies) {
+			Unit unit = Broodwar->getUnit(eu.id);
 
 			if (unit->isVisible()) {
-				if (eu->type.isBuilding() && (unit->getTilePosition().x != eu->tilePosition.x || unit->getTilePosition().y != eu->tilePosition.y)) {
-					eu->tilePosition.x = unit->getTilePosition().x;
-					eu->tilePosition.y = unit->getTilePosition().y;
+				if (eu.type.isBuilding() && (unit->getTilePosition().x != eu.tilePosition.x || unit->getTilePosition().y != eu.tilePosition.y)) {
+					eu.tilePosition.x = unit->getTilePosition().x;
+					eu.tilePosition.y = unit->getTilePosition().y;
 				} else {
-					eu->position.x = unit->getPosition().x;
-					eu->position.y = unit->getPosition().y;
+					eu.position.x = unit->getPosition().x;
+					eu.position.y = unit->getPosition().y;
 				}
 			}
 		}
@@ -70,9 +68,9 @@ namespace BlackCrow {
 	}
 
 	EnemyUnit* Enemy::findEnemy(int id) {
-		for (EnemyUnit* enemyUnit : *enemies) {
-			if (enemyUnit->id == id)
-				return enemyUnit;
+		for (EnemyUnit& enemyUnit : enemies) {
+			if (enemyUnit.id == id)
+				return &enemyUnit;
 		}
 		return nullptr;
 	}

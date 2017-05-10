@@ -9,7 +9,12 @@ namespace BlackCrow {
 	}
 
 	bool Mineral::exists() {
-		return bwemMineral != nullptr;
+		if (bwemMineral != nullptr)
+			if(bwemMineral->Amount() > 0)
+				if(bwemMineral->Unit()->exists())
+					return true;
+
+		return false;
 	}
 
 	void Mineral::registerWorker(std::shared_ptr<Worker> worker) {

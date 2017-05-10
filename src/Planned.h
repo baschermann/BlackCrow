@@ -104,9 +104,10 @@ namespace BlackCrow {
 
 	class PlannedUpgrade : public Planned {
 	public:
-		PlannedUpgrade(BlackCrow& parent, BWAPI::UpgradeType type);
+		PlannedUpgrade(BlackCrow& parent, BWAPI::UpgradeType type, int level);
 
 		BWAPI::UpgradeType type;
+		int level;
 
 		operator std::string() const;
 		int getMineralPrice() override;

@@ -97,6 +97,7 @@ namespace BlackCrow {
 
 					mineral.unregisterWorker(worker);
 					workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
+					worker->reset();
 
 					return worker->unit;
 				}
@@ -115,6 +116,7 @@ namespace BlackCrow {
 			std::shared_ptr<Worker> worker = *workerIt;
 			worker->mineral->unregisterWorker(worker);
 			workers.erase(workerIt);
+			worker->reset();
 
 			return worker->unit;
 		} else 

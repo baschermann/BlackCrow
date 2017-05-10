@@ -12,7 +12,7 @@ namespace BlackCrow {
 
 		void onStart();
 		void onFrame();
-		std::list<EnemyUnit*>* enemies;
+		std::list<EnemyUnit> enemies;
 		void enemyDiscovered(BWAPI::Unit unit);
 		void enemyDestroyed(BWAPI::Unit unit);
 

@@ -11,6 +11,7 @@ namespace BlackCrow {
 	class PlannedUnit;
 	class PlannedBuilding;
 	class PlannedExtractor;
+	class PlannedTech;
 	class Geyser;
 
 	struct Resources {
@@ -42,7 +43,11 @@ namespace BlackCrow {
 		std::shared_ptr<PlannedUnit> planUnit(BWAPI::UnitType type, BWAPI::Position nearTo);
 		std::shared_ptr<PlannedBuilding> planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
 		std::shared_ptr<PlannedExtractor> planExtractor(Geyser& geyser);
-		int getTypeCurrentlyPlanned(BWAPI::UnitType type);
+		std::shared_ptr<PlannedTech> planUpgrade(BWAPI::UpgradeType upgrade, int level = 1);
+		std::shared_ptr<PlannedTech> planTech(BWAPI::TechType tech);
+		int getCurrentlyPlannedAmount(BWAPI::UnitType type);
+		bool isCurrentlyPlanned(BWAPI::UpgradeType upgrade, int level = 1);
+		bool isCurrentlyPlanned(BWAPI::TechType tech);
 		std::vector<std::shared_ptr<PlannedUnit>> getPlannedUnits();
 		
 		// Expansions and Bases

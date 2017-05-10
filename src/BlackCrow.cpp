@@ -165,8 +165,8 @@ namespace BlackCrow {
 	}
 
 	void BlackCrow::onUnitCreate(BWAPI::Unit unit) {
-		//if (Broodwar->getFrameCount() != 0)
-		//Broodwar->sendText("Unit %s created!", unit->getType().c_str());
+		if (Broodwar->getFrameCount() != 0)
+			Broodwar->sendText("Unit %s created!", unit->getType().c_str());
 	}
 
 	void BlackCrow::onUnitDestroy(BWAPI::Unit unit) {
@@ -191,7 +191,7 @@ namespace BlackCrow {
 
 	void BlackCrow::onUnitMorph(BWAPI::Unit unit) {
 		builder.onBuildingDetected(unit);
-		//Broodwar->sendText("Unit %s morphed!", unit->getType().c_str());
+		Broodwar->sendText("Unit %s morphed!", unit->getType().c_str());
 	}
 
 	void BlackCrow::onUnitRenegade(BWAPI::Unit unit) {
@@ -217,8 +217,14 @@ namespace BlackCrow {
 	}
 
 	void BlackCrow::init() {
-		Broodwar->sendText("Caw caw caw!");
+		
+		Broodwar->setLatCom(false);
 		Broodwar->setCommandOptimizationLevel(2);
+		//Broodwar->sendText("Caw caw caw!");
+		Broodwar->sendText(("LatCom is %s", Broodwar->isLatComEnabled() ? "enabled" : "disabled"));
+
+		//Broodwar->setLocalSpeed(0);
+		//Broodwar->setGUI(false);
 
 		//if (Broodwar->isDebug()) {
 		Broodwar->setLocalSpeed(config.localSpeed);

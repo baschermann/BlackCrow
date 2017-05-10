@@ -60,7 +60,7 @@ namespace BlackCrow {
 	void Strategy::dynamicDecision() {
 
 		// Lets do the macro first
-		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Drone.supplyRequired() && bc.macro.getWorkersNeededForSaturation() - bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Drone < 0)) {
+		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Drone.supplyRequired() && bc.macro.getWorkersNeededForSaturation() - bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Drone < 0)) {
 			if (bc.macro.getUnreservedResources().minerals >= 50 && bc.macro.getUnreservedLarvaeAmount() > 0)
 				bc.macro.buildWorkerDrone();
 		}
@@ -71,11 +71,33 @@ namespace BlackCrow {
 		}
 
 		if (bc.macro.getUnreservedResources().minerals >= 300 && bc.macro.getTotalLarvaeAmount()<= 0) {
-			if (bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery) < 1) {
+			if (bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Hatchery) < 1) {
 
 				TilePosition buildPosition = bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery, false);
 				if (buildPosition != TilePositions::None)
 					bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, buildPosition);
+			}
+		}
+
+		// Collect up to 100 gas
+		if (Broodwar->self()->gas() + Broodwar->self()->spentGas() < 100) {
+			if (bc.macro.getTotalGasWorkerAmount() < 3)
+				bc.macro.addGasWorker();
+		} else {
+			if (bc.macro.getTotalGasWorkerAmount() > 0)
+				bc.macro.removeGasWorker();
+		}
+
+		// If 100 gas, zergling speeeeeeeeeeed!
+		if (bc.macro.getUnreservedResources().gas >= 100 && bc.macro.isCurrentlyPlanned(UpgradeTypes::Metabolic_Boost)) {
+		//	bc.macro.planUpgrade(UpgradeTypes::Metabolic_Boost, 1);
+		}
+
+
+		// Build zerglings for now
+		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Zergling.supplyRequired() && bc.macro.getUnreservedLarvaeAmount() >= 1) {
+			if (bc.macro.getUnreservedResources().minerals >= 50) {
+				bc.macro.planUnit(UnitTypes::Zerg_Zergling, bc.macro.startPosition);
 			}
 		}
 	}

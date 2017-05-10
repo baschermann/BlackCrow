@@ -402,17 +402,17 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawEnemyUnits() {
-		for (EnemyUnit* eu : *bc.enemy.enemies) {
-			Unit unit = Broodwar->getUnit(eu->id);
+		for (EnemyUnit eu : bc.enemy.enemies) {
+			Unit unit = Broodwar->getUnit(eu.id);
 			bool a = unit->isVisible();
 
 			if (!unit->isVisible()) {
-				if (eu->type.isBuilding()) {
-					Broodwar->drawBoxMap(eu->tilePosition.x * 32, eu->tilePosition.y * 32, eu->tilePosition.x * 32 + eu->type.tileWidth() * 32, eu->tilePosition.y * 32 + eu->type.tileHeight() * 32, Colors::Grey, false);
-					Broodwar->drawTextMap(eu->tilePosition.x * 32, eu->tilePosition.y * 32, eu->type.c_str());
+				if (eu.type.isBuilding()) {
+					Broodwar->drawBoxMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, eu.tilePosition.x * 32 + eu.type.tileWidth() * 32, eu.tilePosition.y * 32 + eu.type.tileHeight() * 32, Colors::Grey, false);
+					Broodwar->drawTextMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, eu.type.c_str());
 				} else {
-					Broodwar->drawBoxMap(eu->position.x, eu->position.y, eu->position.x + eu->type.width(), eu->position.y + eu->type.height(), Colors::Grey, false);
-					Broodwar->drawTextMap(eu->position.x, eu->position.y, eu->type.c_str());
+					Broodwar->drawBoxMap(eu.position.x, eu.position.y, eu.position.x + eu.type.width(), eu.position.y + eu.type.height(), Colors::Grey, false);
+					Broodwar->drawTextMap(eu.position.x, eu.position.y, eu.type.c_str());
 				}
 			}
 		}

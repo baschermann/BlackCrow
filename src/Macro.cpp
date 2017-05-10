@@ -66,7 +66,13 @@ namespace BlackCrow {
 		return extractor;
 	}
 
-	int Macro::getTypeCurrentlyPlanned(BWAPI::UnitType type) {
+	std::shared_ptr<PlannedTech> Macro::planTech(BWAPI::TechType tech) {
+		auto pTech = std::make_shared<PlannedTech>(bc, tech);
+		plannedStuff.push_back(pTech);
+		return pTech;
+	}
+
+	int Macro::getCurrentlyPlannedAmount(BWAPI::UnitType type) {
 		return std::accumulate(plannedStuff.begin(), plannedStuff.end(), 0, [&](int sum, std::shared_ptr<Planned> planned) { 
 
 			if (type == UnitTypes::Zerg_Extractor) {
@@ -83,18 +89,44 @@ namespace BlackCrow {
 			std::shared_ptr<PlannedBuilding> plannedBuilding = std::dynamic_pointer_cast<PlannedBuilding>(planned);
 			if (plannedBuilding && plannedBuilding->type == type)
 				return ++sum;
-
-			std::shared_ptr<PlannedUpgrade> plannedUpgrade = std::dynamic_pointer_cast<PlannedUpgrade>(planned);
-			if (plannedUpgrade && plannedUpgrade->type == type)
-				return ++sum;
-
-			std::shared_ptr<PlannedTech> plannedTech = std::dynamic_pointer_cast<PlannedTech>(planned);
-			if (plannedTech && plannedTech->type == type)
-				return ++sum;
 			
 			return sum;
 		});
 	}
+	
+	bool Macro::isCurrentlyPlanned(const BWAPI::UpgradeType upgrade, int level) {
+		auto ps = std::find_if(plannedStuff.begin(), plannedStuff.end(), [&](std::shared_ptr<Planned> planned) {
+
+			std::shared_ptr<PlannedUpgrade> plannedUpgrade = std::dynamic_pointer_cast<PlannedUpgrade>(planned);
+			if (plannedUpgrade && plannedUpgrade->type == upgrade && plannedUpgrade->level == level)
+				return true;
+
+			return false;
+		});
+
+		if (ps != plannedStuff.end())
+			return true;
+
+		return false;
+	}
+
+	bool Macro::isCurrentlyPlanned(BWAPI::TechType tech) {
+		auto ps = std::find_if(plannedStuff.begin(), plannedStuff.end(), [&](std::shared_ptr<Planned> planned) {
+
+			std::shared_ptr<PlannedTech> plannedTech = std::dynamic_pointer_cast<PlannedTech>(planned);
+			if (plannedTech && plannedTech->type == tech)
+				return true;
+
+			return false;
+		});
+
+		if (ps != plannedStuff.end())
+			return true;
+		
+		return false;
+	}
+
+	
 
 	std::vector<std::shared_ptr<PlannedUnit>> Macro::getPlannedUnits() {
 		std::vector<std::shared_ptr<PlannedUnit>> plannedUnits;
@@ -301,7 +333,7 @@ namespace BlackCrow {
 	}
 
 	int Macro::getMaxSupply() {
-		return getTypeCurrentlyPlanned(UnitTypes::Zerg_Overlord) * UnitTypes::Zerg_Overlord.supplyProvided() + Broodwar->self()->supplyTotal();
+		return getCurrentlyPlannedAmount(UnitTypes::Zerg_Overlord) * UnitTypes::Zerg_Overlord.supplyProvided() + Broodwar->self()->supplyTotal();
 	}
 
 	int Macro::getFreeSupply() {

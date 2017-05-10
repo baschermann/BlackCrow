@@ -56,8 +56,19 @@ namespace BlackCrow {
 		// Is it finished?
 		if (unit && unit->getType() == type && unit->isCompleted()) {
 			status = Status::COMPLETED;
+
 			if (type == UnitTypes::Zerg_Drone) {
 				bc.macro.addDrone(unit);
+			}
+
+			if (unit->getType() == UnitTypes::Zerg_Zergling) {
+				const BWEM::Area* area = bc.bwem.GetArea(unit->getTilePosition());
+				for (const BWEM::ChokePoint* cp : area->ChokePoints()) {
+					if (!cp->Blocked()) {
+						unit->attack(PositionOrUnit(Position(cp->Center())));
+						Broodwar->sendText("Ordered zergling to chokepoint");
+					}
+				}
 			}
 		}
 	}
@@ -228,7 +239,7 @@ namespace BlackCrow {
 	}
 
 	void PlannedTech::onFrame() {
-
+		Broodwar->sendText("PlannedTech onFrame() not implemented");
 	}
 
 	float PlannedTech::progressPercent() {
@@ -240,7 +251,7 @@ namespace BlackCrow {
 	}
 
 	// Planned Upgrade
-	PlannedUpgrade::PlannedUpgrade(BlackCrow& parent, BWAPI::UpgradeType type) : Planned(parent), type(type) {}
+	PlannedUpgrade::PlannedUpgrade(BlackCrow& parent, BWAPI::UpgradeType type, int level = 0) : Planned(parent), type(type), level(level) {}
 
 	int PlannedUpgrade::getMineralPrice() {
 		return type.mineralPrice();

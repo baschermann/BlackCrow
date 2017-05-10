@@ -28,6 +28,7 @@ namespace BlackCrow {
 		bool continueMining();
 		void setMineral(Mineral& mineral);
 		void setGeyser(Geyser& geyser);
+		void reset();
 	};
 
 	bool operator==(const Worker& left, const Worker& right);

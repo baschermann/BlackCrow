@@ -59,6 +59,11 @@ namespace BlackCrow {
 		mineral = nullptr;
 	}
 
+	void Worker::reset() {
+		mineral = nullptr;
+		geyser = nullptr;
+	}
+
 	bool operator==(const Worker& left, const Worker& right) {
 		return left.unit->getID() == right.unit->getID();
 	}
