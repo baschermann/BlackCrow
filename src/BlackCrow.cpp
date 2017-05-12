@@ -58,8 +58,8 @@ namespace BlackCrow {
 			if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
 				return;
 
-			if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
-				return;
+			//if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
+				//return;
 
 			// All of them hardwork
 			enemy.onFrame();
@@ -165,8 +165,8 @@ namespace BlackCrow {
 	}
 
 	void BlackCrow::onUnitCreate(BWAPI::Unit unit) {
-		if (Broodwar->getFrameCount() != 0)
-			Broodwar->sendText("Unit %s created!", unit->getType().c_str());
+		//if (Broodwar->getFrameCount() != 0)
+			//Broodwar->sendText("Unit %s created!", unit->getType().c_str());
 	}
 
 	void BlackCrow::onUnitDestroy(BWAPI::Unit unit) {
@@ -191,7 +191,7 @@ namespace BlackCrow {
 
 	void BlackCrow::onUnitMorph(BWAPI::Unit unit) {
 		builder.onBuildingDetected(unit);
-		Broodwar->sendText("Unit %s morphed!", unit->getType().c_str());
+		//Broodwar->sendText("Unit %s morphed!", unit->getType().c_str());
 	}
 
 	void BlackCrow::onUnitRenegade(BWAPI::Unit unit) {
@@ -230,5 +230,12 @@ namespace BlackCrow {
 		Broodwar->setLocalSpeed(config.localSpeed);
 		Broodwar->enableFlag(Flag::UserInput);
 		//}
+	}
+
+	bool BlackCrow::isExecutingCommandFrame() {
+		if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() == 0)
+			return true;
+
+		return false;
 	}
 }

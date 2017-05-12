@@ -25,9 +25,6 @@
     <Filter Include="Header Files\Enemy">
       <UniqueIdentifier>{8c2f1e8e-5e92-4d2d-a2b5-a2ad38f51910}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Squad">
-      <UniqueIdentifier>{674cf0cd-f08c-4de1-acb5-94e4b0b95cb3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Macro">
       <UniqueIdentifier>{ae911851-bf5a-43b6-bfcd-6b5fb649dd86}</UniqueIdentifier>
     </Filter>
@@ -37,18 +34,18 @@
     <Filter Include="Source Files\Enemy">
       <UniqueIdentifier>{e3342420-c8ec-4c31-80be-a44a397d7cd0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Squad">
-      <UniqueIdentifier>{961a545d-1161-4baa-a09c-c64af4f8200a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Strategy">
       <UniqueIdentifier>{55e55b89-0f17-42af-9f4b-59c37becfb0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Army">
+      <UniqueIdentifier>{674cf0cd-f08c-4de1-acb5-94e4b0b95cb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Army">
+      <UniqueIdentifier>{961a545d-1161-4baa-a09c-c64af4f8200a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BlackCrow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Area.cpp">
@@ -73,10 +70,10 @@
       <Filter>Source Files\Strategy</Filter>
     </ClCompile>
     <ClCompile Include="src\Squad.cpp">
-      <Filter>Source Files\Squad</Filter>
+      <Filter>Source Files\Army</Filter>
     </ClCompile>
     <ClCompile Include="src\SquadUnit.cpp">
-      <Filter>Source Files\Squad</Filter>
+      <Filter>Source Files\Army</Filter>
     </ClCompile>
     <ClCompile Include="src\Strategy.cpp">
       <Filter>Source Files\Strategy</Filter>
@@ -105,6 +102,12 @@
     <ClCompile Include="src\Tech.cpp">
       <Filter>Source Files\Macro</Filter>
     </ClCompile>
+    <ClCompile Include="src\Army.cpp">
+      <Filter>Source Files\Army</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BlackCrow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BlackCrow.h">
@@ -132,13 +135,13 @@
       <Filter>Header Files\Strategy</Filter>
     </ClInclude>
     <ClInclude Include="src\Squad.h">
-      <Filter>Header Files\Squad</Filter>
+      <Filter>Header Files\Army</Filter>
     </ClInclude>
     <ClInclude Include="src\Strategy.h">
       <Filter>Header Files\Strategy</Filter>
     </ClInclude>
     <ClInclude Include="src\SquadUnit.h">
-      <Filter>Header Files\Squad</Filter>
+      <Filter>Header Files\Army</Filter>
     </ClInclude>
     <ClInclude Include="src\Util.h">
       <Filter>Header Files\Misc</Filter>
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="src\Tech.h">
       <Filter>Header Files\Macro</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Army.h">
+      <Filter>Header Files\Army</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

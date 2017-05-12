@@ -50,8 +50,8 @@ namespace BlackCrow {
 		Tech tech;
 
 		BlackCrow();
-		void emptyMethod();
 		void init();
+		bool isExecutingCommandFrame();
 		void testPath();
 
 	private:

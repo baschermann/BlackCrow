@@ -138,10 +138,17 @@ namespace BlackCrow {
 			Broodwar->drawTextMap(Position(p), std::to_string(i++).c_str());
 		}*/
 
-		Broodwar->drawTextScreen(180, 20, "%i Total Larvae", bc.macro.getTotalLarvaeAmount());
-		Broodwar->drawTextScreen(180, 35, "%i Unreserved Larvae", bc.macro.getUnreservedLarvaeAmount());
+		//Broodwar->drawTextScreen(180, 20, "%i Total Larvae", bc.macro.getTotalLarvaeAmount());
+		//Broodwar->drawTextScreen(180, 35, "%i Unreserved Larvae", bc.macro.getUnreservedLarvaeAmount());
 		//Broodwar->drawTextScreen(180, 50, "%i Free Supply", bc.macro.larv);
 		//Broodwar->drawTextScreen(180, 65, "%i Planned Hatchery", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery));
+
+		Broodwar->drawTextScreen(180, 20, "%i getLatency()", Broodwar->getLatency());
+		Broodwar->drawTextScreen(180, 35, "%i getLatencyFrames();", Broodwar->getLatencyFrames());
+		Broodwar->drawTextScreen(180, 50, "%i getLatencyTime()", Broodwar->getLatencyTime());
+		Broodwar->drawTextScreen(180, 65, "%i getRemainingLatencyFrames()", Broodwar->getRemainingLatencyFrames());
+		Broodwar->drawTextScreen(180, 80, "%i getRemainingLatencyTime()", Broodwar->getRemainingLatencyTime());
+		
 
 		// Draw Mouse Tile Position
 		//Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
