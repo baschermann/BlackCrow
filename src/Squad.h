@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include <memory>
 #include "SquadUnit.h"
 
 // Handles single units in a squad. Micro, target decision (focusfire) and positioning
@@ -15,7 +16,7 @@ namespace BlackCrow {
 		Squad();
 		void onFrame();
 
-		std::vector<SquadUnit> units;
+		std::vector<std::shared_ptr<SquadUnit>> units;
 
 		void add(const SquadUnit& unit);
 		void remove(const SquadUnit& unit);
