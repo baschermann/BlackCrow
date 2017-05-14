@@ -1,25 +1,28 @@
 #pragma once
 #include <memory>
 #include <BWAPI.h>
-#include "BlackCrow.h"
-#include "SquadUnit.h"
+#include "Common.h"
 
 namespace BlackCrow {
 
-	class SquadUnit;
-	class Squad;
-
-	typedef std::shared_ptr<SquadUnit> SquadUnitPtr;
-	typedef std::shared_ptr<Squad> SquadPtr;
+	class BlackCrow;
+	class ScoutSquad;
 
 	class Army {
 	public:
 		Army(BlackCrow &blackrow);
 
-		std::vector<SquadUnitPtr> units;
+		void onStart();
+		void onFrame();
 
-		void addUnit(BWAPI::Unit unit);
-		SquadPtr assignToSquad(SquadUnitPtr);
+		// Variables
+		std::vector<SquadUnitPtr> units;
+		std::vector<ScoutSquad> scoutSquads;
+
+		// Functions
+		SquadUnitPtr addToArmy(BWAPI::Unit unit);
+		SquadPtr assignAutomaticSquad(SquadUnitPtr);
+		void startInitialScout();
 
 	private:
 		BlackCrow &bc;

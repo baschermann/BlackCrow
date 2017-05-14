@@ -48,5 +48,7 @@ namespace BlackCrow {
 		void drawLifeBars();
 
 		void drawFrameTimeDisplay();
+
+		void drawTestPath();
 	};
 }

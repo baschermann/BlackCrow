@@ -12,18 +12,18 @@ namespace BlackCrow {
 
 	void Squad::onFrame() {}
 
-	void Squad::add(const SquadUnit& unit) {
-		//units.push_back(unit);
+	void Squad::add(SquadUnitPtr unit) {
+		units.push_back(unit);
 	}
 
-	void Squad::remove(const SquadUnit& unit) {
-		//units.push_back(unit);
+	void Squad::remove(SquadUnitPtr unit) {
+		units.push_back(unit);
 	}
 
 	void Squad::moveAll(BWAPI::Position position, bool queue) {
-		//for (SquadUnit unit : units) {
-		//	unit.move(position, queue);
-		//}
+		for (SquadUnitPtr unit : units) {
+			unit->move(position, queue);
+		}
 	}
 
 	// ######## Scout Squad #########

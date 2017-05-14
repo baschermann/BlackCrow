@@ -13,7 +13,6 @@ namespace BlackCrow {
 	class Planned;
 
 	class Strategy {
-
 	public:
 
 		enum BuildOrder {
@@ -24,7 +23,6 @@ namespace BlackCrow {
 
 		// Variables
 		std::queue<BWAPI::UnitType> buildOrder;
-		std::vector<ScoutSquad> scoutSquads;
 		BuildOrder bo;
 
 		// General
@@ -43,8 +41,5 @@ namespace BlackCrow {
 		void fillBuildOrder(BuildOrder build);
 		void fillBuildOrderItem(BWAPI::UnitType item);
 		void followBuildOrder();
-
-		
-		void startInitialScout();
 	};
 }

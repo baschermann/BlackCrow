@@ -359,7 +359,7 @@ namespace BlackCrow {
 			
 			Area& area = bc.map.getArea(bwemArea);
 			for (const BWEM::Base& bwemBase : bwemArea.Bases()) {
-				bases.emplace_back(bc, bwemBase, area); // Big Bug of April 2017. Remember me!
+				bases.emplace_back(bc, bwemBase, area); // Big Bug of April 2017. Member me!
 				Base& base = bases.back();
 
 				// Starting Base

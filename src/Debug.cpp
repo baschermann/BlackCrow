@@ -400,10 +400,10 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawSquadInfo() {
-		for (ScoutSquad scoutSquad : bc.strategy.scoutSquads) {
+		for (ScoutSquad scoutSquad : bc.army.scoutSquads) {
 			for (BWAPI::TilePosition tilePosition : scoutSquad.getScoutingPositions()) {
-				//BWAPI::Unit scoutUnit = scoutSquad.units.back().unit;
-				//Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
+				BWAPI::Unit scoutUnit = scoutSquad. units.back()->unit;
+				Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
 			}
 		}
 	}
@@ -457,6 +457,48 @@ namespace BlackCrow {
 					Broodwar->drawBoxMap(barPos + topLeft, barPos + bottomRight, color, true);
 				}
 			}
+		}
+	}
+
+	void Debug::drawTestPath() {
+		static Position left, right;
+
+		Broodwar->drawCircleMap(left, 10, BWAPI::Colors::Red);
+		Broodwar->drawCircleMap(right, 10, BWAPI::Colors::Red);
+
+		// Testdistances
+		if (Broodwar->getMouseState(BWAPI::MouseButton::M_LEFT)) {
+			left = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
+		}
+
+		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
+			right = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
+		}
+
+		Broodwar->drawCircleMap(left, 15, BWAPI::Colors::Red);
+		Broodwar->drawCircleMap(right, 15, BWAPI::Colors::Red);
+
+		int length;
+		const BWEM::CPPath& path = bc.bwem.GetPath(Position(left), Position(right), &length);
+
+		if (path.empty()) { // no ChokePoint between a and b: 
+			// just draw a single line between them:
+			Broodwar->drawLineMap(left, right, BWAPI::Colors::Cyan);
+		} else {
+			// draw a line between each ChokePoint in Path:
+			const BWEM::ChokePoint * cpPrevious = nullptr;
+			for (const BWEM::ChokePoint * cp : path) {
+				if (cpPrevious)
+					Broodwar->drawLineMap(Position(cpPrevious->Center()), Position(cp->Center()), BWAPI::Colors::Cyan);
+				cpPrevious = cp;
+			}
+
+			Broodwar->drawLineMap(left, Position(path.front()->Center()), BWAPI::Colors::Cyan);
+			Broodwar->drawLineMap(right, Position(path.back()->Center()), BWAPI::Colors::Cyan);
+		}
+
+		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT) || Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
+			Broodwar->sendText("BWEM length: %i", length);
 		}
 	}
 }

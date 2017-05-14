@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include <memory>
 #include "SquadUnit.h"
+#include "Common.h"
 
 // Handles single units in a squad. Micro, target decision (focusfire) and positioning
 
@@ -16,11 +17,12 @@ namespace BlackCrow {
 		Squad();
 		void onFrame();
 
-		std::vector<std::shared_ptr<SquadUnit>> units;
+		std::vector<SquadUnitPtr> units;
 
-		void add(const SquadUnit& unit);
-		void remove(const SquadUnit& unit);
+		void add(const SquadUnitPtr unit);
+		void remove(const SquadUnitPtr unit);
 		void moveAll(BWAPI::Position position, bool queue);
+
 
 	protected:
 		BlackCrow &bc;

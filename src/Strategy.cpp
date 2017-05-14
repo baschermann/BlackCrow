@@ -25,12 +25,8 @@ namespace BlackCrow {
 			dynamicDecision();
 		}
 
-		if (bc.macro.getUsedSupply() >= 18 && scoutSquads.size() <= 0) {
-			startInitialScout();
-		}
-
-		for (ScoutSquad& ss : scoutSquads) {
-			ss.onFrame();
+		if (bc.macro.getUsedSupply() >= 18 && bc.army.scoutSquads.size() <= 0) {
+			bc.army.startInitialScout();
 		}
 	}
 
@@ -81,8 +77,9 @@ namespace BlackCrow {
 
 		// Collect up to 100 gas
 		if (Broodwar->self()->gas() + Broodwar->self()->spentGas() < 100) {
-			if (bc.macro.getTotalGasWorkerAmount() < 3)
-				bc.macro.addGasWorker();
+			if (bc.macro.getGasWorkerSlotsAvailable() > 0)
+				if (bc.macro.getTotalGasWorkerAmount() < 3)
+					bc.macro.addGasWorker();
 		} else {
 			if (bc.macro.getTotalGasWorkerAmount() > 0)
 				bc.macro.removeGasWorker();
@@ -126,18 +123,6 @@ namespace BlackCrow {
 	}
 
 
-	void Strategy::startInitialScout() {
-		ScoutSquad scoutSquad(bc);
-		BWAPI::Unit worker = bc.macro.getDroneForBuilding(bc.macro.startPosition);
-		if (worker) {
-			SquadUnit su(worker);
-			scoutSquad.add(su);
-
-			scoutSquad.addStartLocations();
-			scoutSquads.push_back(scoutSquad);
-		}
-	}
-
 	void Strategy::fillBuildOrder(BuildOrder build) {
 
 		switch (build) {
@@ -145,34 +130,24 @@ namespace BlackCrow {
 
 			// Drone @4
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @5
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @6
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @7
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Spawning Pool @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Spawning_Pool);
-
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Extractor @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Extractor);
-
 			// Overlord @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Overlord);
-
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// 6 Zerglings @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
@@ -184,38 +159,26 @@ namespace BlackCrow {
 
 			// Drone @4
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @5
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @6
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @7
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Overlord @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Overlord);
-
 			// Spawning Pool @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Spawning_Pool);
-
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @10
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-			// Now has 11 Drones
-
 			// Extractor @11
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Extractor);
-
 			// 6 Zerglings @10
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
@@ -227,43 +190,30 @@ namespace BlackCrow {
 
 			// Drone @4
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @5
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @6
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @7
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @8
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Overlord @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Overlord);
-
 			// Drone @9
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @10
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @11
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Drone @12
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Hatchery @12
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Drone);
-
 			// Spawning Pool @11
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Spawning_Pool);
-
 			// Extractor @11
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Extractor);
-
 			// 6 Zerglings @10
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);
 			fillBuildOrderItem(BWAPI::UnitTypes::Zerg_Zergling);

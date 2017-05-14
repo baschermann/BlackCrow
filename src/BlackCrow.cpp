@@ -6,7 +6,7 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	//BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), tech(*this), bwem(BWEM::Map::Instance()) {}
-	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), tech(*this), bwem(BWEM::Map::Instance()) {}
+	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), tech(*this), army(*this), bwem(BWEM::Map::Instance()) {}
 
 	void BlackCrow::onStart() {
 
@@ -34,6 +34,7 @@ namespace BlackCrow {
 			builder.onStart();
 			tech.onStart();
 			debug.onStart();
+			army.onStart();
 
 			auto end = std::chrono::high_resolution_clock::now();
 
@@ -66,6 +67,7 @@ namespace BlackCrow {
 			macro.onFrame();
 			strategy.onFrame();
 			tech.onFrame();
+			army.onFrame();
 			// End of them hardwork
 
 			auto end = std::chrono::high_resolution_clock::now();
@@ -77,47 +79,7 @@ namespace BlackCrow {
 		}
 	}
 
-	void BlackCrow::testPath() {
-		static Position left, right;
-
-		Broodwar->drawCircleMap(left, 10, BWAPI::Colors::Red);
-		Broodwar->drawCircleMap(right, 10, BWAPI::Colors::Red);
-
-		// Testdistances
-		if (Broodwar->getMouseState(BWAPI::MouseButton::M_LEFT)) {
-			left = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
-		}
-
-		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
-			right = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
-		}
-
-		Broodwar->drawCircleMap(left, 15, BWAPI::Colors::Red);
-		Broodwar->drawCircleMap(right, 15, BWAPI::Colors::Red);
-
-		int length;
-		const BWEM::CPPath& path = bwem.GetPath(Position(left), Position(right), &length);
-
-		if (path.empty()) { // no ChokePoint between a and b: 
-			// just draw a single line between them:
-			Broodwar->drawLineMap(left, right, BWAPI::Colors::Cyan);
-		} else {
-			// draw a line between each ChokePoint in Path:
-			const BWEM::ChokePoint * cpPrevious = nullptr;
-			for (const BWEM::ChokePoint * cp : path) {
-				if (cpPrevious)
-					Broodwar->drawLineMap(Position(cpPrevious->Center()), Position(cp->Center()), BWAPI::Colors::Cyan);
-				cpPrevious = cp;
-			}
-
-			Broodwar->drawLineMap(left, Position(path.front()->Center()), BWAPI::Colors::Cyan);
-			Broodwar->drawLineMap(right, Position(path.back()->Center()), BWAPI::Colors::Cyan);
-		}
-
-		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT) || Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
-			Broodwar->sendText("BWEM length: %i", length);
-		}
-	}
+	
 
 	void BlackCrow::onSendText(std::string text) {
 		BWEM::utils::MapDrawer::ProcessCommand(text);

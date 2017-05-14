@@ -135,6 +135,7 @@
     <ClCompile Include="src\Tech.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\Army.h" />
     <ClInclude Include="src\Macro.h" />
     <ClInclude Include="src\Geyser.h" />

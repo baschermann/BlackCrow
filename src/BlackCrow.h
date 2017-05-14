@@ -12,11 +12,12 @@
 #include "Builder.h"
 #include "Util.h"
 #include "Tech.h"
+#include "Army.h"
 
 
 // Remember not to use "Broodwar" in any global class constructor!
 namespace BlackCrow {
-
+	
 	class BlackCrow : public BWAPI::AIModule {
 	public:
 		// Virtual functions for callbacks, leave these as they are.
@@ -48,11 +49,11 @@ namespace BlackCrow {
 		Map map;
 		Strategy strategy;
 		Tech tech;
+		Army army;
 
 		BlackCrow();
 		void init();
 		bool isExecutingCommandFrame();
-		void testPath();
 
 	private:
 		std::chrono::high_resolution_clock::time_point lastFrame;
