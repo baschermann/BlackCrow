@@ -56,7 +56,7 @@ namespace BlackCrow {
 	void Strategy::dynamicDecision() {
 
 		// Lets do the macro first
-		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Drone.supplyRequired() && bc.macro.getWorkersNeededForSaturation() - bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Drone < 0)) {
+		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Drone.supplyRequired() && bc.macro.getWorkersNeededForSaturation() - bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Drone) > 0) {
 			if (bc.macro.getUnreservedResources().minerals >= 50 && bc.macro.getUnreservedLarvaeAmount() > 0)
 				bc.macro.buildWorkerDrone();
 		}
@@ -90,14 +90,14 @@ namespace BlackCrow {
 		//	bc.macro.planUpgrade(UpgradeTypes::Metabolic_Boost, 1);
 		}
 
-		/*
+		
 		// Build zerglings for now
 		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Zergling.supplyRequired() && bc.macro.getUnreservedLarvaeAmount() >= 1) {
-			if (bc.macro.getUnreservedResources().minerals >= 50) {
+			if (bc.macro.getUnreservedResources().minerals >= 100) {
 				bc.macro.planUnit(UnitTypes::Zerg_Zergling, bc.macro.startPosition);
 			}
 		}
-		*/
+		
 	}
 
 	void Strategy::onUnitDiscovered(BWAPI::Unit unit) {
