@@ -400,9 +400,9 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawSquadInfo() {
-		for (ScoutSquad scoutSquad : bc.army.scoutSquads) {
-			for (BWAPI::TilePosition tilePosition : scoutSquad.getScoutingPositions()) {
-				BWAPI::Unit scoutUnit = scoutSquad. units.back()->unit;
+		for (ScoutSquadPtr scoutSquad : bc.army.scoutSquads) {
+			for (BWAPI::TilePosition tilePosition : scoutSquad->getScoutingPositions()) {
+				BWAPI::Unit scoutUnit = scoutSquad->units.back()->unit;
 				Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
 			}
 		}

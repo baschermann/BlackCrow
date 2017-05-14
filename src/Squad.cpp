@@ -35,9 +35,9 @@ namespace BlackCrow {
 		while (scoutLocations.size() > 0 && Broodwar->isVisible(scoutLocations.back()))
 			scoutLocations.pop_back();
 
-		if (scoutLocations.size() > 0) {
-			moveAll(BWAPI::Position(scoutLocations.back()), false); // Kruecke: This will spam hard! - TODO Not good then!
-		}
+		if (bc.isExecutingCommandFrame())
+			if (scoutLocations.size() > 0)
+				moveAll(BWAPI::Position(scoutLocations.back()), false); // Kruecke: This will spam hard! - TODO Not good then!
 	}
 
 	bool ScoutSquad::isStillScouting() {

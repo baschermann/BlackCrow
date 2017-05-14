@@ -69,7 +69,7 @@ namespace BlackCrow {
 		if (bc.macro.getUnreservedResources().minerals >= 300 && bc.macro.getTotalLarvaeAmount()<= 0) {
 			if (bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Hatchery) < 1) {
 
-				TilePosition buildPosition = bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery, false);
+				TilePosition buildPosition = bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery);
 				if (buildPosition != TilePositions::None)
 					bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, buildPosition);
 			}
@@ -90,13 +90,14 @@ namespace BlackCrow {
 		//	bc.macro.planUpgrade(UpgradeTypes::Metabolic_Boost, 1);
 		}
 
-
+		/*
 		// Build zerglings for now
 		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Zergling.supplyRequired() && bc.macro.getUnreservedLarvaeAmount() >= 1) {
 			if (bc.macro.getUnreservedResources().minerals >= 50) {
 				bc.macro.planUnit(UnitTypes::Zerg_Zergling, bc.macro.startPosition);
 			}
 		}
+		*/
 	}
 
 	void Strategy::onUnitDiscovered(BWAPI::Unit unit) {

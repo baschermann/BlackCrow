@@ -11,12 +11,11 @@ namespace BlackCrow {
 	Army::Army(BlackCrow &parent) : bc(parent) {}
 
 	void Army::onStart() {
-
 	}
 
 	void Army::onFrame() {
-		for (ScoutSquad& ss : scoutSquads) {
-			ss.onFrame();
+		for (ScoutSquadPtr ss : scoutSquads) {
+			ss->onFrame();
 		}
 	}
 
@@ -25,8 +24,7 @@ namespace BlackCrow {
 		return units.back();
 	}
 
-	SquadPtr Army::assignAutomaticSquad(SquadUnitPtr) {
-		return nullptr;
+	void Army::assignAutomaticSquad(SquadUnitPtr) {
 	}
 
 	void Army::startInitialScout() {
@@ -34,11 +32,11 @@ namespace BlackCrow {
 		BWAPI::Unit worker = bc.macro.getDroneForBuilding(bc.macro.startPosition);
 
 		if (worker) {
-			scoutSquads.emplace_back(bc);
-			ScoutSquad scoutSquad = scoutSquads.back();
+			scoutSquads.emplace_back(std::make_shared<ScoutSquad>(bc));
+			ScoutSquadPtr scoutSquad = scoutSquads.back();
 
-			scoutSquad.add(addToArmy(worker));
-			scoutSquad.addStartLocations();
+			scoutSquad->add(addToArmy(worker));
+			scoutSquad->addStartLocations();
 		}
 	}
 }
