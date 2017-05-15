@@ -129,6 +129,8 @@ namespace BlackCrow {
 	void BlackCrow::onUnitCreate(BWAPI::Unit unit) {
 		//if (Broodwar->getFrameCount() != 0)
 			//Broodwar->sendText("Unit %s created!", unit->getType().c_str());
+
+		army.onUnitCreated(unit);
 	}
 
 	void BlackCrow::onUnitDestroy(BWAPI::Unit unit) {

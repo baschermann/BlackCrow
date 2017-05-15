@@ -171,7 +171,7 @@
       <Filter>Header Files\Army</Filter>
     </ClInclude>
     <ClInclude Include="src\Common.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ namespace BlackCrow {
 	}
 
 	void Squad::remove(SquadUnitPtr unit) {
-		units.push_back(unit);
+		units.erase(std::remove(units.begin(), units.end(), unit), units.end());
 	}
 
 	void Squad::moveAll(BWAPI::Position position, bool queue) {
@@ -78,5 +78,22 @@ namespace BlackCrow {
 
 	void ScoutSquad::setGlobalSearch(bool searchGlobally) {
 		globalSearch = searchGlobally;
+	}
+
+	// ######## Attack Squad #########
+	AttackSquad::AttackSquad(BlackCrow &parent) : Squad(parent) {}
+
+	void AttackSquad::onFrame() {
+		Squad::onFrame();
+
+		/*
+		const BWEM::Area* area = bc.bwem.GetArea(unit->getTilePosition());
+		for (const BWEM::ChokePoint* cp : area->ChokePoints()) {
+			if (!cp->Blocked()) {
+				unit->attack(PositionOrUnit(Position(cp->Center())));
+				Broodwar->sendText("Ordered zergling to chokepoint");
+			}
+		}
+		*/
 	}
 }

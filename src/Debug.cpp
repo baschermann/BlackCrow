@@ -306,7 +306,7 @@ namespace BlackCrow {
 					if (fastDrawBuildable)
 						Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, color, false);
 					else {
-						// Note: Using Position classes costs additional 30%
+						// Note: Using Position classes costs additional 30% (at least in debug)
 						int border = 1;
 						int length = 5;
 
@@ -500,5 +500,6 @@ namespace BlackCrow {
 		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT) || Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
 			Broodwar->sendText("BWEM length: %i", length);
 		}
+
 	}
 }

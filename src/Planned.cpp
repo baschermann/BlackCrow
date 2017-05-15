@@ -59,15 +59,9 @@ namespace BlackCrow {
 
 			if (type == UnitTypes::Zerg_Drone) {
 				bc.macro.addDrone(unit);
-			}
-
-			if (unit->getType() == UnitTypes::Zerg_Zergling) {
-				const BWEM::Area* area = bc.bwem.GetArea(unit->getTilePosition());
-				for (const BWEM::ChokePoint* cp : area->ChokePoints()) {
-					if (!cp->Blocked()) {
-						unit->attack(PositionOrUnit(Position(cp->Center())));
-						Broodwar->sendText("Ordered zergling to chokepoint");
-					}
+			} else {
+				if (type != UnitTypes::Zerg_Overlord) {
+					bc.army.assignAutomaticSquad(bc.army.addToArmy(unit));
 				}
 			}
 		}

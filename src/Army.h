@@ -18,8 +18,10 @@ namespace BlackCrow {
 		// Variables
 		std::vector<SquadUnitPtr> units;
 		std::vector<ScoutSquadPtr> scoutSquads;
+		std::vector<AttackSquadPtr> attackSquads;
 
 		// Functions
+		void onUnitCreated(BWAPI::Unit unit);
 		SquadUnitPtr addToArmy(BWAPI::Unit unit);
 		void assignAutomaticSquad(SquadUnitPtr);
 		void startInitialScout();

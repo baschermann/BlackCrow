@@ -32,7 +32,6 @@ namespace BlackCrow {
 	class ScoutSquad : public Squad {
 	public:
 		ScoutSquad(BlackCrow &parent);
-		void init();
 		void onFrame();
 		bool isStillScouting();
 		int locationsToScout();
@@ -48,10 +47,12 @@ namespace BlackCrow {
 	};
 
 	class AttackSquad : public Squad {
-
+	public:
+		AttackSquad(BlackCrow &parent);
+		void onFrame();
 	};
 
 	class StallSquad : public Squad {
-
+	public:
 	};
 }

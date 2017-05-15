@@ -17,6 +17,22 @@ namespace BlackCrow {
 		for (ScoutSquadPtr ss : scoutSquads) {
 			ss->onFrame();
 		}
+
+		for (AttackSquadPtr as : attackSquads) {
+			as->onFrame();
+		}
+	}
+
+	void Army::onUnitCreated(BWAPI::Unit unit) {
+		UnitType type = unit->getType();
+
+		if( type.isBuilding()
+			|| type == UnitTypes::Zerg_Larva
+			|| type == UnitTypes::Zerg_Drone
+			|| type == UnitTypes::Zerg_Overlord)
+			return;
+
+		assignAutomaticSquad(addToArmy(unit));
 	}
 
 	SquadUnitPtr Army::addToArmy(BWAPI::Unit unit) {
@@ -24,7 +40,9 @@ namespace BlackCrow {
 		return units.back();
 	}
 
-	void Army::assignAutomaticSquad(SquadUnitPtr) {
+	void Army::assignAutomaticSquad(SquadUnitPtr unitPtr) {
+		// TODO
+		Broodwar->sendText("Assign army unit to automatic squad: %s", unitPtr->unit->getType().c_str());
 	}
 
 	void Army::startInitialScout() {
