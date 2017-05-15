@@ -8,6 +8,19 @@ namespace BlackCrow {
 
 	class BlackCrow;
 
+	class DebugPerformanceDisplay {
+	public:
+		void elapsedTime(double millis);
+		void updateAndDraw(int x, int y);
+		void setBackgroundColor(BWAPI::Color color);
+
+	private:
+		std::list<double> frameTimeHistory;
+		double highestFrameTime = 0;
+		double highestFrameTimeAgo = 0;
+		BWAPI::Color backgroundColor = BWAPI::Colors::Brown;
+	};
+
 	// Draws debug information
 	class Debug {
 
@@ -16,13 +29,11 @@ namespace BlackCrow {
 
 		void onStart();
 		void drawOnFrame();
-		bool command(std::string text);
-		double elapsedMs;
-		std::list<double> frameTimeHistory;
-		double highestFrameTime;
-		double highestFrameTimeAgo;
 
+		bool command(std::string text);
 		bool fastDrawBuildable;
+		DebugPerformanceDisplay displayBot;
+		DebugPerformanceDisplay displayBroodwar;
 
 	private:
 		BlackCrow &bc;

@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "Debug.h"
 #include "BlackCrow.h"
 #include "Macro.h"
@@ -5,6 +6,7 @@
 #include "SquadUnit.h"
 #include "EnemyUnit.h"
 #include "Tech.h"
+#include <BW/Offsets.h>
 
 
 namespace BlackCrow {
@@ -24,10 +26,8 @@ namespace BlackCrow {
 		showEnemyUnits = true;
 		showLifeBars = true;
 
-
-		elapsedMs = 0;
-		highestFrameTime = 0;
-		highestFrameTimeAgo = 0;
+		displayBroodwar.setBackgroundColor(Color(0, 100, 0)); // Dark Green
+		displayBot.setBackgroundColor(BWAPI::Colors::Brown);
 
 		plannedStatusStrings.emplace(Planned::Status::ACTIVE, "Active");
 		plannedStatusStrings.emplace(Planned::Status::COMPLETED, "Completed");
@@ -181,83 +181,8 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawFrameTimeDisplay() {
-
-		// Get Current Logical Speed
-		// Read from BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]; the local game speed, see Additional Setup.txt in the Project Folder.
-
-		int logicalFrameSpeed = 6; // BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0];
-
-		//Framerates
-		if (frameTimeHistory.size() >= Broodwar->getFPS() * .5) {
-			if (frameTimeHistory.size() > 0)
-				frameTimeHistory.pop_back();
-		}
-		frameTimeHistory.push_front(elapsedMs);
-
-		if (++highestFrameTimeAgo > Broodwar->getFPS() * 11) {
-			highestFrameTime = 0;
-			highestFrameTimeAgo = 0;
-		}
-
-		if (highestFrameTime < elapsedMs) {
-			highestFrameTime = elapsedMs;
-			highestFrameTimeAgo = 0;
-		}
-
-		// Frame time taken
-		if (frameTimeHistory.size() > 0) {
-			double average = 0;
-			for (double frameTime : frameTimeHistory) {
-				average += frameTime;
-			}
-			average /= frameTimeHistory.size();
-
-			// Current Load
-			Broodwar->drawBoxScreen(0, 0, 23, 9, Colors::Brown, true);
-			Broodwar->setTextSize(BWAPI::Text::Size::Small);
-
-			Color blackBarColor = Colors::Black;
-			bool overLimit = false;
-			double percent = average / logicalFrameSpeed;
-			double barPercent = percent;
-
-			if (percent > 1) {
-				overLimit = true;
-				barPercent = 1;
-				blackBarColor = Colors::Red;
-			}
-
-			Broodwar->drawTextScreen(1, -1, std::to_string((int)(percent * 100.0)).c_str());
-			Broodwar->drawTextScreen(15, -1, "%%");
-
-			// Black Bar
-			Broodwar->drawBoxScreen(23, 0, 100, 9, blackBarColor, true);
-			// Indicator Helper Bars
-			for (int i = 0; i <= logicalFrameSpeed; i++) {
-				int xPos = (int)((75.0 / logicalFrameSpeed) * i);
-				if (i % 5 == 0) {
-					Broodwar->drawLineScreen(24 + xPos, 0, 24 + xPos, 9, Colors::Grey);
-				} else {
-					Broodwar->drawLineScreen(24 + xPos, 0, 24 + xPos, 1, Colors::Grey);
-					Broodwar->drawLineScreen(24 + xPos, 8, 24 + xPos, 9, Colors::Grey);
-				}
-				//Broodwar->drawTextScreen(24 + xPos, 10, std::to_string(i).c_str());
-			}
-
-			// Highest Frame Indicator
-			int indicatorXPos = 24 + (int)(75 * (std::min(highestFrameTime / logicalFrameSpeed, 1.0)));
-			Broodwar->drawLineScreen(indicatorXPos, 0, indicatorXPos, 9, Colors::Yellow);
-			// White Average Bar
-			Broodwar->drawBoxScreen(24, 2, 25 + (int)(74 * barPercent), 7, Colors::White, false);
-
-			// Over the limit red bar
-			if (highestFrameTime > logicalFrameSpeed) {
-				Broodwar->drawBoxScreen(100, 0, 166, 9, Colors::Red, true);
-				Broodwar->drawTextScreen(103, -1, "%i ms spike!", (int)highestFrameTime);
-			}
-
-			Broodwar->setTextSize(BWAPI::Text::Size::Default);
-		}
+		displayBot.updateAndDraw(0, 0);
+		//displayBroodwar.updateAndDraw(0, 10);
 	}
 
 	void Debug::drawBaseInformation() {
@@ -501,5 +426,94 @@ namespace BlackCrow {
 			Broodwar->sendText("BWEM length: %i", length);
 		}
 
+	}
+
+	// ############# Debug Performance Display ###############
+	void DebugPerformanceDisplay::elapsedTime(double millis) {
+		frameTimeHistory.push_front(millis);
+
+		if (highestFrameTime < millis) {
+			highestFrameTime = millis;
+			highestFrameTimeAgo = 0;
+		}
+	}
+
+	void DebugPerformanceDisplay::setBackgroundColor(BWAPI::Color color) {
+		backgroundColor = color;
+	}
+
+	void DebugPerformanceDisplay::updateAndDraw(int xStart, int yStart) {
+
+		// Get Current Logical Speed
+		// Read from BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]; the local game speed, see Additional Setup.txt in the Project Folder.
+
+		//int logicalFrameSpeed = 6; // Use this if no additional setup was done
+		int logicalFrameSpeed = BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0];
+
+		//Framerates
+		if (frameTimeHistory.size() >= Broodwar->getFPS() * .5) {
+			if (frameTimeHistory.size() > 0)
+				frameTimeHistory.pop_back();
+		}
+
+		if (++highestFrameTimeAgo > Broodwar->getFPS() * 11) {
+			highestFrameTime = 0;
+			highestFrameTimeAgo = 0;
+		}
+
+		// Frame time taken
+		if (frameTimeHistory.size() > 0) {
+			double average = 0;
+			for (double frameTime : frameTimeHistory) {
+				average += frameTime;
+			}
+			average /= frameTimeHistory.size();
+
+			// Current Load
+			Broodwar->drawBoxScreen(xStart, yStart, xStart + 23, yStart + 9, backgroundColor, true);
+			Broodwar->setTextSize(BWAPI::Text::Size::Small);
+
+			Color blackBarColor = Colors::Black;
+			bool overLimit = false;
+			double percent = average / logicalFrameSpeed;
+			double barPercent = percent;
+
+			if (percent > 1) {
+				overLimit = true;
+				barPercent = 1;
+				blackBarColor = Colors::Red;
+			}
+
+			Broodwar->drawTextScreen(xStart + 1, yStart + -1, std::to_string((int)(percent * 100.0)).c_str());
+			Broodwar->drawTextScreen(xStart + 15, yStart + -1, "%%");
+
+			// Black Bar
+			Broodwar->drawBoxScreen(xStart + 23, yStart + 0, xStart + 100, yStart + 9, blackBarColor, true);
+			// Indicator Helper Bars
+			for (int i = 0; i <= logicalFrameSpeed; i++) {
+				int xPos = (int)((75.0 / logicalFrameSpeed) * i);
+				if (i % 5 == 0) {
+					Broodwar->drawLineScreen(xStart + 24 + xPos, yStart + 0, xStart + 24 + xPos, yStart + 9, Colors::Grey);
+				} else {
+					Broodwar->drawLineScreen(xStart + 24 + xPos, yStart + 0, xStart + 24 + xPos, yStart + 1, Colors::Grey);
+					Broodwar->drawLineScreen(xStart + 24 + xPos, yStart + 8, xStart + 24 + xPos, yStart + 9, Colors::Grey);
+				}
+				//Broodwar->drawTextScreen(xStart + 24 + xPos, yStart + 10, std::to_string(i).c_str());
+			}
+
+			// Highest Frame Indicator
+			int indicatorXPos = 24 + (int)(75 * (std::min(highestFrameTime / logicalFrameSpeed, 1.0)));
+			Broodwar->drawLineScreen(xStart + indicatorXPos, yStart + 0, xStart + indicatorXPos, yStart + 9, Colors::Yellow);
+			// White Average Bar
+			Broodwar->drawBoxScreen(xStart + 24, yStart + 2, xStart + 25 + (int)(74 * barPercent), yStart + 7, Colors::White, false);
+
+			// Over the limit red bar
+			if (highestFrameTime > logicalFrameSpeed) {
+				Broodwar->drawBoxScreen(xStart + 100, yStart + 0, xStart + 166, yStart + 9, Colors::Red, true);
+				Broodwar->drawTextScreen(xStart + 103, yStart + -1, "%i ms spike!", (int)highestFrameTime);
+			}
+
+			Broodwar->setTextSize(BWAPI::Text::Size::Default);
+		}
 	}
 }

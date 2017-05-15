@@ -71,8 +71,12 @@ namespace BlackCrow {
 			// End of them hardwork
 
 			auto end = std::chrono::high_resolution_clock::now();
-			std::chrono::duration<double, std::milli> diff = end - start;
-			debug.elapsedMs = diff.count();
+			std::chrono::duration<double, std::milli> diffThisFrame = end - start;
+			debug.displayBot.elapsedTime(diffThisFrame.count());
+
+			//std::chrono::duration<double, std::milli> diffLastFrame = end - lastFrame;
+			//lastFrame = end;
+			//debug.displayBroodwar.elapsedTime(diffLastFrame.count());
 
 		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;

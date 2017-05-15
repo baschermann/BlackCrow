@@ -9,11 +9,9 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Enemy::Enemy(BlackCrow &parent) : bc(parent) {
-	}
+	Enemy::Enemy(BlackCrow &parent) : bc(parent) {}
 
-	void Enemy::onStart() {
-	}
+	void Enemy::onStart() {}
 
 	void Enemy::enemyDiscovered(BWAPI::Unit unit) {
 		if (Broodwar->self()->isEnemy(unit->getPlayer())) {
@@ -48,7 +46,7 @@ namespace BlackCrow {
 	}
 
 	void Enemy::onFrame() {
-		for (EnemyUnit eu : enemies) {
+		for (EnemyUnit& eu : enemies) {
 			Unit unit = Broodwar->getUnit(eu.id);
 
 			if (unit->isVisible()) {
@@ -58,6 +56,10 @@ namespace BlackCrow {
 				} else {
 					eu.position.x = unit->getPosition().x;
 					eu.position.y = unit->getPosition().y;
+				}
+
+				if (unit->getType() != eu.type) {
+					eu.type = unit->getType();
 				}
 			}
 		}

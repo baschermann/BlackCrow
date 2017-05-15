@@ -157,6 +157,9 @@
     <ClInclude Include="src\Worker.h" />
     <ClInclude Include="src\Tech.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Entwicklung\BWAPI\Crow\Additional Setup.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

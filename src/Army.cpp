@@ -10,8 +10,7 @@ namespace BlackCrow {
 
 	Army::Army(BlackCrow &parent) : bc(parent) {}
 
-	void Army::onStart() {
-	}
+	void Army::onStart() {}
 
 	void Army::onFrame() {
 		for (ScoutSquadPtr ss : scoutSquads) {
@@ -26,7 +25,8 @@ namespace BlackCrow {
 	void Army::onUnitCreated(BWAPI::Unit unit) {
 		UnitType type = unit->getType();
 
-		if( type.isBuilding()
+		if (unit->getPlayer() != Broodwar->self()
+			|| type.isBuilding()
 			|| type == UnitTypes::Zerg_Larva
 			|| type == UnitTypes::Zerg_Drone
 			|| type == UnitTypes::Zerg_Overlord)

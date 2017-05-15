@@ -174,4 +174,7 @@
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Entwicklung\BWAPI\Crow\Additional Setup.txt" />
+  </ItemGroup>
 </Project>
