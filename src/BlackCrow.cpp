@@ -5,7 +5,6 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	//BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), tech(*this), bwem(BWEM::Map::Instance()) {}
 	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), tech(*this), army(*this), bwem(BWEM::Map::Instance()) {}
 
 	void BlackCrow::onStart() {
@@ -74,16 +73,14 @@ namespace BlackCrow {
 			std::chrono::duration<double, std::milli> diffThisFrame = end - start;
 			debug.displayBot.elapsedTime(diffThisFrame.count());
 
-			//std::chrono::duration<double, std::milli> diffLastFrame = end - lastFrame;
-			//lastFrame = end;
-			//debug.displayBroodwar.elapsedTime(diffLastFrame.count());
+			std::chrono::duration<double, std::milli> diffLastFrame = end - lastFrame;
+			lastFrame = end;
+			debug.displayBroodwar.elapsedTime(diffLastFrame.count());
 
 		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
 		}
 	}
-
-	
 
 	void BlackCrow::onSendText(std::string text) {
 		BWEM::utils::MapDrawer::ProcessCommand(text);

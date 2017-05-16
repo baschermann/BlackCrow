@@ -1,8 +1,6 @@
 #pragma once
 #include <BWAPI.h>
 #include "Planned.h"
-//#include <BW/Offsets.h>
-
 
 namespace BlackCrow {
 
@@ -13,12 +11,16 @@ namespace BlackCrow {
 		void elapsedTime(double millis);
 		void updateAndDraw(int x, int y);
 		void setBackgroundColor(BWAPI::Color color);
+		void setShowPercentage(double percentage);
+		void setShowSpikes(bool show);
 
 	private:
 		std::list<double> frameTimeHistory;
 		double highestFrameTime = 0;
 		double highestFrameTimeAgo = 0;
 		BWAPI::Color backgroundColor = BWAPI::Colors::Brown;
+		double showPercentage = 0;
+		bool showSpikes = true;
 	};
 
 	// Draws debug information

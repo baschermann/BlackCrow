@@ -7,6 +7,7 @@ namespace BlackCrow {
 
 	class BlackCrow;
 	class ScoutSquad;
+	class AttackSquad;
 
 	class Army {
 	public:

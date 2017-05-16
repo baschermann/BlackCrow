@@ -27,7 +27,8 @@ namespace BlackCrow {
 		showLifeBars = true;
 
 		displayBroodwar.setBackgroundColor(Color(0, 100, 0)); // Dark Green
-		displayBot.setBackgroundColor(BWAPI::Colors::Brown);
+		displayBroodwar.setShowPercentage(110);
+		displayBroodwar.setShowSpikes(false);
 
 		plannedStatusStrings.emplace(Planned::Status::ACTIVE, "Active");
 		plannedStatusStrings.emplace(Planned::Status::COMPLETED, "Completed");
@@ -143,12 +144,15 @@ namespace BlackCrow {
 		//Broodwar->drawTextScreen(180, 50, "%i Free Supply", bc.macro.larv);
 		//Broodwar->drawTextScreen(180, 65, "%i Planned Hatchery", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery));
 
-		Broodwar->drawTextScreen(180, 20, "%i getLatency()", Broodwar->getLatency());
-		Broodwar->drawTextScreen(180, 35, "%i getLatencyFrames();", Broodwar->getLatencyFrames());
-		Broodwar->drawTextScreen(180, 50, "%i getLatencyTime()", Broodwar->getLatencyTime());
-		Broodwar->drawTextScreen(180, 65, "%i getRemainingLatencyFrames()", Broodwar->getRemainingLatencyFrames());
-		Broodwar->drawTextScreen(180, 80, "%i getRemainingLatencyTime()", Broodwar->getRemainingLatencyTime());
-		
+		//Broodwar->drawTextScreen(180, 20, "%i getLatency()", Broodwar->getLatency());
+		//Broodwar->drawTextScreen(180, 35, "%i getLatencyFrames();", Broodwar->getLatencyFrames());
+		//Broodwar->drawTextScreen(180, 50, "%i getLatencyTime()", Broodwar->getLatencyTime());
+		//Broodwar->drawTextScreen(180, 65, "%i getRemainingLatencyFrames()", Broodwar->getRemainingLatencyFrames());
+		//Broodwar->drawTextScreen(180, 80, "%i getRemainingLatencyTime()", Broodwar->getRemainingLatencyTime());
+
+		Broodwar->setTextSize(BWAPI::Text::Size::Small);
+		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
+		Broodwar->setTextSize(BWAPI::Text::Size::Default);
 
 		// Draw Mouse Tile Position
 		//Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
@@ -182,7 +186,7 @@ namespace BlackCrow {
 
 	void Debug::drawFrameTimeDisplay() {
 		displayBot.updateAndDraw(0, 0);
-		//displayBroodwar.updateAndDraw(0, 10);
+		displayBroodwar.updateAndDraw(0, 10);
 	}
 
 	void Debug::drawBaseInformation() {
@@ -469,14 +473,17 @@ namespace BlackCrow {
 			}
 			average /= frameTimeHistory.size();
 
-			// Current Load
-			Broodwar->drawBoxScreen(xStart, yStart, xStart + 23, yStart + 9, backgroundColor, true);
-			Broodwar->setTextSize(BWAPI::Text::Size::Small);
-
 			Color blackBarColor = Colors::Black;
 			bool overLimit = false;
 			double percent = average / logicalFrameSpeed;
 			double barPercent = percent;
+
+			if (showPercentage / 100 > percent)
+				return;
+
+			// Current Load
+			Broodwar->drawBoxScreen(xStart, yStart, xStart + 23, yStart + 9, backgroundColor, true);
+			Broodwar->setTextSize(BWAPI::Text::Size::Small);
 
 			if (percent > 1) {
 				overLimit = true;
@@ -508,7 +515,7 @@ namespace BlackCrow {
 			Broodwar->drawBoxScreen(xStart + 24, yStart + 2, xStart + 25 + (int)(74 * barPercent), yStart + 7, Colors::White, false);
 
 			// Over the limit red bar
-			if (highestFrameTime > logicalFrameSpeed) {
+			if (showSpikes && highestFrameTime > logicalFrameSpeed) {
 				Broodwar->drawBoxScreen(xStart + 100, yStart + 0, xStart + 166, yStart + 9, Colors::Red, true);
 				Broodwar->drawTextScreen(xStart + 103, yStart + -1, "%i ms spike!", (int)highestFrameTime);
 			}
@@ -516,4 +523,13 @@ namespace BlackCrow {
 			Broodwar->setTextSize(BWAPI::Text::Size::Default);
 		}
 	}
+
+	void DebugPerformanceDisplay::setShowPercentage(double percentage) {
+		showPercentage = percentage;
+	}
+
+	void DebugPerformanceDisplay::setShowSpikes(bool show) {
+		showSpikes = show;
+	}
+	// ############# Debug Performance Display - End ###############
 }
