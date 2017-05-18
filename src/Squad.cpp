@@ -13,16 +13,17 @@ namespace BlackCrow {
 	void Squad::onFrame() {}
 
 	void Squad::add(SquadUnitPtr unit) {
-		units.push_back(unit);
+		sunits.push_back(unit);
 	}
 
 	void Squad::remove(SquadUnitPtr unit) {
-		units.erase(std::remove(units.begin(), units.end(), unit), units.end());
+		sunits.erase(std::remove(sunits.begin(), sunits.end(), unit), sunits.end());
 	}
 
 	void Squad::moveAll(BWAPI::Position position, bool queue) {
-		for (SquadUnitPtr unit : units) {
-			unit->move(position, queue);
+		for (SquadUnitPtr sunit : sunits) {
+			if (sunit->isIdle() || !sunit->isMoving())
+				sunit->move(position, queue);
 		}
 	}
 
@@ -86,14 +87,44 @@ namespace BlackCrow {
 	void AttackSquad::onFrame() {
 		Squad::onFrame();
 
-		/*
-		const BWEM::Area* area = bc.bwem.GetArea(unit->getTilePosition());
-		for (const BWEM::ChokePoint* cp : area->ChokePoints()) {
-			if (!cp->Blocked()) {
-				unit->attack(PositionOrUnit(Position(cp->Center())));
-				Broodwar->sendText("Ordered zergling to chokepoint");
+		// Decide
+		if (sunits.size() >= 30)
+			state = State::ATTACK;
+
+		// Action
+		switch (state) {
+		case State::MOVE:
+			for (SquadUnitPtr sunit : sunits) {
+				if (sunit->isIdle()) {
+
+					const BWEM::Area* area = bc.bwem.GetArea(sunit->unit->getTilePosition());
+					if (area) {
+						for (const BWEM::ChokePoint* cp : area->ChokePoints()) {
+							if (!cp->Blocked()) {
+								sunit->attack(PositionOrUnit(Position(cp->Center())), false);
+								//Broodwar->sendText("Ordered zergling to chokepoint");
+							}
+						}
+					}
+				}
 			}
+			break;
+
+		case State::ATTACK:
+			
+			for (SquadUnitPtr sunit : sunits) {
+				if (!sunit->commandInQueue() || sunit->isIdle()) {
+					
+					auto enemyIt = std::min_element(bc.enemy.enemies.begin(), bc.enemy.enemies.end(), [sunit](EnemyUnit& left, EnemyUnit& right) { 
+						return Util::distance(left.position, sunit->unit->getPosition()) < Util::distance(right.position, sunit->unit->getPosition()); 
+					});
+
+					if (enemyIt != bc.enemy.enemies.end())
+						sunit->attack(enemyIt->position, false);
+				}
+			}
+
+			break;
 		}
-		*/
 	}
 }

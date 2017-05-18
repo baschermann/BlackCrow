@@ -147,8 +147,13 @@ namespace BlackCrow {
 		//Broodwar->drawTextScreen(180, 20, "%i getLatency()", Broodwar->getLatency());
 		//Broodwar->drawTextScreen(180, 35, "%i getLatencyFrames();", Broodwar->getLatencyFrames());
 		//Broodwar->drawTextScreen(180, 50, "%i getLatencyTime()", Broodwar->getLatencyTime());
-		//Broodwar->drawTextScreen(180, 65, "%i getRemainingLatencyFrames()", Broodwar->getRemainingLatencyFrames());
+		Broodwar->drawTextScreen(180, 65, "%i getRemainingLatencyFrames()", Broodwar->getRemainingLatencyFrames());
 		//Broodwar->drawTextScreen(180, 80, "%i getRemainingLatencyTime()", Broodwar->getRemainingLatencyTime());
+
+		Broodwar->setTextSize(BWAPI::Text::Size::Small);
+		for (auto unit : Broodwar->self()->getUnits()) {
+			Broodwar->drawTextMap(unit->getPosition(), "%s", unit->getOrder().c_str());
+		}
 
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
@@ -331,7 +336,7 @@ namespace BlackCrow {
 	void Debug::drawSquadInfo() {
 		for (ScoutSquadPtr scoutSquad : bc.army.scoutSquads) {
 			for (BWAPI::TilePosition tilePosition : scoutSquad->getScoutingPositions()) {
-				BWAPI::Unit scoutUnit = scoutSquad->units.back()->unit;
+				BWAPI::Unit scoutUnit = scoutSquad->sunits.back()->unit;
 				Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
 			}
 		}
@@ -451,7 +456,7 @@ namespace BlackCrow {
 		// Get Current Logical Speed
 		// Read from BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]; the local game speed, see Additional Setup.txt in the Project Folder.
 
-		//int logicalFrameSpeed = 6; // Use this if no additional setup was done
+		//int logicalFrameSpeed = 8; // Use this if no additional setup was done
 		int logicalFrameSpeed = BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0];
 
 		//Framerates

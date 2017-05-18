@@ -45,8 +45,11 @@ namespace BlackCrow {
 		if (attackSquads.size() <= 0)
 			attackSquads.emplace_back(std::make_shared<AttackSquad>(bc));
 
+		AttackSquadPtr aq = attackSquads.back();
+		aq->add(unitPtr);
+
 		// TODO
-		Broodwar->sendText("Assign army unit to automatic squad: %s", unitPtr->unit->getType().c_str());
+		//Broodwar->sendText("Assign army unit to automatic squad: %s", unitPtr->unit->getType().c_str());
 	}
 
 	void Army::startInitialScout() {

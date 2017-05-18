@@ -17,10 +17,10 @@ namespace BlackCrow {
 		Squad();
 		void onFrame();
 
-		std::vector<SquadUnitPtr> units;
+		std::vector<SquadUnitPtr> sunits;
 
-		void add(const SquadUnitPtr unit);
-		void remove(const SquadUnitPtr unit);
+		void add(const SquadUnitPtr sunit);
+		void remove(const SquadUnitPtr sunit);
 		void moveAll(BWAPI::Position position, bool queue);
 
 
@@ -48,8 +48,22 @@ namespace BlackCrow {
 
 	class AttackSquad : public Squad {
 	public:
+
+		enum class State {
+			MOVE,
+			ATTACK
+		};
+
+		// Common Functions
 		AttackSquad(BlackCrow &parent);
 		void onFrame();
+
+		// Variables
+		State state = State::MOVE;
+
+		// Functions
+		
+
 	};
 
 	class StallSquad : public Squad {

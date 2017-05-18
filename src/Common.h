@@ -1,3 +1,5 @@
+#include <memory>
+
 namespace BlackCrow {
 	class SquadUnit;
 	class Squad;
