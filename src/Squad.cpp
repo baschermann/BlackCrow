@@ -88,7 +88,7 @@ namespace BlackCrow {
 		Squad::onFrame();
 
 		// Decide
-		if (sunits.size() >= 30)
+		if (sunits.size() >= 15)
 			state = State::ATTACK;
 
 		// Action
@@ -111,19 +111,13 @@ namespace BlackCrow {
 			break;
 
 		case State::ATTACK:
-			
 			for (SquadUnitPtr sunit : sunits) {
-				if (!sunit->commandInQueue() || sunit->isIdle()) {
-					
-					auto enemyIt = std::min_element(bc.enemy.enemies.begin(), bc.enemy.enemies.end(), [sunit](EnemyUnit& left, EnemyUnit& right) { 
-						return Util::distance(left.position, sunit->unit->getPosition()) < Util::distance(right.position, sunit->unit->getPosition()); 
-					});
-
-					if (enemyIt != bc.enemy.enemies.end())
-						sunit->attack(enemyIt->position, false);
+				if (!sunit->commandInQueue() || sunit->isIdle()) {		
+					EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { return !eu.type.isFlyer(); });
+					if (enemyUnit)
+						sunit->attack(enemyUnit->position, false);
 				}
 			}
-
 			break;
 		}
 	}
