@@ -14,7 +14,7 @@ namespace BlackCrow {
 		void onFrame();
 		std::list<EnemyUnit> enemies;
 		void enemyDiscovered(BWAPI::Unit unit);
-		void enemyDestroyed(BWAPI::Unit unit);
+		void onUnitDestroyed(BWAPI::Unit unit);
 
 		// Predicate for whether to include the unit or not
 		// bool pred(const EnemyUnit& enemyUnit)

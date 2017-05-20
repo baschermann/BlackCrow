@@ -146,6 +146,7 @@ namespace BlackCrow {
 			builder.onBuildingDestroyed(unit);
 			strategy.onUnitDestroyed(unit);
 			macro.onUnitDestroyed(unit);
+			enemy.onUnitDestroyed(unit);
 
 		} catch (const std::exception & e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;

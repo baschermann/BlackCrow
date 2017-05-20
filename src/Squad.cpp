@@ -102,7 +102,6 @@ namespace BlackCrow {
 						for (const BWEM::ChokePoint* cp : area->ChokePoints()) {
 							if (!cp->Blocked()) {
 								sunit->attack(PositionOrUnit(Position(cp->Center())), false);
-								//Broodwar->sendText("Ordered zergling to chokepoint");
 							}
 						}
 					}

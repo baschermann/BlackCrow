@@ -65,7 +65,7 @@ namespace BlackCrow {
 		}
 	}
 
-	void Enemy::enemyDestroyed(BWAPI::Unit unit) {
+	void Enemy::onUnitDestroyed(BWAPI::Unit unit) {
 		auto enemyUnitIt = enemies.begin();
 		while (enemyUnitIt != enemies.end()) {
 			if (enemyUnitIt->id == unit->getID()) {
