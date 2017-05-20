@@ -270,12 +270,10 @@ namespace BlackCrow {
 	}
 
 	std::string Debug::getShortName(std::string longName) {
-		std::string::size_type pos;
+		std::string::size_type pos = longName.find("_");
 
-		pos = longName.find("_");
-		if (pos != std::string::npos) {
+		if (pos != std::string::npos)
 			return longName.substr(pos + 1);
-		}
 
 		return longName;
 	}
@@ -354,6 +352,8 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawEnemyUnits() {
+		Broodwar->setTextSize(BWAPI::Text::Size::Small);
+
 		for (EnemyUnit eu : bc.enemy.enemies) {
 			Unit unit = Broodwar->getUnit(eu.id);
 			bool a = unit->isVisible();
@@ -369,6 +369,8 @@ namespace BlackCrow {
 				}
 			}
 		}
+
+		Broodwar->setTextSize(BWAPI::Text::Size::Default);
 	}
 
 	void Debug::drawLifeBars() {
