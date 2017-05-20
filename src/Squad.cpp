@@ -112,7 +112,7 @@ namespace BlackCrow {
 		case State::ATTACK:
 			for (SquadUnitPtr sunit : sunits) {
 				if (!sunit->commandInQueue() || sunit->isIdle()) {		
-					EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { return !eu.type.isFlyer(); });
+					EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { return !eu.type.isFlyer() && !eu.isGhost; });
 					if (enemyUnit)
 						sunit->attack(enemyUnit->position, false);
 				}

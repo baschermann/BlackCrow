@@ -14,6 +14,7 @@ namespace BlackCrow {
 		BWAPI::TilePosition tilePosition;
 		int lastSeen;
 		bool isVisible;
+		bool isGhost = false;
 	};
 
 	bool operator==(const EnemyUnit& left, const EnemyUnit& right);

@@ -41,6 +41,7 @@ namespace BlackCrow {
 		BlackCrow &bc;
 
 		EnemyUnit* findEnemy(int id);
+		double ghostTime(BWAPI::UnitType type);
 	};
 
 }

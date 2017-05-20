@@ -352,7 +352,8 @@ namespace BlackCrow {
 					Broodwar->drawBoxMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, eu.tilePosition.x * 32 + eu.type.tileWidth() * 32, eu.tilePosition.y * 32 + eu.type.tileHeight() * 32, Colors::Grey, false);
 					Broodwar->drawTextMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, eu.type.c_str());
 				} else {
-					Broodwar->drawBoxMap(eu.position.x, eu.position.y, eu.position.x + eu.type.width(), eu.position.y + eu.type.height(), Colors::Grey, false);
+					Color borderColor = eu.isGhost ? Colors::Black : Colors::Grey;
+					Broodwar->drawBoxMap(eu.position.x, eu.position.y, eu.position.x + eu.type.width(), eu.position.y + eu.type.height(), borderColor, false);
 					Broodwar->drawTextMap(eu.position.x, eu.position.y, eu.type.c_str());
 				}
 			}

@@ -50,6 +50,8 @@ namespace BlackCrow {
 			Unit unit = Broodwar->getUnit(eu.id);
 
 			if (unit->isVisible()) {
+				eu.isGhost = false;
+
 				if (eu.type.isBuilding() && (unit->getTilePosition().x != eu.tilePosition.x || unit->getTilePosition().y != eu.tilePosition.y)) {
 					eu.tilePosition.x = unit->getTilePosition().x;
 					eu.tilePosition.y = unit->getTilePosition().y;
@@ -60,6 +62,19 @@ namespace BlackCrow {
 
 				if (unit->getType() != eu.type) {
 					eu.type = unit->getType();
+				}
+
+				eu.lastSeen = Broodwar->getFrameCount();	
+			} else {
+				eu.isVisible = false;
+
+				// Handling a ghost
+				if (Broodwar->isVisible(TilePosition(eu.position))) {
+					eu.isGhost = true;
+				} else {
+					if (!eu.type.isBuilding() && eu.lastSeen + ghostTime(eu.type) <= Broodwar->getFrameCount()) {
+						eu.isGhost = true;
+					}
 				}
 			}
 		}
@@ -83,5 +98,9 @@ namespace BlackCrow {
 				return &enemyUnit;
 		}
 		return nullptr;
+	}
+
+	double Enemy::ghostTime(BWAPI::UnitType type) {
+		return 2500 / type.topSpeed();
 	}
 }
