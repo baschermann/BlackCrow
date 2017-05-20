@@ -269,6 +269,17 @@ namespace BlackCrow {
 		return value ? "on" : "off";
 	}
 
+	std::string Debug::getShortName(std::string longName) {
+		std::string::size_type pos;
+
+		pos = longName.find("_");
+		if (pos != std::string::npos) {
+			return longName.substr(pos + 1);
+		}
+
+		return longName;
+	}
+
 	void Debug::drawManagerInfo() {
 		// Strategy Manager
 		// Build Order
@@ -350,11 +361,11 @@ namespace BlackCrow {
 			if (!unit->isVisible()) {
 				if (eu.type.isBuilding()) {
 					Broodwar->drawBoxMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, eu.tilePosition.x * 32 + eu.type.tileWidth() * 32, eu.tilePosition.y * 32 + eu.type.tileHeight() * 32, Colors::Grey, false);
-					Broodwar->drawTextMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, eu.type.c_str());
+					Broodwar->drawTextMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, getShortName(eu.type.getName()).c_str());
 				} else {
 					Color borderColor = eu.isGhost ? Colors::Black : Colors::Grey;
 					Broodwar->drawBoxMap(eu.position.x, eu.position.y, eu.position.x + eu.type.width(), eu.position.y + eu.type.height(), borderColor, false);
-					Broodwar->drawTextMap(eu.position.x, eu.position.y, eu.type.c_str());
+					Broodwar->drawTextMap(eu.position.x, eu.position.y, getShortName(eu.type.getName()).c_str());
 				}
 			}
 		}

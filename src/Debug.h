@@ -50,6 +50,7 @@ namespace BlackCrow {
 		bool showEnemyUnits;
 		bool showLifeBars;
 		std::string getOnOffString(bool value);
+		std::string getShortName(std::string longName);
 
 		void drawBaseInformation();
 		void drawBuildable();
