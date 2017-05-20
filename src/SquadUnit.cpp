@@ -1,9 +1,25 @@
 #include "SquadUnit.h"
+#include "EnemyUnit.h"
 
 namespace BlackCrow {
 
 	using namespace BWAPI;
 	using namespace Filter;
+
+	void SquadUnit::onFrame() {
+		if (attackTarget) {
+			Unit enemyUnit = Broodwar->getUnit(attackTarget->id);
+
+			// TODO Override attack move
+			if (attackTarget && unit->getOrderTarget() != enemyUnit && !commandInQueue()) { // TODO override attack move
+				unit->attack(enemyUnit, false);
+				commandExecuted();
+
+				if (unit->isSelected())
+					Broodwar->sendText("Attack Enemy %i", enemyUnit->getID());
+			}
+		}
+	}
 
 	SquadUnit::SquadUnit(BWAPI::Unit unit) {
 		this->unit = unit;
@@ -24,11 +40,26 @@ namespace BlackCrow {
 		return unit->getOrder() == Orders::Move;
 	}
 
-	void SquadUnit::attack(PositionOrUnit positionOrUnit, bool queue) {
+	void SquadUnit::attackMove(BWAPI::Position position, bool queue) {
 		if (!commandInQueue()) {
-			unit->attack(positionOrUnit, queue);
+			unit->attack(position, queue);
 			commandExecuted();
 		}
+	}
+
+	void SquadUnit::setAttackTarget(EnemyUnit& enemy) {
+		attackTarget = &enemy;
+	}
+
+	bool SquadUnit::hasTarget() {
+		if (!attackTarget)
+			return true;
+
+		if (Broodwar->getUnit(attackTarget->id)->exists()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	bool SquadUnit::commandInQueue() {

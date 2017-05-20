@@ -101,7 +101,7 @@ namespace BlackCrow {
 					if (area) {
 						for (const BWEM::ChokePoint* cp : area->ChokePoints()) {
 							if (!cp->Blocked()) {
-								sunit->attack(PositionOrUnit(Position(cp->Center())), false);
+								sunit->attackMove(Position(cp->Center()), false);
 							}
 						}
 					}
@@ -111,10 +111,12 @@ namespace BlackCrow {
 
 		case State::ATTACK:
 			for (SquadUnitPtr sunit : sunits) {
-				if (!sunit->commandInQueue() || sunit->isIdle()) {		
-					EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { return !eu.type.isFlyer() && !eu.isGhost; });
-					if (enemyUnit)
-						sunit->attack(enemyUnit->position, false);
+				EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { return !eu.type.isFlyer() && !eu.isGhost; });
+
+				if (enemyUnit && enemyUnit->isVisible) {
+					sunit->setAttackTarget(*enemyUnit);
+				} else {
+					sunit->attackMove(enemyUnit->position, false);
 				}
 			}
 			break;

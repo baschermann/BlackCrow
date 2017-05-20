@@ -20,6 +20,10 @@ namespace BlackCrow {
 		for (AttackSquadPtr as : attackSquads) {
 			as->onFrame();
 		}
+
+		for (SquadUnitPtr sunit : sunits) {
+			sunit->onFrame();
+		}
 	}
 
 	void Army::onUnitCreated(BWAPI::Unit unit) {
@@ -36,8 +40,8 @@ namespace BlackCrow {
 	}
 
 	SquadUnitPtr Army::addToArmy(BWAPI::Unit unit) {
-		units.emplace_back(std::make_shared<SquadUnit>(unit));
-		return units.back();
+		sunits.emplace_back(std::make_shared<SquadUnit>(unit));
+		return sunits.back();
 	}
 
 	void Army::assignAutomaticSquad(SquadUnitPtr unitPtr) {

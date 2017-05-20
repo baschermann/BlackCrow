@@ -17,7 +17,7 @@ namespace BlackCrow {
 		void onFrame();
 
 		// Variables
-		std::vector<SquadUnitPtr> units;
+		std::vector<SquadUnitPtr> sunits;
 		std::vector<ScoutSquadPtr> scoutSquads;
 		std::vector<AttackSquadPtr> attackSquads;
 

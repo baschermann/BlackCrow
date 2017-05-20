@@ -53,8 +53,6 @@ namespace BlackCrow {
 			// Performance Qeuery Timer
 			// http://www.decompile.com/cpp/faq/windows_timer_api.htm
 
-			debug.drawOnFrame();
-
 			if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
 				return;
 
@@ -67,6 +65,8 @@ namespace BlackCrow {
 			strategy.onFrame();
 			tech.onFrame();
 			army.onFrame();
+
+			debug.drawOnFrame();
 			// End of them hardwork
 
 			auto end = std::chrono::high_resolution_clock::now();
@@ -76,6 +76,16 @@ namespace BlackCrow {
 			std::chrono::duration<double, std::milli> diffLastFrame = end - lastFrame;
 			lastFrame = end;
 			debug.displayBroodwar.elapsedTime(diffLastFrame.count());
+
+			// EXTRA set SPEED per KEEB
+			if (Broodwar->getKeyState(K_1))
+				Broodwar->setLocalSpeed(50);
+
+			if (Broodwar->getKeyState(K_2))
+				Broodwar->setLocalSpeed(25);
+
+			if (Broodwar->getKeyState(K_3))
+				Broodwar->setLocalSpeed(8);
 
 		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
