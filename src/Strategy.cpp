@@ -57,7 +57,7 @@ namespace BlackCrow {
 
 		// Lets do the macro first
 		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Drone.supplyRequired() && bc.macro.getWorkersNeededForSaturation() - bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Drone) > 0) {
-			if (bc.macro.getUnreservedResources().minerals >= 50 && bc.macro.getUnreservedLarvaeAmount() > 0)
+			if (bc.macro.getUnreservedResources().minerals >= 60 && bc.macro.getUnreservedLarvaeAmount() > 0)
 				bc.macro.buildWorkerDrone();
 		}
 
@@ -93,7 +93,7 @@ namespace BlackCrow {
 		
 		// Build zerglings for now
 		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Zergling.supplyRequired() && bc.macro.getUnreservedLarvaeAmount() >= 1) {
-			if (bc.macro.getUnreservedResources().minerals >= 100) {
+			if (bc.macro.getUnreservedResources().minerals >= 50) {
 				bc.macro.planUnit(UnitTypes::Zerg_Zergling, bc.macro.startPosition);
 			}
 		}

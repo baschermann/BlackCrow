@@ -15,7 +15,7 @@ namespace BlackCrow {
 
 	void Enemy::enemyDiscovered(BWAPI::Unit unit) {
 		if (Broodwar->self()->isEnemy(unit->getPlayer())) {
-			EnemyUnit* enemy = findEnemy(unit->getID());
+			EnemyUnit* enemy = getEnemy(unit->getID());
 
 			if (!enemy) {
 				enemies.emplace_back();
@@ -92,7 +92,7 @@ namespace BlackCrow {
 		}
 	}
 
-	EnemyUnit* Enemy::findEnemy(int id) {
+	EnemyUnit* Enemy::getEnemy(int id) {
 		for (EnemyUnit& enemyUnit : enemies) {
 			if (enemyUnit.id == id)
 				return &enemyUnit;
@@ -101,6 +101,6 @@ namespace BlackCrow {
 	}
 
 	double Enemy::ghostTime(BWAPI::UnitType type) {
-		return 2500 / type.topSpeed();
+		return 1700 / type.topSpeed();
 	}
 }

@@ -40,7 +40,7 @@ namespace BlackCrow {
 	}
 
 	SquadUnitPtr Army::addToArmy(BWAPI::Unit unit) {
-		sunits.emplace_back(std::make_shared<SquadUnit>(unit));
+		sunits.emplace_back(std::make_shared<SquadUnit>(bc, unit));
 		return sunits.back();
 	}
 

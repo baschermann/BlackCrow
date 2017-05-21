@@ -4,28 +4,32 @@
 
 namespace BlackCrow {
 
+	class BlackCrow;
 	class EnemyUnit;
 
 	class SquadUnit {
 	public:
-		SquadUnit(BWAPI::Unit unit);
+		SquadUnit(BlackCrow& bc, BWAPI::Unit unit);
+		void onFrame();
 
 		// Variables
 		BWAPI::Unit unit = nullptr;
-		EnemyUnit* attackTarget = nullptr;
+		int attackTargetId = -13337;
 		SquadPtr squad = nullptr;
 		int lastCommandSent = 0;
 		int nextCommandExecutesAt = 0;
 
 		// Functions
-		void onFrame();
 		bool isIdle();
 		void move(BWAPI::Position position, bool queue);
 		bool isMoving();
 		void attackMove(BWAPI::Position position, bool queue);
-		void setAttackTarget(EnemyUnit& enemy);
+		void setAttackTarget(int id);
 		bool hasTarget();
 		bool commandInQueue();
 		void commandExecuted();
+
+	private:
+		BlackCrow &bc;
 	};
 }

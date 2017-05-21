@@ -88,7 +88,7 @@ namespace BlackCrow {
 		Squad::onFrame();
 
 		// Decide
-		if (sunits.size() >= 15)
+		if (sunits.size() >= 20)
 			state = State::ATTACK;
 
 		// Action
@@ -111,13 +111,16 @@ namespace BlackCrow {
 
 		case State::ATTACK:
 			for (SquadUnitPtr sunit : sunits) {
-				EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { return !eu.type.isFlyer() && !eu.isGhost; });
+				EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { 
+					return !eu.type.isFlyer()
+						&& !eu.isGhost
+						&& eu.type != UnitTypes::Zerg_Larva
+						&& eu.type != UnitTypes::Zerg_Egg;
+				});
 
-				if (enemyUnit && enemyUnit->isVisible) {
-					sunit->setAttackTarget(*enemyUnit);
-				} else {
-					sunit->attackMove(enemyUnit->position, false);
-				}
+				if (enemyUnit)
+					sunit->setAttackTarget(enemyUnit->id);
+				// else we should scout for one!
 			}
 			break;
 		}

@@ -134,27 +134,32 @@ namespace BlackCrow {
 
 	void Debug::drawOnFrame() {
 
-		/*int i = 0;
-		for (BWAPI::TilePosition p : bc.builder.positions) {
-			Broodwar->drawTextMap(Position(p), std::to_string(i++).c_str());
-		}*/
-
-		//Broodwar->drawTextScreen(180, 20, "%i Total Larvae", bc.macro.getTotalLarvaeAmount());
-		//Broodwar->drawTextScreen(180, 35, "%i Unreserved Larvae", bc.macro.getUnreservedLarvaeAmount());
-		//Broodwar->drawTextScreen(180, 50, "%i Free Supply", bc.macro.larv);
-		//Broodwar->drawTextScreen(180, 65, "%i Planned Hatchery", bc.macro.getTypeCurrentlyPlanned(UnitTypes::Zerg_Hatchery));
-
-		//Broodwar->drawTextScreen(180, 20, "%i getLatency()", Broodwar->getLatency());
-		//Broodwar->drawTextScreen(180, 35, "%i getLatencyFrames();", Broodwar->getLatencyFrames());
-		//Broodwar->drawTextScreen(180, 50, "%i getLatencyTime()", Broodwar->getLatencyTime());
-		Broodwar->drawTextScreen(180, 65, "%i getRemainingLatencyFrames()", Broodwar->getRemainingLatencyFrames());
-		//Broodwar->drawTextScreen(180, 80, "%i getRemainingLatencyTime()", Broodwar->getRemainingLatencyTime());
-
+		// Draw current order
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		for (auto unit : Broodwar->self()->getUnits()) {
-			Broodwar->drawTextMap(unit->getPosition(), "%s", unit->getOrder().c_str());
+			//Broodwar->drawTextMap(unit->getPosition(), "%s", unit->getOrder().c_str());
+		}
+		Broodwar->setTextSize(BWAPI::Text::Size::Default);
+
+		// Selected Units Info
+		int yOffset = 0;
+		Color darkRed = Color(96, 0, 0);
+		for (SquadUnitPtr sunit : bc.army.sunits) {
+			EnemyUnit* eu = bc.enemy.getEnemy(sunit->attackTargetId);
+
+			if (sunit->unit->isSelected()) {
+				Unit u = Broodwar->getUnit(sunit->attackTargetId);	
+				if (u)
+					Broodwar->drawTextScreen(200, 10 + yOffset++ * 15, "\x11 Target ID: %i, Type %s", sunit->attackTargetId, eu->type.getName().c_str());
+				else
+					Broodwar->drawTextScreen(200, 10 + yOffset++ * 15, "\x11 Target ID: %i", sunit->attackTargetId);
+			}
+
+			if (sunit->hasTarget())
+				Broodwar->drawLineMap(sunit->unit->getPosition(), eu->position, darkRed);
 		}
 
+		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
 		Broodwar->setTextSize(BWAPI::Text::Size::Default);

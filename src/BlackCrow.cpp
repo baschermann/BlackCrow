@@ -87,6 +87,9 @@ namespace BlackCrow {
 			if (Broodwar->getKeyState(K_3))
 				Broodwar->setLocalSpeed(8);
 
+			if (Broodwar->getKeyState(K_4))
+				Broodwar->setLocalSpeed(1);
+
 		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
 		}

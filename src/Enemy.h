@@ -16,6 +16,8 @@ namespace BlackCrow {
 		void enemyDiscovered(BWAPI::Unit unit);
 		void onUnitDestroyed(BWAPI::Unit unit);
 
+		EnemyUnit* getEnemy(int id);
+
 		// Predicate for whether to include the unit or not
 		// bool pred(const EnemyUnit& enemyUnit)
 		template<class UnaryPredicate>
@@ -40,7 +42,6 @@ namespace BlackCrow {
 	private:
 		BlackCrow &bc;
 
-		EnemyUnit* findEnemy(int id);
 		double ghostTime(BWAPI::UnitType type);
 	};
 
