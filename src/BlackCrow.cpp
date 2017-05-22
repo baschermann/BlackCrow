@@ -121,7 +121,6 @@ namespace BlackCrow {
 
 	void BlackCrow::onUnitDiscover(BWAPI::Unit unit) {
 		builder.onBuildingDetected(unit);
-		strategy.onUnitDiscovered(unit);
 		enemy.enemyDiscovered(unit);
 
 		//if (Broodwar->getFrameCount() != 0)
@@ -158,7 +157,6 @@ namespace BlackCrow {
 			// Other
 			army.onUnitDestroyed(unit);
 			builder.onBuildingDestroyed(unit);
-			strategy.onUnitDestroyed(unit);
 			macro.onUnitDestroyed(unit);
 			enemy.onUnitDestroyed(unit);
 
@@ -166,7 +164,9 @@ namespace BlackCrow {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
 		}
 
-		//Broodwar->sendText("Unit %s destroyed!", unit->getType().c_str());
+		if (unit->getType().isBuilding()) {
+			Broodwar->sendText("Unit %s destroyed!", unit->getType().c_str());
+		}
 	}
 
 	void BlackCrow::onUnitMorph(BWAPI::Unit unit) {
@@ -175,6 +175,9 @@ namespace BlackCrow {
 	}
 
 	void BlackCrow::onUnitRenegade(BWAPI::Unit unit) {
+		army.onUnitDestroyed(unit);
+		macro.onUnitDestroyed(unit);
+
 		//Broodwar->sendText("Unit %s went renegade!", unit->getType().c_str());
 	}
 

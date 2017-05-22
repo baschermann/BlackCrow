@@ -27,7 +27,7 @@ namespace BlackCrow {
 		showLifeBars = true;
 
 		displayBroodwar.setBackgroundColor(Color(0, 100, 0)); // Dark Green
-		displayBroodwar.setShowPercentage(110);
+		displayBroodwar.setShowPercentage(105);
 		displayBroodwar.setShowSpikes(false);
 
 		plannedStatusStrings.emplace(Planned::Status::ACTIVE, "Active");
@@ -157,6 +157,17 @@ namespace BlackCrow {
 
 			if (sunit->hasTarget())
 				Broodwar->drawLineMap(sunit->unit->getPosition(), eu->position, darkRed);
+		}
+
+		// Squad Sizes
+		Broodwar->drawTextScreen(10, 50, "Army Size: %i", bc.army.sunits.size());
+		int i = 0;
+		for (AttackSquadPtr as : bc.army.attackSquads) {
+			Broodwar->drawTextScreen(10, 65 + 12 * i++, "Attack Squad Size: %i", as->sunits.size());
+		}
+
+		for (ScoutSquadPtr as : bc.army.scoutSquads) {
+			Broodwar->drawTextScreen(10, 65 + 12 * i++, "Scout Squad Size: %i", as->sunits.size());
 		}
 
 		// Draw APM

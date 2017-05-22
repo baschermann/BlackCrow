@@ -12,12 +12,12 @@ namespace BlackCrow {
 
 	void Squad::onFrame() {}
 
-	void Squad::add(SquadUnitPtr unit) {
+	void Squad::add(const SquadUnitPtr unit) {
 		sunits.push_back(unit);
 	}
 
-	void Squad::remove(SquadUnitPtr unit) {
-		sunits.erase(std::remove(sunits.begin(), sunits.end(), unit), sunits.end());
+	void Squad::remove(const SquadUnitPtr sunit) {
+		sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
 	}
 
 	void Squad::moveAll(BWAPI::Position position, bool queue) {

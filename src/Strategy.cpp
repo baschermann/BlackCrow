@@ -97,15 +97,6 @@ namespace BlackCrow {
 				bc.macro.planUnit(UnitTypes::Zerg_Zergling, bc.macro.startPosition);
 			}
 		}
-		
-	}
-
-	void Strategy::onUnitDiscovered(BWAPI::Unit unit) {
-		
-	}
-
-	void Strategy::onUnitDestroyed(BWAPI::Unit unit) {
-
 	}
 
 	Strategy::BuildOrder Strategy::getStartBuildOrder() {

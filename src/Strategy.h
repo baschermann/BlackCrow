@@ -29,8 +29,6 @@ namespace BlackCrow {
 		Strategy(BlackCrow &parent);
 		void onStart();
 		void onFrame();
-		void onUnitDiscovered(BWAPI::Unit unit);
-		void onUnitDestroyed(BWAPI::Unit unit);
 		void dynamicDecision();
 
 	private:

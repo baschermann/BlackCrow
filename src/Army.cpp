@@ -42,6 +42,7 @@ namespace BlackCrow {
 	void Army::onUnitDestroyed(BWAPI::Unit unit) {
 		SquadUnitPtr sunit = findSquadUnit(unit);
 		if (sunit) {
+			assert(sunit->squad);
 			sunit->squad->remove(sunit);
 			sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
 		}
@@ -78,7 +79,10 @@ namespace BlackCrow {
 			scoutSquads.emplace_back(std::make_shared<ScoutSquad>(bc));
 			ScoutSquadPtr scoutSquad = scoutSquads.back();
 
-			scoutSquad->add(addToArmy(worker));
+			SquadUnitPtr sunit = addToArmy(worker);
+			sunit->squad = scoutSquad;
+
+			scoutSquad->add(sunit);
 			scoutSquad->addStartLocations();
 		}
 	}
