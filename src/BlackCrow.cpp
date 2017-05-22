@@ -204,7 +204,7 @@ namespace BlackCrow {
 		Broodwar->setLatCom(false);
 		Broodwar->setCommandOptimizationLevel(2);
 		//Broodwar->sendText("Caw caw caw!");
-		Broodwar->sendText(("LatCom is %s", Broodwar->isLatComEnabled() ? "enabled" : "disabled"));
+		//Broodwar->sendText(("LatCom is %s", Broodwar->isLatComEnabled() ? "enabled" : "disabled"));
 
 		//Broodwar->setLocalSpeed(0);
 		//Broodwar->setGUI(false);

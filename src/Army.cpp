@@ -13,12 +13,26 @@ namespace BlackCrow {
 	void Army::onStart() {}
 
 	void Army::onFrame() {
-		for (ScoutSquadPtr ss : scoutSquads) {
-			ss->onFrame();
+		auto ssIt = scoutSquads.begin();
+		while (ssIt != scoutSquads.end()) {
+			ScoutSquadPtr ss = *ssIt;
+			if (ss->sunits.size() <= 0) {
+				ssIt = scoutSquads.erase(ssIt);
+			} else {
+				ss->onFrame();
+				ssIt++;
+			}
 		}
 
-		for (AttackSquadPtr as : attackSquads) {
-			as->onFrame();
+		auto asIt = attackSquads.begin();
+		while (asIt != attackSquads.end()) {
+			AttackSquadPtr as = *asIt;
+			if (as->sunits.size() <= 0) {
+				asIt = attackSquads.erase(asIt);
+			} else {
+				as->onFrame();
+				asIt++;
+			}
 		}
 
 		for (SquadUnitPtr sunit : sunits) {
