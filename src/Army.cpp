@@ -39,18 +39,35 @@ namespace BlackCrow {
 		assignAutomaticSquad(addToArmy(unit));
 	}
 
+	void Army::onUnitDestroyed(BWAPI::Unit unit) {
+		SquadUnitPtr sunit = findSquadUnit(unit);
+		if (sunit) {
+			sunit->squad->remove(sunit);
+			sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
+		}
+	}
+
 	SquadUnitPtr Army::addToArmy(BWAPI::Unit unit) {
 		sunits.emplace_back(std::make_shared<SquadUnit>(bc, unit));
 		return sunits.back();
 	}
 
-	void Army::assignAutomaticSquad(SquadUnitPtr unitPtr) {
+	SquadUnitPtr Army::findSquadUnit(BWAPI::Unit unit) {
+		for (SquadUnitPtr sunit : sunits) {
+			if (sunit->unit == unit)
+				return sunit;
+		}
+		return nullptr;
+	}
+
+	void Army::assignAutomaticSquad(SquadUnitPtr sunit) {
 
 		if (attackSquads.size() <= 0 || attackSquads.back()->state == AttackSquad::State::ATTACK)
 			attackSquads.emplace_back(std::make_shared<AttackSquad>(bc));
 
 		AttackSquadPtr aq = attackSquads.back();
-		aq->add(unitPtr);
+		aq->add(sunit);
+		sunit->squad = aq;
 	}
 
 	void Army::startInitialScout() {

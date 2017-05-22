@@ -156,6 +156,7 @@ namespace BlackCrow {
 				bwem.OnStaticBuildingDestroyed(unit);
 
 			// Other
+			army.onUnitDestroyed(unit);
 			builder.onBuildingDestroyed(unit);
 			strategy.onUnitDestroyed(unit);
 			macro.onUnitDestroyed(unit);

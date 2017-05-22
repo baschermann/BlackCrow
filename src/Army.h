@@ -23,7 +23,9 @@ namespace BlackCrow {
 
 		// Functions
 		void onUnitCreated(BWAPI::Unit unit);
+		void onUnitDestroyed(BWAPI::Unit unit);
 		SquadUnitPtr addToArmy(BWAPI::Unit unit);
+		SquadUnitPtr findSquadUnit(BWAPI::Unit unit);
 		void assignAutomaticSquad(SquadUnitPtr);
 		void startInitialScout();
 
