@@ -46,7 +46,10 @@ namespace BlackCrow {
 	}
 
 	void Enemy::onFrame() {
-		for (EnemyUnit& eu : enemies) {
+		auto euIt = enemies.begin();
+
+		while (euIt != enemies.end()) {
+			EnemyUnit& eu = *euIt;
 			Unit unit = Broodwar->getUnit(eu.id);
 
 			if (unit->isVisible()) {
@@ -65,6 +68,14 @@ namespace BlackCrow {
 				}
 
 				eu.lastSeen = Broodwar->getFrameCount();	
+
+				// Handling dead extractors
+				if (eu.type == UnitTypes::Resource_Vespene_Geyser) {
+					Broodwar->sendText("Dead Geyser detected. Deleting that thing");
+					euIt = enemies.erase(euIt);
+				} else {
+					euIt++;
+				}
 			} else {
 				eu.isVisible = false;
 
@@ -76,6 +87,8 @@ namespace BlackCrow {
 						eu.isGhost = true;
 					}
 				}
+
+				euIt++;
 			}
 		}
 	}

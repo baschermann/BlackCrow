@@ -6,6 +6,7 @@
 #include <numeric>
 #include <algorithm>
 #include <Filter.h>
+#include "Common.h"
 
 namespace BlackCrow {
 
@@ -28,7 +29,7 @@ namespace BlackCrow {
 	}
 
 	void Base::onFrame() {
-		for (std::shared_ptr<Worker> worker : workers) {
+		for (WorkerPtr worker : workers) {
 			worker->onFrame();
 		}
 	}
@@ -37,7 +38,7 @@ namespace BlackCrow {
 		if (unit->getType().isMineralField()) {
 			auto it = std::find_if(minerals.begin(), minerals.end(), [&](Mineral& mineral) { return mineral.bwemMineral->Unit() == unit; });
 			if (it != minerals.end() && it->workers.size() > 0) {
-				for (std::shared_ptr<Worker> worker : it->workers) {
+				for (WorkerPtr worker : it->workers) {
 					Mineral& mineral = findMineralForWorker();
 					worker->setMineral(mineral);
 					mineral.registerWorker(worker);
@@ -48,10 +49,10 @@ namespace BlackCrow {
 		}
 
 		if (unit->getType() == UnitTypes::Zerg_Drone) {
-			auto workerIt = std::find_if(workers.begin(), workers.end(), [&](std::shared_ptr<Worker> worker) { return worker->unit->getID() == unit->getID(); });
+			auto workerIt = std::find_if(workers.begin(), workers.end(), [&](WorkerPtr worker) { return worker->unit->getID() == unit->getID(); });
 			if (workerIt != workers.end()) {
 
-				std::shared_ptr<Worker> worker = *workerIt;
+				WorkerPtr worker = *workerIt;
 				if (worker->miningTarget == Worker::MiningTarget::MINERAL) {
 					worker->mineral->unregisterWorker(worker);
 				} else if (worker->miningTarget == Worker::MiningTarget::GEYSER) {
@@ -75,10 +76,10 @@ namespace BlackCrow {
 		//In c++17, emplace_back returns the created element.
 		//workers.emplace_back(unit, *this);
 
-		std::shared_ptr<Worker> worker = std::make_shared<Worker>(unit, *this);
+		WorkerPtr worker = std::make_shared<Worker>(unit, *this);
 		workers.push_back(worker);
 		
-		//std::shared_ptr<Worker> worker = workers.back();
+		//WorkerPtr worker = workers.back();
 		Mineral& mineral = findMineralForWorker();
 
 		worker->setMineral(mineral);
@@ -93,7 +94,7 @@ namespace BlackCrow {
 		if (highestWorkerCount > 0) {
 			for (Mineral& mineral : minerals) {
 				if (mineral.workers.size() == highestWorkerCount) {
-					std::shared_ptr<Worker> worker = mineral.workers.back();
+					WorkerPtr worker = mineral.workers.back();
 
 					mineral.unregisterWorker(worker);
 					workers.erase(std::remove(workers.begin(), workers.end(), worker), workers.end());
@@ -110,11 +111,15 @@ namespace BlackCrow {
 	// Can return nullptr
 	BWAPI::Unit Base::removeWorker(BWAPI::Position closestTo) {
 		// TODO this is calculating to much DISTANCE!!
-		auto workerIt = std::min_element(workers.begin(), workers.end(), [&](std::shared_ptr<Worker> left, std::shared_ptr<Worker> right) { return Util::distance(left->unit->getPosition(), closestTo) < Util::distance(right->unit->getPosition(), closestTo); });
+		auto workerIt = std::min_element(workers.begin(), workers.end(), [&](WorkerPtr left, WorkerPtr right) { return Util::distance(left->unit->getPosition(), closestTo) < Util::distance(right->unit->getPosition(), closestTo); });
 		if (workerIt != workers.end()) {
 
-			std::shared_ptr<Worker> worker = *workerIt;
-			worker->mineral->unregisterWorker(worker);
+			WorkerPtr worker = *workerIt;
+			if (worker->mineral)
+				worker->mineral->unregisterWorker(worker);
+			if (worker->geyser)
+				worker->geyser->unregisterWorker(worker);
+
 			workers.erase(workerIt);
 			worker->reset();
 
@@ -153,10 +158,13 @@ namespace BlackCrow {
 			// TODO Get the closest drone instead of a random one
 			// TODO this is calculating to much DISTANCE!!
 			//auto worker = std::min_element(workers.begin(), workers.end(), [&](Worker& left, Worker& right) { return Util::distance(left.unit->getPosition(), closestTo) < Util::distance(right.unit->getPosition(), closestTo); });
-			auto workerIt = std::find_if(workers.begin(), workers.end(), [](std::shared_ptr<Worker> worker) { return worker->miningTarget == Worker::MiningTarget::MINERAL; });
+			auto workerIt = std::find_if(workers.begin(), workers.end(), [](WorkerPtr worker) { return worker->miningTarget == Worker::MiningTarget::MINERAL; });
 			if (workerIt != workers.end()) {
 
-				std::shared_ptr<Worker> worker = *workerIt;
+				WorkerPtr worker = *workerIt;
+				worker->mineral->unregisterWorker(worker);
+				worker->reset();
+
 				worker->setGeyser(*geyser);
 				geyser->registerWorker(worker);
 				worker->continueMining();
@@ -169,11 +177,12 @@ namespace BlackCrow {
 	}
 
 	void Base::shiftWorkerFromGas() {
-		auto workerIt = std::find_if(workers.begin(), workers.end(), [](std::shared_ptr<Worker> worker) { return worker->miningTarget == Worker::MiningTarget::GEYSER; });
+		auto workerIt = std::find_if(workers.begin(), workers.end(), [](WorkerPtr worker) { return worker->miningTarget == Worker::MiningTarget::GEYSER; });
 		if (workerIt != workers.end()) {
 
-			std::shared_ptr<Worker> worker = *workerIt;
+			WorkerPtr worker = *workerIt;
 			worker->geyser->unregisterWorker(worker);
+			worker->reset();
 
 			Mineral& mineral = findMineralForWorker();
 			worker->setMineral(mineral);
@@ -198,11 +207,11 @@ namespace BlackCrow {
 	}
 
 	const int Base::getTotalMineralWorkers() {
-		return std::accumulate(workers.begin(), workers.end(), 0, [](int sum, std::shared_ptr<Worker> worker) { return worker->miningTarget == Worker::MiningTarget::MINERAL ? ++sum : sum; });
+		return std::accumulate(workers.begin(), workers.end(), 0, [](int sum, WorkerPtr worker) { return worker->miningTarget == Worker::MiningTarget::MINERAL ? ++sum : sum; });
 	}
 
 	const int Base::getTotalGasWorkers() {
-		return std::accumulate(workers.begin(), workers.end(), 0, [](int sum, std::shared_ptr<Worker> worker) { return worker->miningTarget == Worker::MiningTarget::GEYSER ? ++sum : sum; });
+		return std::accumulate(workers.begin(), workers.end(), 0, [](int sum, WorkerPtr worker) { return worker->miningTarget == Worker::MiningTarget::GEYSER ? ++sum : sum; });
 	}
 
 	const int Base::getGasWorkerSlotsAvailable() {

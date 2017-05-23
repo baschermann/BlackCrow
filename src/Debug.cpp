@@ -184,23 +184,23 @@ namespace BlackCrow {
 		if (showBuildable)
 			drawBuildable();
 
-		if (showManagerInfos)
-			drawManagerInfo();
-
 		if (showPlacementInfos)
 			drawPlacementInfo();
 
 		if (showBwem)
 			drawBwem();
 
-		if (showSquadInfo)
-			drawSquadInfo();
-
 		if (showEnemyUnits)
 			drawEnemyUnits();
 
 		if (showLifeBars)
-			drawLifeBars();
+			drawLifeBars(); 
+		
+		if (showSquadInfo)
+			drawSquadInfo();
+
+		if (showManagerInfos)
+			drawManagerInfo();
 
 		drawFrameTimeDisplay();
 	}
