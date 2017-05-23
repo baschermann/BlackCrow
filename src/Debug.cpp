@@ -147,16 +147,18 @@ namespace BlackCrow {
 		for (SquadUnitPtr sunit : bc.army.sunits) {
 			EnemyUnit* eu = bc.enemy.getEnemy(sunit->attackTargetId);
 
-			if (sunit->unit->isSelected()) {
-				Unit u = Broodwar->getUnit(sunit->attackTargetId);	
-				if (u)
-					Broodwar->drawTextScreen(200, 10 + yOffset++ * 15, "\x11 Target ID: %i, Type %s", sunit->attackTargetId, eu->type.getName().c_str());
-				else
-					Broodwar->drawTextScreen(200, 10 + yOffset++ * 15, "\x11 Target ID: %i", sunit->attackTargetId);
-			}
+			if (eu) {
+				if (sunit->unit->isSelected()) {
+					Unit u = Broodwar->getUnit(sunit->attackTargetId);
+					if (u)
+						Broodwar->drawTextScreen(200, 10 + yOffset++ * 15, "\x11 Target ID: %i, Type %s", sunit->attackTargetId, eu->type.getName().c_str());
+					else
+						Broodwar->drawTextScreen(200, 10 + yOffset++ * 15, "\x11 Target ID: %i", sunit->attackTargetId);
+				}
 
-			if (sunit->hasTarget())
-				Broodwar->drawLineMap(sunit->unit->getPosition(), eu->position, darkRed);
+				if (sunit->hasTarget())
+					Broodwar->drawLineMap(sunit->unit->getPosition(), eu->position, darkRed);
+			}
 		}
 
 		// Squad Sizes

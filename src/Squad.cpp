@@ -115,7 +115,8 @@ namespace BlackCrow {
 					return !eu.type.isFlyer()
 						&& !eu.isGhost
 						&& eu.type != UnitTypes::Zerg_Larva
-						&& eu.type != UnitTypes::Zerg_Egg;
+						&& eu.type != UnitTypes::Zerg_Egg
+						&& !Broodwar->getUnit(eu.id)->isBurrowed();
 				});
 
 				if (enemyUnit)
