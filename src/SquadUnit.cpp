@@ -20,9 +20,6 @@ namespace BlackCrow {
 				if (enemyBwapiUnit && unit->getOrderTarget() != enemyBwapiUnit && !commandInQueue()) {
 					unit->attack(enemyBwapiUnit, false);
 					commandExecuted();
-
-					if (unit->isSelected())
-						Broodwar->sendText("Attack Enemy %i", enemyBwapiUnit->getID());
 				}
 			} else {
 				attackMove(enemyUnit->position, false);

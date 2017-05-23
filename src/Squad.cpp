@@ -112,11 +112,13 @@ namespace BlackCrow {
 		case State::ATTACK:
 			for (SquadUnitPtr sunit : sunits) {
 				EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { 
+					Unit unit = Broodwar->getUnit(eu.id);
 					return !eu.type.isFlyer()
 						&& !eu.isGhost
 						&& eu.type != UnitTypes::Zerg_Larva
 						&& eu.type != UnitTypes::Zerg_Egg
-						&& !Broodwar->getUnit(eu.id)->isBurrowed();
+						&& eu.type != UnitTypes::Zerg_Lurker_Egg
+						&& !(!unit->isDetected() && unit->isBurrowed());
 				});
 
 				if (enemyUnit)

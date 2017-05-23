@@ -164,9 +164,7 @@ namespace BlackCrow {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
 		}
 
-		if (unit->getType().isBuilding()) {
-			Broodwar->sendText("Unit %s destroyed!", unit->getType().c_str());
-		}
+		//Broodwar->sendText("Unit %s destroyed!", unit->getType().c_str());
 	}
 
 	void BlackCrow::onUnitMorph(BWAPI::Unit unit) {
