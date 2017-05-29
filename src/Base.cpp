@@ -38,10 +38,15 @@ namespace BlackCrow {
 		if (unit->getType().isMineralField()) {
 			auto it = std::find_if(minerals.begin(), minerals.end(), [&](Mineral& mineral) { return mineral.bwemMineral->Unit() == unit; });
 			if (it != minerals.end() && it->workers.size() > 0) {
+
 				for (WorkerPtr worker : it->workers) {
-					Mineral& mineral = findMineralForWorker();
-					worker->setMineral(mineral);
-					mineral.registerWorker(worker);
+					Mineral* mineral = findMineralForWorker();
+					worker->mineral->unregisterWorker(worker);
+
+					if (mineral) {
+						worker->setMineral(*mineral);
+						mineral->registerWorker(worker);
+					}
 				}
 				minerals.erase(it);
 				return true;
@@ -79,12 +84,12 @@ namespace BlackCrow {
 		WorkerPtr worker = std::make_shared<Worker>(unit, *this);
 		workers.push_back(worker);
 		
-		//WorkerPtr worker = workers.back();
-		Mineral& mineral = findMineralForWorker();
-
-		worker->setMineral(mineral);
-		mineral.registerWorker(worker);
-		worker->continueMining();
+		Mineral* mineral = findMineralForWorker();
+		if(mineral) {
+			worker->setMineral(*mineral);
+			mineral->registerWorker(worker);
+			worker->continueMining();
+		}
 	}
 
 	// Can return nullptr
@@ -184,22 +189,25 @@ namespace BlackCrow {
 			worker->geyser->unregisterWorker(worker);
 			worker->reset();
 
-			Mineral& mineral = findMineralForWorker();
-			worker->setMineral(mineral);
-			mineral.registerWorker(worker);
+			Mineral* mineral = findMineralForWorker();
+			if (mineral) {
+				worker->setMineral(*mineral);
+				mineral->registerWorker(worker);
+			}
 			worker->continueMining();
 			return;
 		}
 		Broodwar->sendText("No worker could be shifted from gas to minerals. This should not happen");
 	}
 
-	Mineral& Base::findMineralForWorker() {
+	Mineral* Base::findMineralForWorker() {
 		for (unsigned int maxWorkers = 0;; maxWorkers++) {
 			for (Mineral& mineral : minerals) {
-				if (mineral.workers.size() <= maxWorkers)
-					return mineral;
+				if (mineral.workers.size() <= maxWorkers && mineral.exists())
+					return &mineral;
 			}
 		}
+		return nullptr;
 	}
 
 	const int Base::getTotalWorkers() {

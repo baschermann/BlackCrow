@@ -10,8 +10,8 @@ namespace BlackCrow {
 
 	bool Mineral::exists() {
 		if (bwemMineral != nullptr)
-			if(bwemMineral->Amount() > 0)
-				if(bwemMineral->Unit()->exists())
+			if (bwemMineral->Unit()->exists())
+				if(bwemMineral->Amount() > 0)
 					return true;
 
 		return false;

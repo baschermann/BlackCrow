@@ -45,6 +45,6 @@ namespace BlackCrow {
 
 	private:
 		BlackCrow& bc;
-		Mineral& findMineralForWorker();
+		Mineral* findMineralForWorker();
 	};
 }

@@ -87,9 +87,12 @@ namespace BlackCrow {
 	void AttackSquad::onFrame() {
 		Squad::onFrame();
 
+		static int attackSize = 20;
 		// Decide
-		if (sunits.size() >= 20)
+		if (sunits.size() >= attackSize) {
 			state = State::ATTACK;
+			attackSize += 2;
+		}
 
 		// Action
 		switch (state) {
