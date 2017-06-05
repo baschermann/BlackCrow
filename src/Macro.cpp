@@ -30,6 +30,9 @@ namespace BlackCrow {
 
 		for (Base& base : bases)
 			base.onFrame();
+
+		calculateResourceAverages();
+		
 	}
 
 	void Macro::onUnitCompleted(BWAPI::Unit unit) {
@@ -346,11 +349,15 @@ namespace BlackCrow {
 	}
 
 	double Macro::getAverageMineralsPerFrame() {
-		return 0;
+		return averageMineralsPerFrame;
 	}
 
 	double Macro::getAverageGasPerFrame() {
-		return 0;
+		return averageGasPerFrame;
+	}
+
+	double Macro::getAverageLarvaePerFrame() {
+		return hatcheries.size() / 342;
 	}
 
 	// Private
@@ -424,5 +431,33 @@ namespace BlackCrow {
 		std::set_difference(allLarvae.begin(), allLarvae.end(), reservedLarvae.begin(), reservedLarvae.end(), std::inserter(unreservedLarvae, unreservedLarvae.begin()));
 
 		return unreservedLarvae;
+	}
+
+	void Macro::calculateResourceAverages() {
+		// Minerals
+		int totalMinerals = Broodwar->self()->gatheredMinerals();
+
+		if (lastFrameTotalMinerals == totalMinerals) {
+			mineralIncomeList.push_back(0);
+		} else {
+			mineralIncomeList.push_back(totalMinerals - lastFrameTotalMinerals);
+		}
+
+		if (mineralIncomeList.size() > 350)
+			mineralIncomeList.pop_front();
+
+		lastFrameTotalMinerals = totalMinerals;
+
+		double averageTotal = 0;
+		for (int frameIncome : mineralIncomeList) {
+			averageTotal += frameIncome;
+		}
+
+		mineralFrameAverage = averageTotal / mineralIncomeList.size();
+		double difference = averageMineralsPerFrame - mineralFrameAverage;
+		averageMineralsPerFrame += -difference * 0.008;
+		// --
+
+
 	}
 }

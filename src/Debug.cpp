@@ -162,15 +162,8 @@ namespace BlackCrow {
 		}
 
 		// Squad Sizes
-		Broodwar->drawTextScreen(10, 50, "Army Size: %i", bc.army.sunits.size());
-		int i = 0;
-		for (AttackSquadPtr as : bc.army.attackSquads) {
-			Broodwar->drawTextScreen(10, 65 + 12 * i++, "Attack Squad Size: %i", as->sunits.size());
-		}
-
-		for (ScoutSquadPtr as : bc.army.scoutSquads) {
-			Broodwar->drawTextScreen(10, 65 + 12 * i++, "Scout Squad Size: %i", as->sunits.size());
-		}
+		Broodwar->drawTextScreen(10, 50, "Average Minerals per frame: %f", bc.macro.mineralFrameAverage);
+		Broodwar->drawTextScreen(10, 65, "Last Frame Total Minerals: %f", bc.macro.getAverageMineralsPerFrame());
 
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);

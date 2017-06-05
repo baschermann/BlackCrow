@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <memory>
+#include <deque>
 #include "Base.h"
 
 namespace BlackCrow {
@@ -86,9 +87,16 @@ namespace BlackCrow {
 		int getMaxSupply();
 		int getFreeSupply();
 		int getPlannedSupply();
-		double getAverageMineralsPerFrame();
+		
+		double getAverageLarvaePerFrame();
 		double getAverageGasPerFrame();
+		double getAverageMineralsPerFrame();
 
+
+
+		double mineralFrameAverage = 0;
+
+		
 
 	private:
 		BlackCrow &bc;
@@ -98,7 +106,17 @@ namespace BlackCrow {
 		std::vector<BWAPI::Unit> getAllLarvae();
 		std::vector<BWAPI::Unit> getReservedLarvae();
 		std::vector<BWAPI::Unit> getUnreservedLarvae();
-		
+
+		void calculateResourceAverages();
+		// Minerals
+		std::deque<int> mineralIncomeList;
+		int lastFrameTotalMinerals = 0;
+		double averageMineralsPerFrame = 0;
+		// Gas
+		std::deque<int> gasIncomeList;
+		int lastFrameTotalGas = 0;
+		int averageGasPerFrame = 0;
+		double gasFrameAverage = 0;
 	};
 
 }
