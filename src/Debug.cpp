@@ -161,9 +161,13 @@ namespace BlackCrow {
 			}
 		}
 
-		// Squad Sizes
-		Broodwar->drawTextScreen(10, 50, "Average Minerals per frame: %f", bc.macro.mineralFrameAverage);
-		Broodwar->drawTextScreen(10, 65, "Last Frame Total Minerals: %f", bc.macro.getAverageMineralsPerFrame());
+		// Minerals
+		Broodwar->drawTextScreen(10, 50, "Average Minerals: %f", bc.macro.mineralFrameAverage);
+		Broodwar->drawTextScreen(10, 65, "Average Smoothed Minerals: %f", bc.macro.getAverageMineralsPerFrame());
+
+		Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
+		Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
+
 
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);

@@ -95,6 +95,7 @@ namespace BlackCrow {
 
 
 		double mineralFrameAverage = 0;
+		double gasFrameAverage = 0;
 
 		
 
@@ -115,8 +116,7 @@ namespace BlackCrow {
 		// Gas
 		std::deque<int> gasIncomeList;
 		int lastFrameTotalGas = 0;
-		int averageGasPerFrame = 0;
-		double gasFrameAverage = 0;
+		double averageGasPerFrame = 0;
 	};
 
 }
