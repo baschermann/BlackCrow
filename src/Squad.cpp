@@ -89,7 +89,7 @@ namespace BlackCrow {
 
 		static int attackSize = 20;
 		// Decide
-		if (sunits.size() >= attackSize) {
+		if ((int)sunits.size() >= attackSize) {
 			state = State::ATTACK;
 			attackSize += 2;
 		}

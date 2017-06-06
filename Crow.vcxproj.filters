@@ -108,70 +108,76 @@
     <ClCompile Include="src\BlackCrow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\UnitMix.cpp">
+      <Filter>Source Files\Strategy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\BlackCrow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Area.h">
-      <Filter>Header Files\Strategy</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Builder.h">
-      <Filter>Header Files\Macro</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Config.h">
-      <Filter>Header Files\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Debug.h">
-      <Filter>Header Files\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EnemyUnit.h">
-      <Filter>Header Files\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Enemy.h">
-      <Filter>Header Files\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Map.h">
-      <Filter>Header Files\Strategy</Filter>
+    <ClInclude Include="src\Army.h">
+      <Filter>Source Files\Army</Filter>
     </ClInclude>
     <ClInclude Include="src\Squad.h">
-      <Filter>Header Files\Army</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Strategy.h">
-      <Filter>Header Files\Strategy</Filter>
+      <Filter>Source Files\Army</Filter>
     </ClInclude>
     <ClInclude Include="src\SquadUnit.h">
-      <Filter>Header Files\Army</Filter>
+      <Filter>Source Files\Army</Filter>
     </ClInclude>
-    <ClInclude Include="src\Util.h">
-      <Filter>Header Files\Misc</Filter>
+    <ClInclude Include="src\Enemy.h">
+      <Filter>Source Files\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\Planned.h">
-      <Filter>Header Files\Macro</Filter>
+    <ClInclude Include="src\EnemyUnit.h">
+      <Filter>Source Files\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="src\Base.h">
-      <Filter>Header Files\Macro</Filter>
+      <Filter>Source Files\Macro</Filter>
     </ClInclude>
-    <ClInclude Include="src\Worker.h">
-      <Filter>Header Files\Macro</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mineral.h">
-      <Filter>Header Files\Macro</Filter>
+    <ClInclude Include="src\Builder.h">
+      <Filter>Source Files\Macro</Filter>
     </ClInclude>
     <ClInclude Include="src\Geyser.h">
-      <Filter>Header Files\Macro</Filter>
+      <Filter>Source Files\Macro</Filter>
     </ClInclude>
     <ClInclude Include="src\Macro.h">
-      <Filter>Header Files\Macro</Filter>
+      <Filter>Source Files\Macro</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mineral.h">
+      <Filter>Source Files\Macro</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Planned.h">
+      <Filter>Source Files\Macro</Filter>
     </ClInclude>
     <ClInclude Include="src\Tech.h">
-      <Filter>Header Files\Macro</Filter>
+      <Filter>Source Files\Macro</Filter>
     </ClInclude>
-    <ClInclude Include="src\Army.h">
-      <Filter>Header Files\Army</Filter>
+    <ClInclude Include="src\Worker.h">
+      <Filter>Source Files\Macro</Filter>
     </ClInclude>
     <ClInclude Include="src\Common.h">
-      <Filter>Header Files\Misc</Filter>
+      <Filter>Source Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Config.h">
+      <Filter>Source Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Debug.h">
+      <Filter>Source Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util.h">
+      <Filter>Source Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Area.h">
+      <Filter>Source Files\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map.h">
+      <Filter>Source Files\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Strategy.h">
+      <Filter>Source Files\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UnitMix.h">
+      <Filter>Source Files\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BlackCrow.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

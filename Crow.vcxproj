@@ -133,6 +133,7 @@
     <ClCompile Include="src\Util.cpp" />
     <ClCompile Include="src\Worker.cpp" />
     <ClCompile Include="src\Tech.cpp" />
+    <ClCompile Include="src\UnitMix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="src\Util.h" />
     <ClInclude Include="src\Worker.h" />
     <ClInclude Include="src\Tech.h" />
+    <ClInclude Include="src\UnitMix.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\Entwicklung\BWAPI\Crow\Additional Setup.txt" />

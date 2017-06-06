@@ -11,10 +11,14 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Strategy::Strategy(BlackCrow &parent) : bc(parent) {}
+	Strategy::Strategy(BlackCrow &parent) : bc(parent) {
+		unitMix = std::make_unique<UnitMix>(bc);
+	}
 
 	void Strategy::onStart() {
 		fillBuildOrder(getStartBuildOrder());
+
+		unitMix->add(BWAPI::UnitTypes::Zerg_Zergling, 1);
 	}
 
 	void Strategy::onFrame() {
