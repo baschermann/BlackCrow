@@ -1,10 +1,12 @@
 #pragma once
 #include <BWAPI.h>
 #include "Planned.h"
+#include <memory>
 
 namespace BlackCrow {
 
 	class BlackCrow;
+	class UnitMix;
 
 	class DebugPerformanceDisplay {
 	public:

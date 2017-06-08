@@ -17,7 +17,6 @@ namespace BlackCrow {
 
 	void Strategy::onStart() {
 		fillBuildOrder(getStartBuildOrder());
-
 		unitMix->add(BWAPI::UnitTypes::Zerg_Zergling, 1);
 	}
 

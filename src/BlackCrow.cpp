@@ -41,6 +41,8 @@ namespace BlackCrow {
 			Broodwar->sendText("Init has taken %fms", diff.count());
 			//Broodwar->sendText("black sheep wall");
 
+
+
 		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
 		}

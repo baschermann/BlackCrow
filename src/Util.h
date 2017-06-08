@@ -35,5 +35,7 @@ namespace BlackCrow {
 		BWAPI::Unit findClosestUnit(std::vector<BWAPI::Unit> units, BWAPI::Position position);
 
 		BWAPI::Position middleOfBuilding(BWAPI::UnitType building);
+
+		int randomIntIncl(int a, int b);
 	}
 }

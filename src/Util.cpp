@@ -1,5 +1,6 @@
 #include "Util.h"
 #include "BlackCrow.h"
+#include <random>
 
 namespace BlackCrow {
 	using namespace BWAPI;
@@ -121,6 +122,15 @@ namespace BlackCrow {
 			case 2: --x; if (-x == layer) ++leg; break;
 			case 3: --y; if (-y == layer) { leg = 0; ++layer; } break;
 			}
+		}
+
+		// Walter from StackOverflow @ https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
+		int Util::randomIntIncl(int min, int max) {
+			std::random_device rd;
+			std::mt19937 rng(rd());
+			std::uniform_int_distribution<int> uni(min, max);
+
+			return uni(rng);
 		}
 	}
 }

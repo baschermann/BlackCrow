@@ -46,13 +46,9 @@ namespace BlackCrow {
 			return true;
 		}
 
-		if (text == "1") {
-			auto aaa = bc.tech.getTechPath(UnitTypes::Zerg_Lurker);
-			Broodwar->sendText("Size is %i", aaa.size());
+		
 
-			for (auto item : aaa.items) {
-				Broodwar->sendText(item.getName().c_str());
-			}
+		if (text == "1") {
 			return true;
 		}
 
@@ -167,7 +163,6 @@ namespace BlackCrow {
 		
 		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
 		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
-
 
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
