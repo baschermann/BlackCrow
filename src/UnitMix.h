@@ -18,7 +18,6 @@ namespace BlackCrow {
 		BWAPI::UnitType peek();
 		BWAPI::UnitType pop();
 
-
 		double larvaPerFrame();
 		double mineralPerFrame();
 		double gasPerFrame();

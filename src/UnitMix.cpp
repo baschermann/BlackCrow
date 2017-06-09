@@ -15,8 +15,7 @@ namespace BlackCrow {
 		resetSpawnValues();
 		chooseNext();
 	}
-
-	// Chooses next unit based on past picks and probability
+	
 	BWAPI::UnitType UnitMix::peek() {
 		return next;
 	}
@@ -37,6 +36,10 @@ namespace BlackCrow {
 
 	double UnitMix::gasPerFrame() {
 		return gasFrame;
+	}
+
+	int UnitMix::size() {
+		return propertyUnits.size();
 	}
 
 	void UnitMix::calculate() {
@@ -62,6 +65,7 @@ namespace BlackCrow {
 		}
 	}
 
+	// Chooses next unit based on past picks and probability
 	void UnitMix::chooseNext() {
 		double weightAmount = totalWeight / propertyUnits.size();
 		std::set<BWAPI::UnitType> randomBucket;

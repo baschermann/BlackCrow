@@ -49,6 +49,27 @@ namespace BlackCrow {
 		
 
 		if (text == "1") {
+			UnitMix mix(bc);
+			mix.add(BWAPI::UnitTypes::Zerg_Zergling, 2000);
+			mix.add(BWAPI::UnitTypes::Zerg_Hydralisk, 5000);
+			mix.add(BWAPI::UnitTypes::Zerg_Ultralisk, 3000);
+
+			std::map<BWAPI::UnitType, int> counter;
+			for (int i = 0; i < 10000; i++) {
+				BWAPI::UnitType type = mix.pop();
+				auto it = counter.find(type);
+				if (it != counter.end())
+					it->second = it->second + 1;
+				else
+					counter.emplace(type, 1);
+			}
+
+			int zerglings = (counter.find(BWAPI::UnitTypes::Zerg_Zergling))->second;
+			int hydralisk = (counter.find(BWAPI::UnitTypes::Zerg_Hydralisk))->second;
+			int ultralisk = (counter.find(BWAPI::UnitTypes::Zerg_Ultralisk))->second;
+
+			Broodwar->sendText("Zerglings: %i, Hydralisks: %i, Ultralisks: %i", zerglings, hydralisk, ultralisk);
+
 			return true;
 		}
 
