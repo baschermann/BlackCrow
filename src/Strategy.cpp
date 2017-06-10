@@ -95,7 +95,7 @@ namespace BlackCrow {
 		}
 
 		// If 100 gas, zergling speeeeeeeeeeed!
-		if (bc.macro.getUnreservedResources().gas >= 100 && !bc.macro.isCurrentlyPlanned(UpgradeTypes::Metabolic_Boost)) {
+		if (bc.macro.getUnreservedResources().gas >= 100 && !bc.macro.isCurrentlyPlanned(UpgradeTypes::Metabolic_Boost) && Broodwar->self()->getUpgradeLevel(UpgradeTypes::Metabolic_Boost) <= 0) {
 			bc.macro.planUpgrade(UpgradeTypes::Metabolic_Boost, 1);
 		}
 

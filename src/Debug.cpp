@@ -184,7 +184,6 @@ namespace BlackCrow {
 		
 		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
 		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
-		Broodwar->drawTextScreen(10, 95, "Unreserved: %i minerals, %i gas", bc.macro.getUnreservedResources());
 
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
@@ -315,7 +314,7 @@ namespace BlackCrow {
 		// Build Order
 
 		if (bc.strategy.buildOrder.size() > 0) {
-			int xStart = 20;
+			int xStart = 500;
 			int yStart = 20;
 
 			Broodwar->drawTextScreen(xStart, yStart, "\x03 Build Order Items left %i", bc.strategy.buildOrder.size());
@@ -327,7 +326,7 @@ namespace BlackCrow {
 		{
 			// Macro Manager
 			// Planned Units
-			int xStart = 500;
+			int xStart = 20;
 			int yStart = 20;
 
 			Broodwar->drawTextScreen(xStart + 1, yStart, "Planned Units");
@@ -342,8 +341,8 @@ namespace BlackCrow {
 				Broodwar->drawTextScreen(xStart + 1, yStart + 13 * i, planned->getName().c_str());
 
 				std::shared_ptr<PlannedUnit> plannedUnit = std::dynamic_pointer_cast<PlannedUnit>(planned);
-				if (plannedUnit && plannedUnit->unit)
-					Broodwar->drawTextScreen(xStart - 25, yStart + 13 * i, std::to_string(plannedUnit->unit->getID()).c_str());
+				//if (plannedUnit && plannedUnit->unit)
+					//Broodwar->drawTextScreen(xStart - 25, yStart + 13 * i, std::to_string(plannedUnit->unit->getID()).c_str());
 				
 				i++;
 			}

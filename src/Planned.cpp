@@ -299,7 +299,7 @@ namespace BlackCrow {
 	}
 
 	std::string PlannedUpgrade::getName() {
-		return type.getName();
+		return "\x1F" + type.getName();
 	}
 
 }
