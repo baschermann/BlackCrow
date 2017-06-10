@@ -108,6 +108,7 @@ namespace BlackCrow {
 
 		BWAPI::UpgradeType type;
 		int level;
+		BWAPI::Unit researchingBuilding = nullptr;
 
 		operator std::string() const;
 		int getMineralPrice() override;

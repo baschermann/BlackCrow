@@ -58,6 +58,12 @@ namespace BlackCrow {
 
 	void Strategy::dynamicDecision() {
 
+		
+
+
+
+
+		// ### OLD ###
 		// Lets do the macro first
 		if (bc.macro.getFreeSupply() >= UnitTypes::Zerg_Drone.supplyRequired() && bc.macro.getWorkersNeededForSaturation() - bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Drone) > 0) {
 			if (bc.macro.getUnreservedResources().minerals >= 60 && bc.macro.getUnreservedLarvaeAmount() > 0)
@@ -89,8 +95,8 @@ namespace BlackCrow {
 		}
 
 		// If 100 gas, zergling speeeeeeeeeeed!
-		if (bc.macro.getUnreservedResources().gas >= 100 && bc.macro.isCurrentlyPlanned(UpgradeTypes::Metabolic_Boost)) {
-		//	bc.macro.planUpgrade(UpgradeTypes::Metabolic_Boost, 1);
+		if (bc.macro.getUnreservedResources().gas >= 100 && !bc.macro.isCurrentlyPlanned(UpgradeTypes::Metabolic_Boost)) {
+			bc.macro.planUpgrade(UpgradeTypes::Metabolic_Boost, 1);
 		}
 
 		
@@ -100,6 +106,7 @@ namespace BlackCrow {
 				bc.macro.planUnit(UnitTypes::Zerg_Zergling, bc.macro.startPosition);
 			}
 		}
+		// ### -- OLD ###
 	}
 
 	Strategy::BuildOrder Strategy::getStartBuildOrder() {

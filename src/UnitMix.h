@@ -8,9 +8,6 @@ namespace BlackCrow {
 
 	class UnitMix {
 	public:
-
-		
-
 		UnitMix(BlackCrow& blackCrow);
 
 		void add(BWAPI::UnitType type, double weight);

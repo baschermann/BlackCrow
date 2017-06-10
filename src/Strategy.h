@@ -39,6 +39,7 @@ namespace BlackCrow {
 
 	private:
 		BlackCrow &bc;
+		double droneBuildAccumulation = 0;
 
 		// Buildorder
 		BuildOrder getStartBuildOrder();

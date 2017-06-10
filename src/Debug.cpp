@@ -184,6 +184,7 @@ namespace BlackCrow {
 		
 		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
 		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
+		Broodwar->drawTextScreen(10, 95, "Unreserved: %i minerals, %i gas", bc.macro.getUnreservedResources());
 
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);

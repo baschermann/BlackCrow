@@ -51,28 +51,34 @@ namespace BlackCrow {
 	}
 
 	// ### Planned ###
-	std::shared_ptr<PlannedUnit> Macro::planUnit(BWAPI::UnitType type, BWAPI::Position nearTo) {
+	PlannedUnitPtr Macro::planUnit(BWAPI::UnitType type, BWAPI::Position nearTo) {
 		auto unit = std::make_shared<PlannedUnit>(bc, type, nearTo);
 		plannedStuff.push_back(unit);
 		return unit;
 	}
 
-	std::shared_ptr<PlannedBuilding> Macro::planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition) {
+	PlannedBuildingPtr Macro::planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition) {
 		auto building = std::make_shared<PlannedBuilding>(bc, type, buildPosition);
 		plannedStuff.push_back(building);
 		return building;
 	}
 
-	std::shared_ptr<PlannedExtractor> Macro::planExtractor(Geyser& geyser) {
+	PlannedExtractorPtr Macro::planExtractor(Geyser& geyser) {
 		auto extractor = std::make_shared<PlannedExtractor>(bc, geyser);
 		plannedStuff.push_back(extractor);
 		return extractor;
 	}
 
-	std::shared_ptr<PlannedTech> Macro::planTech(BWAPI::TechType tech) {
+	PlannedTechPtr Macro::planTech(BWAPI::TechType tech) {
 		auto pTech = std::make_shared<PlannedTech>(bc, tech);
 		plannedStuff.push_back(pTech);
 		return pTech;
+	}
+
+	PlannedUpgradePtr Macro::planUpgrade(BWAPI::UpgradeType upgrade, int level) {
+		auto pUpgrade = std::make_shared<PlannedUpgrade>(bc, upgrade, level);
+		plannedStuff.push_back(pUpgrade);
+		return pUpgrade;
 	}
 
 	int Macro::getCurrentlyPlannedAmount(BWAPI::UnitType type) {
@@ -144,8 +150,8 @@ namespace BlackCrow {
 	}
 
 	// ### Expansions and Bases ### // TODO Need enemy information to do this
-	Base& Macro::getSafestToExpand() {
-		return bases.front();
+	Base* Macro::getSafestToExpand() {
+		return &bases.front();
 	}
 
 	void Macro::expand() {
@@ -414,7 +420,7 @@ namespace BlackCrow {
 			if (pu) {
 				Unit larva = pu->reservedLarva();
 				if (larva)
-					reservedLarvae.push_back(larva); // Can you push a nullptr?
+					reservedLarvae.push_back(larva);
 			}
 		}
 

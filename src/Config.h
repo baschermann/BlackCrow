@@ -3,16 +3,16 @@
 
 namespace BlackCrow {
 
-	// Config!
+	// Note: Values can be modified by the program. These are starting values.
 	class Config {
 
 	public:
 		Config();
 
-		int localSpeed;
-		int maxDrones;
-		float saturationLevel;
-		float barSize;
-		double mineralSaturationMultiplier;
+		int localSpeed = 8; // Game Speed
+		int maxDrones = 70;
+		double mineralSaturationMultiplier = 2; // Workers per mineral patch
+		float barSize = 3; // Health/Shield/Energy bar size
+		double droneToArmyRatio = 0.50; // How many drones before army is being built
 	};
 }

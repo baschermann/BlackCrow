@@ -166,11 +166,17 @@ namespace BlackCrow {
 	}
 
 	int PlannedExtractor::getMineralPrice() {
-		return UnitTypes::Zerg_Extractor.mineralPrice();
+		if (!alreadyBuiltExtractor)
+			return UnitTypes::Zerg_Extractor.mineralPrice();
+		else
+			return 0;
 	}
 
 	int PlannedExtractor::getGasPrice() {
-		return UnitTypes::Zerg_Extractor.gasPrice();
+		if (!alreadyBuiltExtractor)
+			return UnitTypes::Zerg_Extractor.gasPrice();
+		else
+			return 0;
 	}
 
 	void PlannedExtractor::onFrame() {
@@ -245,22 +251,51 @@ namespace BlackCrow {
 	}
 
 	// Planned Upgrade
-	PlannedUpgrade::PlannedUpgrade(BlackCrow& parent, BWAPI::UpgradeType type, int level = 0) : Planned(parent), type(type), level(level) {}
+	PlannedUpgrade::PlannedUpgrade(BlackCrow& parent, BWAPI::UpgradeType type, int level) : Planned(parent), type(type), level(level) {}
 
 	int PlannedUpgrade::getMineralPrice() {
-		return type.mineralPrice();
+		if (researchingBuilding && researchingBuilding->isUpgrading())
+			return 0;
+		else
+			return type.mineralPrice();
 	}
 
 	int PlannedUpgrade::getGasPrice() {
-		return type.gasPrice();
+		if (researchingBuilding && researchingBuilding->isUpgrading())
+			return 0;
+		else
+			return type.gasPrice();
 	}
 
 	void PlannedUpgrade::onFrame() {
+		if (researchingBuilding && !researchingBuilding->exists()) {
+			status = Status::FAILED;
+			return;
+		}
 
+		if (status == Status::ACTIVE && !researchingBuilding) {
+			auto ownUnits = Broodwar->self()->getUnits();
+			auto freeSpawningPoolIt = std::find_if(ownUnits.begin(), ownUnits.end(), [](BWAPI::Unit unit) { return unit->getType() == UnitTypes::Zerg_Spawning_Pool && !unit->isUpgrading(); });
+			if (freeSpawningPoolIt != ownUnits.end()) {
+				researchingBuilding = *freeSpawningPoolIt;
+			}
+		}
+
+		if (status == Status::ACTIVE && researchingBuilding)
+			if (!researchingBuilding->isUpgrading() && researchingBuilding->canUpgrade())
+				if (Broodwar->self()->minerals() >= type.mineralPrice() && Broodwar->self()->gas() >= type.gasPrice())
+					researchingBuilding->upgrade(type);
+
+		if (status == Status::ACTIVE && Broodwar->self()->getUpgradeLevel(type) >= level)
+			status = Status::COMPLETED;
+		
 	}
 
 	float PlannedUpgrade::progressPercent() {
-		return 0;
+		if (researchingBuilding && researchingBuilding->isUpgrading())
+			return (float)researchingBuilding->getRemainingUpgradeTime() / (float)type.upgradeTime(level);
+		else
+			return 0;
 	}
 
 	std::string PlannedUpgrade::getName() {

@@ -3,6 +3,7 @@
 #include <memory>
 #include <deque>
 #include "Base.h"
+#include "Common.h"
 
 namespace BlackCrow {
 
@@ -41,18 +42,18 @@ namespace BlackCrow {
 		std::vector<BWAPI::Unit> hatcheries;
 
 		// Planned
-		std::shared_ptr<PlannedUnit> planUnit(BWAPI::UnitType type, BWAPI::Position nearTo);
-		std::shared_ptr<PlannedBuilding> planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
-		std::shared_ptr<PlannedExtractor> planExtractor(Geyser& geyser);
-		std::shared_ptr<PlannedTech> planUpgrade(BWAPI::UpgradeType upgrade, int level = 1);
-		std::shared_ptr<PlannedTech> planTech(BWAPI::TechType tech);
+		PlannedUnitPtr planUnit(BWAPI::UnitType type, BWAPI::Position nearTo);
+		PlannedBuildingPtr planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition);
+		PlannedExtractorPtr planExtractor(Geyser& geyser);
+		PlannedUpgradePtr planUpgrade(BWAPI::UpgradeType upgrade, int level = 1);
+		PlannedTechPtr planTech(BWAPI::TechType tech);
 		int getCurrentlyPlannedAmount(BWAPI::UnitType type);
 		bool isCurrentlyPlanned(BWAPI::UpgradeType upgrade, int level = 1);
 		bool isCurrentlyPlanned(BWAPI::TechType tech);
 		std::vector<std::shared_ptr<PlannedUnit>> getPlannedUnits();
 		
 		// Expansions and Bases
-		Base& getSafestToExpand();
+		Base* getSafestToExpand();
 		void expand();
 		int getNumberOfCurrentlyExpandingBases();
 		int getNumberOfEstablishedBases();
