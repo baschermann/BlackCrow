@@ -275,7 +275,7 @@ namespace BlackCrow {
 
 		if (status == Status::ACTIVE && !researchingBuilding) {
 			auto ownUnits = Broodwar->self()->getUnits();
-			auto freeSpawningPoolIt = std::find_if(ownUnits.begin(), ownUnits.end(), [](BWAPI::Unit unit) { return unit->getType() == UnitTypes::Zerg_Spawning_Pool && !unit->isUpgrading(); });
+			auto freeSpawningPoolIt = std::find_if(ownUnits.begin(), ownUnits.end(), [&](BWAPI::Unit unit) { return unit->getType() == type.whatUpgrades() && !unit->isUpgrading(); });
 			if (freeSpawningPoolIt != ownUnits.end()) {
 				researchingBuilding = *freeSpawningPoolIt;
 			}
