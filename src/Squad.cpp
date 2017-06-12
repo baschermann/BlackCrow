@@ -117,11 +117,13 @@ namespace BlackCrow {
 				EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { 
 					Unit unit = Broodwar->getUnit(eu.id);
 					return !eu.type.isFlyer()
+						&& !eu.type.isInvincible()
 						&& !eu.isGhost
 						&& eu.type != UnitTypes::Zerg_Larva
 						&& eu.type != UnitTypes::Zerg_Egg
 						&& eu.type != UnitTypes::Zerg_Lurker_Egg
 						&& !(!unit->isDetected() && unit->isBurrowed());
+						// Add under Disruption Web
 				});
 
 				if (enemyUnit)

@@ -185,6 +185,8 @@ namespace BlackCrow {
 		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
 		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
 
+		/* 
+		// Unit Mix and Strategy calculation numbers
 		int ox = 250;
 		int yx = 250;
 
@@ -196,6 +198,7 @@ namespace BlackCrow {
 		Broodwar->drawTextScreen(ox, yx + 50, "prod multi min: %f", bc.strategy.productionMultiplierMinerals);
 		Broodwar->drawTextScreen(ox, yx + 60, "prod multi larvae: %f", bc.strategy.productionMultiplierLarvae);
 		Broodwar->drawTextScreen(ox, yx + 70, "prod multi: %f", bc.strategy.productionMultiplier);
+		*/
 
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
@@ -240,6 +243,7 @@ namespace BlackCrow {
 	void Debug::drawBaseInformation() {
 		// TODO
 		for (Base& base : bc.macro.bases) {
+			/*
 			for (Mineral& mineral : base.minerals) {
 				Broodwar->drawBoxMap(Position(mineral.bwemMineral->TopLeft()), Position(mineral.bwemMineral->TopLeft()) + Position(10, 10), Colors::Black, true);
 				Broodwar->drawTextMap(Position(mineral.bwemMineral->TopLeft()) + Position(3, -1), std::to_string(mineral.workers.size()).c_str());
@@ -249,6 +253,7 @@ namespace BlackCrow {
 				Broodwar->drawBoxMap(Position(geyser.bwemGeyser->TopLeft()), Position(geyser.bwemGeyser->TopLeft()) + Position(10, 10), Colors::Black);
 				Broodwar->drawTextMap(Position(geyser.bwemGeyser->TopLeft()), std::to_string(geyser.workers.size()).c_str());
 			}
+			*/
 
 			Broodwar->drawBoxMap(Position(base.bwemBase.Location()) + Position(25, 35), Position(base.bwemBase.Location()) + Position(100, 75), Colors::Black, true);
 			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 35), "Total: %i (+%i)", base.getTotalWorkers(), base.getWorkersNeeded());
