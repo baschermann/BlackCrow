@@ -94,7 +94,6 @@ namespace BlackCrow {
 
 		if (scoutSquads.size() <= 0) {
 			ScoutSquadPtr ss = createScoutSquad();
-			ss->addStartLocations();
 			ss->addExpansions();
 		}
 

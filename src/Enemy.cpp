@@ -71,7 +71,7 @@ namespace BlackCrow {
 
 				// Handling dead extractors
 				if (eu.type == UnitTypes::Resource_Vespene_Geyser) {
-					Broodwar->sendText("Dead Geyser detected. Deleting that thing");
+					//Broodwar->sendText("Dead Geyser detected. Deleting that thing");
 					euIt = enemies.erase(euIt);
 				} else {
 					euIt++;
