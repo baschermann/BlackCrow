@@ -23,7 +23,7 @@ namespace BlackCrow {
 	void Squad::moveAll(BWAPI::Position position, bool queue) {
 		for (SquadUnitPtr sunit : sunits) {
 			if (sunit->isIdle() || !sunit->isMoving())
-				sunit->move(position, queue);
+				sunit->attackMove(position, queue);
 		}
 	}
 
@@ -38,7 +38,10 @@ namespace BlackCrow {
 
 		if (bc.isExecutingCommandFrame())
 			if (scoutLocations.size() > 0)
-				moveAll(BWAPI::Position(scoutLocations.back()), false); // Kruecke: This will spam hard! - TODO Not good then!
+				moveAll(BWAPI::Position(scoutLocations.back()), false);
+
+		if ( (scoutLocations.size() <= 0 && sunits.size() >= 0) || bc.enemy.hasKnownBuilding())
+			disband();
 	}
 
 	bool ScoutSquad::isStillScouting() {
@@ -68,8 +71,8 @@ namespace BlackCrow {
 	}
 
 	void ScoutSquad::addExpansions() {
-		for (BWEM::Area area : bc.bwem.Areas()) {
-			for (BWEM::Base base : area.Bases()) {
+		for (const BWEM::Area& area : bc.bwem.Areas()) {
+			for (const BWEM::Base& base : area.Bases()) {
 				if (!Broodwar->isVisible(base.Location())) {
 					addScoutPosition(base.Location());
 				}
@@ -79,6 +82,18 @@ namespace BlackCrow {
 
 	void ScoutSquad::setGlobalSearch(bool searchGlobally) {
 		globalSearch = searchGlobally;
+	}
+
+	void ScoutSquad::disband() {
+		for (SquadUnitPtr sunit : sunits) {
+			if (sunit->unit->getType() == UnitTypes::Zerg_Drone) {
+				bc.macro.addDrone(sunit->unit);
+				bc.army.removeFromArmy(sunit);
+			} else {
+				bc.army.assignAutomaticAttackSquad(sunit);
+			}
+		}
+		sunits.clear();
 	}
 
 	// ######## Attack Squad #########
@@ -128,8 +143,15 @@ namespace BlackCrow {
 
 				if (enemyUnit)
 					sunit->setAttackTarget(enemyUnit->id);
-				// else we should scout for one!
 			}
+
+			if (!bc.enemy.hasKnownBuilding()) {
+				// Assign all to scouts
+				for (SquadUnitPtr sunit : sunits)
+					bc.army.assignAutomaticScoutSquad(sunit);
+				sunits.clear();
+			}
+
 			break;
 		}
 	}

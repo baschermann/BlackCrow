@@ -49,27 +49,7 @@ namespace BlackCrow {
 		
 
 		if (text == "1") {
-			UnitMix mix(bc);
-			mix.set(BWAPI::UnitTypes::Zerg_Zergling, 2000);
-			mix.set(BWAPI::UnitTypes::Zerg_Hydralisk, 5000);
-			mix.set(BWAPI::UnitTypes::Zerg_Ultralisk, 3000);
-
-			std::map<BWAPI::UnitType, int> counter;
-			for (int i = 0; i < 10000; i++) {
-				BWAPI::UnitType type = mix.pop();
-				auto it = counter.find(type);
-				if (it != counter.end())
-					it->second = it->second + 1;
-				else
-					counter.emplace(type, 1);
-			}
-
-			int zerglings = (counter.find(BWAPI::UnitTypes::Zerg_Zergling))->second;
-			int hydralisk = (counter.find(BWAPI::UnitTypes::Zerg_Hydralisk))->second;
-			int ultralisk = (counter.find(BWAPI::UnitTypes::Zerg_Ultralisk))->second;
-
-			Broodwar->sendText("Zerglings: %i, Hydralisks: %i, Ultralisks: %i", zerglings, hydralisk, ultralisk);
-
+			bc.enemy.enemies.clear();
 			return true;
 		}
 
@@ -396,18 +376,20 @@ namespace BlackCrow {
 
 	void Debug::drawSquadInfo() {
 		for (ScoutSquadPtr scoutSquad : bc.army.scoutSquads) {
-			auto positionsIt = scoutSquad->getScoutingPositions().begin();
+			if (scoutSquad->sunits.size() > 0) {
+				auto positionsIt = scoutSquad->getScoutingPositions().begin();
 
-			while (positionsIt != scoutSquad->getScoutingPositions().end()) {
-				BWAPI::Unit scoutUnit = scoutSquad->sunits.back()->unit;
-				TilePosition& tilePosition = *positionsIt;
+				while (positionsIt != scoutSquad->getScoutingPositions().end()) {
+					BWAPI::Unit scoutUnit = scoutSquad->sunits.back()->unit;
+					TilePosition& tilePosition = *positionsIt;
 
-				if (*positionsIt == scoutSquad->getScoutingPositions().back()) {
-					Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
-				} else {
-					Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::Grey);
+					if (*positionsIt == scoutSquad->getScoutingPositions().back()) {
+						Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
+					} else {
+						Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::Grey);
+					}
+					positionsIt++;
 				}
-				positionsIt++;
 			}
 		}
 	}

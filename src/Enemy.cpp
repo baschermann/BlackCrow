@@ -116,4 +116,11 @@ namespace BlackCrow {
 	double Enemy::ghostTime(BWAPI::UnitType type) {
 		return 1700 / type.topSpeed();
 	}
+
+	bool Enemy::hasKnownBuilding() {
+		auto buildingIt = std::find_if(enemies.begin(), enemies.end(), [](EnemyUnit& enemyUnit) {return enemyUnit.type.isBuilding(); });
+		if (buildingIt != enemies.end())
+			return true;
+		return false;
+	}
 }

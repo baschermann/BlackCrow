@@ -17,6 +17,7 @@ namespace BlackCrow {
 		void onUnitDestroyed(BWAPI::Unit unit);
 
 		EnemyUnit* getEnemy(int id);
+		bool hasKnownBuilding();
 
 		// Predicate for whether to include the unit or not
 		// bool pred(const EnemyUnit& enemyUnit)

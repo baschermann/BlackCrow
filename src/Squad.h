@@ -31,6 +31,7 @@ namespace BlackCrow {
 
 	class ScoutSquad : public Squad {
 	public:
+
 		ScoutSquad(BlackCrow &parent);
 		void onFrame();
 		bool isStillScouting();
@@ -43,6 +44,7 @@ namespace BlackCrow {
 
 	private:
 		bool globalSearch;
+		void ScoutSquad::disband();
 		std::vector<BWAPI::TilePosition> scoutLocations;
 	};
 

@@ -61,7 +61,7 @@ namespace BlackCrow {
 				bc.macro.addDrone(unit);
 			} else {
 				if (type != UnitTypes::Zerg_Overlord) {
-					bc.army.assignAutomaticSquad(bc.army.addToArmy(unit));
+					bc.army.assignAutomaticAttackSquad(bc.army.addToArmy(unit));
 				}
 			}
 		}
@@ -134,7 +134,7 @@ namespace BlackCrow {
 
 						// TODO Error Spam
 						if (Broodwar->getLastError() != BWAPI::Errors::Unit_Busy) {
-							Broodwar << Broodwar->getLastError() << std::endl;
+							//Broodwar << Broodwar->getLastError() << std::endl;
 							// TODO Spam of NONE NONE NONE when building could not be placed
 							// Mark tiles where to build as "markedForBuilding" and squad units should avoid that space
 						}

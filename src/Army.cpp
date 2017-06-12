@@ -50,7 +50,7 @@ namespace BlackCrow {
 			|| type == UnitTypes::Zerg_Overlord)
 			return;
 
-		assignAutomaticSquad(addToArmy(unit));
+		assignAutomaticAttackSquad(addToArmy(unit));
 	}
 
 	void Army::onUnitDestroyed(BWAPI::Unit unit) {
@@ -67,6 +67,11 @@ namespace BlackCrow {
 		return sunits.back();
 	}
 
+	void Army::removeFromArmy(SquadUnitPtr sunit) {
+		assert(sunit->squad);
+		sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
+	}
+
 	SquadUnitPtr Army::findSquadUnit(BWAPI::Unit unit) {
 		for (SquadUnitPtr sunit : sunits) {
 			if (sunit->unit == unit)
@@ -75,14 +80,27 @@ namespace BlackCrow {
 		return nullptr;
 	}
 
-	void Army::assignAutomaticSquad(SquadUnitPtr sunit) {
+	void Army::assignAutomaticAttackSquad(SquadUnitPtr sunit) {
 
 		if (attackSquads.size() <= 0 || attackSquads.back()->state == AttackSquad::State::ATTACK)
-			attackSquads.emplace_back(std::make_shared<AttackSquad>(bc));
+			createAttackSquad();
 
 		AttackSquadPtr aq = attackSquads.back();
 		aq->add(sunit);
 		sunit->squad = aq;
+	}
+
+	void Army::assignAutomaticScoutSquad(SquadUnitPtr sunit) {
+
+		if (scoutSquads.size() <= 0) {
+			ScoutSquadPtr ss = createScoutSquad();
+			ss->addStartLocations();
+			ss->addExpansions();
+		}
+
+		ScoutSquadPtr ss = scoutSquads.back();
+		ss->add(sunit);
+		sunit->squad = ss;
 	}
 
 	void Army::startInitialScout() {
@@ -90,8 +108,7 @@ namespace BlackCrow {
 		BWAPI::Unit worker = bc.macro.getDroneForBuilding(bc.macro.startPosition);
 
 		if (worker) {
-			scoutSquads.emplace_back(std::make_shared<ScoutSquad>(bc));
-			ScoutSquadPtr scoutSquad = scoutSquads.back();
+			ScoutSquadPtr scoutSquad = createScoutSquad();
 
 			SquadUnitPtr sunit = addToArmy(worker);
 			sunit->squad = scoutSquad;
@@ -99,5 +116,15 @@ namespace BlackCrow {
 			scoutSquad->add(sunit);
 			scoutSquad->addStartLocations();
 		}
+	}
+
+	AttackSquadPtr Army::createAttackSquad() {
+		attackSquads.emplace_back(std::make_shared<AttackSquad>(bc));
+		return attackSquads.back();
+	}
+
+	ScoutSquadPtr Army::createScoutSquad() {
+		scoutSquads.emplace_back(std::make_shared<ScoutSquad>(bc));
+		return scoutSquads.back();
 	}
 }
