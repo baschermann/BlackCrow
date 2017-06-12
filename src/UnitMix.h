@@ -10,7 +10,10 @@ namespace BlackCrow {
 	public:
 		UnitMix(BlackCrow& blackCrow);
 
-		void add(BWAPI::UnitType type, double weight);
+		void set(BWAPI::UnitType type, double weight);
+		void remove(BWAPI::UnitType type);
+		double get(BWAPI::UnitType type);
+		bool exists(BWAPI::UnitType type);
 		int size();
 		BWAPI::UnitType peek();
 		BWAPI::UnitType pop();
@@ -18,6 +21,7 @@ namespace BlackCrow {
 		double larvaPerFrame();
 		double mineralPerFrame();
 		double gasPerFrame();
+		double supplyPerFrame();
 
 	private:
 		struct SpawnProperty {
@@ -36,6 +40,7 @@ namespace BlackCrow {
 		double larvaFrame = 0;
 		double mineralFrame = 0;
 		double gasFrame = 0;
+		double supplyFrame = 0;
 
 		void calculate();
 		void chooseNext();

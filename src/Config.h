@@ -13,6 +13,5 @@ namespace BlackCrow {
 		int maxDrones = 70;
 		double mineralSaturationMultiplier = 2; // Workers per mineral patch
 		float barSize = 3; // Health/Shield/Energy bar size
-		double droneToArmyRatio = 0.50; // How many drones before army is being built
 	};
 }

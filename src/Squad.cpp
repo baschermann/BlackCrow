@@ -49,7 +49,7 @@ namespace BlackCrow {
 		return scoutLocations.size();
 	}
 
-	std::vector<BWAPI::TilePosition> ScoutSquad::getScoutingPositions() {
+	std::vector<BWAPI::TilePosition>& ScoutSquad::getScoutingPositions() {
 		return scoutLocations;
 	}
 

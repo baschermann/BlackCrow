@@ -1,6 +1,6 @@
 #pragma once
 #include <BWAPI.h>
-#include <queue>
+#include <list>
 #include "Squad.h" // Can this be moved to .cpp?
 #include "UnitMix.h" // Needed for UnitMixPtr which is a unique_ptr, can this be moved to .cpp?
 
@@ -30,16 +30,22 @@ namespace BlackCrow {
 		void dynamicDecision();
 
 		// Build Order
-		std::queue<BWAPI::UnitType> buildOrder;
+		std::list<BWAPI::UnitType> buildOrder;
 		BuildOrder bo;
 
 		// Unit Mix
 		double droneProbability = 1; // 1 = 100%
 		UnitMixPtr unitMix = nullptr;
 
+		// Decision decisions
+		double productionMultiplierMinerals = 0;
+		double productionMultiplierGas = 0;
+		double productionMultiplierLarvae = 0;
+		double productionMultiplier = 0;
+
 	private:
 		BlackCrow &bc;
-		double droneBuildAccumulation = 0;
+		bool initialScoutStarted = false;
 
 		// Buildorder
 		BuildOrder getStartBuildOrder();

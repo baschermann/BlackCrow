@@ -32,7 +32,6 @@ namespace BlackCrow {
 			base.onFrame();
 
 		calculateResourceAverages();
-		
 	}
 
 	void Macro::onUnitCompleted(BWAPI::Unit unit) {
@@ -363,7 +362,7 @@ namespace BlackCrow {
 	}
 
 	double Macro::getAverageLarvaePerFrame() {
-		return hatcheries.size() / 342;
+		return (double)hatcheries.size() / (double)342;
 	}
 
 	// Private
@@ -443,9 +442,9 @@ namespace BlackCrow {
 
 		// Minerals
 		{
-			int totalMinerals = Broodwar->self()->gatheredMinerals();
-
-			if (lastFrameTotalMinerals == totalMinerals) {
+			int totalMinerals = Broodwar->self()->gatheredMinerals();;
+			
+			if (lastFrameTotalMinerals == totalMinerals || Broodwar->getFrameCount() == 0) {
 				mineralIncomeList.push_back(0);
 			} else {
 				mineralIncomeList.push_back(totalMinerals - lastFrameTotalMinerals);

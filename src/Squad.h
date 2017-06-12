@@ -35,7 +35,7 @@ namespace BlackCrow {
 		void onFrame();
 		bool isStillScouting();
 		int locationsToScout();
-		std::vector<BWAPI::TilePosition> getScoutingPositions();
+		std::vector<BWAPI::TilePosition>& getScoutingPositions();
 		void addScoutPosition(BWAPI::TilePosition position);
 		void addStartLocations();
 		void addExpansions();

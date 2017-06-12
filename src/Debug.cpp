@@ -50,9 +50,9 @@ namespace BlackCrow {
 
 		if (text == "1") {
 			UnitMix mix(bc);
-			mix.add(BWAPI::UnitTypes::Zerg_Zergling, 2000);
-			mix.add(BWAPI::UnitTypes::Zerg_Hydralisk, 5000);
-			mix.add(BWAPI::UnitTypes::Zerg_Ultralisk, 3000);
+			mix.set(BWAPI::UnitTypes::Zerg_Zergling, 2000);
+			mix.set(BWAPI::UnitTypes::Zerg_Hydralisk, 5000);
+			mix.set(BWAPI::UnitTypes::Zerg_Ultralisk, 3000);
 
 			std::map<BWAPI::UnitType, int> counter;
 			for (int i = 0; i < 10000; i++) {
@@ -184,6 +184,13 @@ namespace BlackCrow {
 		
 		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
 		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
+
+		Broodwar->drawTextScreen(10, 95, "Unit Mix minerals per frame: %f", bc.strategy.unitMix->mineralPerFrame());
+		Broodwar->drawTextScreen(10, 105, "Average minerals per frame: %f", bc.macro.getAverageMineralsPerFrame());
+		Broodwar->drawTextScreen(10, 115, "Average larvae per frame: %f", bc.macro.getAverageLarvaePerFrame());
+		Broodwar->drawTextScreen(10, 125, "Production Multiplier Minerals: %f", bc.strategy.productionMultiplier);
+		
+
 
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
@@ -320,7 +327,11 @@ namespace BlackCrow {
 			Broodwar->drawTextScreen(xStart, yStart, "\x03 Build Order Items left %i", bc.strategy.buildOrder.size());
 			Broodwar->drawLineScreen(xStart + 4, yStart + 15, xStart + 120, yStart + 15, BWAPI::Colors::Yellow);
 
-			Broodwar->drawTextScreen(xStart + 5, yStart + 17, bc.strategy.buildOrder.front().c_str());
+			int offset = 0;
+			for (auto item : bc.strategy.buildOrder) {
+				Broodwar->drawTextScreen(xStart + 5, yStart + 17 + offset, item.c_str());
+				offset += 10;
+			}
 		}
 
 		{
@@ -375,9 +386,18 @@ namespace BlackCrow {
 
 	void Debug::drawSquadInfo() {
 		for (ScoutSquadPtr scoutSquad : bc.army.scoutSquads) {
-			for (BWAPI::TilePosition tilePosition : scoutSquad->getScoutingPositions()) {
+			auto positionsIt = scoutSquad->getScoutingPositions().begin();
+
+			while (positionsIt != scoutSquad->getScoutingPositions().end()) {
 				BWAPI::Unit scoutUnit = scoutSquad->sunits.back()->unit;
-				Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
+				TilePosition& tilePosition = *positionsIt;
+
+				if (*positionsIt == scoutSquad->getScoutingPositions().back()) {
+					Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
+				} else {
+					Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::Grey);
+				}
+				positionsIt++;
 			}
 		}
 	}
