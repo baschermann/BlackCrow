@@ -185,12 +185,17 @@ namespace BlackCrow {
 		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
 		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
 
-		Broodwar->drawTextScreen(10, 95, "Unit Mix minerals per frame: %f", bc.strategy.unitMix->mineralPerFrame());
-		Broodwar->drawTextScreen(10, 105, "Average minerals per frame: %f", bc.macro.getAverageMineralsPerFrame());
-		Broodwar->drawTextScreen(10, 115, "Average larvae per frame: %f", bc.macro.getAverageLarvaePerFrame());
-		Broodwar->drawTextScreen(10, 125, "Production Multiplier Minerals: %f", bc.strategy.productionMultiplier);
-		
+		int ox = 250;
+		int yx = 250;
 
+		Broodwar->drawTextScreen(ox, yx, "UMix s/pf: %f", bc.strategy.unitMix->supplyPerFrame());
+		Broodwar->drawTextScreen(ox, yx + 10, "UMix m/pf: %f", bc.strategy.unitMix->mineralPerFrame());
+		Broodwar->drawTextScreen(ox, yx + 20, "UMix l/pf: %f", bc.strategy.unitMix->larvaPerFrame());
+		Broodwar->drawTextScreen(ox, yx + 30, "avg m/pf: %f", bc.macro.getAverageMineralsPerFrame());
+		Broodwar->drawTextScreen(ox, yx + 40, "avg l/pr: %f", bc.macro.getAverageLarvaePerFrame());
+		Broodwar->drawTextScreen(ox, yx + 50, "prod multi min: %f", bc.strategy.productionMultiplierMinerals);
+		Broodwar->drawTextScreen(ox, yx + 60, "prod multi larvae: %f", bc.strategy.productionMultiplierLarvae);
+		Broodwar->drawTextScreen(ox, yx + 70, "prod multi: %f", bc.strategy.productionMultiplier);
 
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
