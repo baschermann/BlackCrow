@@ -18,6 +18,9 @@ namespace BlackCrow {
 			return distance(p1.x, p1.y, p2.x, p2.y);
 		}
 
+		double distance(BWAPI::TilePosition p1, BWAPI::TilePosition p2) {
+			return distance(p1.x, p1.y, p2.x, p2.y);
+		}
 		
 		BWAPI::Unit findClosestUnit(std::vector<BWAPI::Unit> units, BWAPI::Position position) {
 			double closestDistance = std::numeric_limits<double>::max();

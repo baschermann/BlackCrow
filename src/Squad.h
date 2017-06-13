@@ -39,7 +39,7 @@ namespace BlackCrow {
 		std::vector<BWAPI::TilePosition>& getScoutingPositions();
 		void addScoutPosition(BWAPI::TilePosition position);
 		void addStartLocations();
-		void addExpansions();
+		void addExpansions(bool addIslands);
 		void setGlobalSearch(bool searchGlobally);
 
 	private:

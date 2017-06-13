@@ -22,7 +22,7 @@ namespace BlackCrow {
 		showManagerInfos = true;
 		showPlacementInfos = true;
 		showBwem = false;
-		showSquadInfo = true;
+		showSquadInfo = false;
 		showEnemyUnits = true;
 		showLifeBars = true;
 
@@ -183,6 +183,7 @@ namespace BlackCrow {
 		// Draw APM
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
+		Broodwar->drawTextScreen(175, 0, "LSpeed: %i", BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]);
 		Broodwar->setTextSize(BWAPI::Text::Size::Default);
 
 		// Draw Mouse Tile Position

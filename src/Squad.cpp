@@ -2,6 +2,7 @@
 #include "SquadUnit.h"
 #include "BWEM/bwem.h"
 #include "BlackCrow.h"
+#include <numeric>
 
 namespace BlackCrow {
 
@@ -33,14 +34,33 @@ namespace BlackCrow {
 	void ScoutSquad::onFrame() {
 		Squad::onFrame();
 
-		while (scoutLocations.size() > 0 && Broodwar->isVisible(scoutLocations.back()))
-			scoutLocations.pop_back();
+		// Remove visible locations
+		auto locIt = scoutLocations.begin();
+		while (locIt != scoutLocations.end()) {
+			if (Broodwar->isVisible(*locIt))
+				locIt = scoutLocations.erase(locIt);
+			else
+				locIt++;
+		}
 
+		// Average Position of Squad
+		int avgX = 0;
+		int avgY = 0;
+		for (SquadUnitPtr sunit : sunits) {
+			avgX += sunit->unit->getPosition().x;
+			avgY += sunit->unit->getPosition().y;
+		}
+		TilePosition avgSquadTilePosition(avgX / sunits.size(), avgY /= sunits.size());
+
+		// Move to closest point
 		if (bc.isExecutingCommandFrame())
-			if (scoutLocations.size() > 0)
-				moveAll(BWAPI::Position(scoutLocations.back()), false);
+			if (scoutLocations.size() > 0) {
+				auto locIt = std::min_element(scoutLocations.begin(), scoutLocations.end(), [&](TilePosition& left, TilePosition& right) { return Util::distance(left, avgSquadTilePosition) < Util::distance(right, avgSquadTilePosition); });
+				moveAll(BWAPI::Position(*locIt), false);
+			}
+			
 
-		if ( (scoutLocations.size() <= 0 && sunits.size() >= 0) || bc.enemy.hasKnownBuilding())
+		if ((scoutLocations.size() <= 0 && sunits.size() >= 0) || bc.enemy.hasKnownBuilding())
 			disband();
 	}
 
@@ -70,11 +90,18 @@ namespace BlackCrow {
 		}
 	}
 
-	void ScoutSquad::addExpansions() {
+	void ScoutSquad::addExpansions(bool addIslands) {
+		auto startAreaGroupId = bc.bwem.GetArea(TilePosition(bc.macro.startPosition))->GroupId();
+
 		for (const BWEM::Area& area : bc.bwem.Areas()) {
 			for (const BWEM::Base& base : area.Bases()) {
 				if (!Broodwar->isVisible(base.Location())) {
-					addScoutPosition(base.Location());
+					if (addIslands) {
+						addScoutPosition(base.Location());
+					} else {
+						if (area.GroupId() == startAreaGroupId)
+							addScoutPosition(base.Location());
+					}
 				}
 			}
 		}
@@ -102,11 +129,11 @@ namespace BlackCrow {
 	void AttackSquad::onFrame() {
 		Squad::onFrame();
 
-		static int attackSize = 20;
+		static int attackSize = 6;
 		// Decide
 		if ((int)sunits.size() >= attackSize) {
 			state = State::ATTACK;
-			attackSize += 2;
+			attackSize += 3;
 		}
 
 		// Action
