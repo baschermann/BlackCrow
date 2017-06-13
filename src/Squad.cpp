@@ -129,11 +129,21 @@ namespace BlackCrow {
 	void AttackSquad::onFrame() {
 		Squad::onFrame();
 
-		static int attackSize = 6;
+		static int attackSize = 10;
 		// Decide
 		if ((int)sunits.size() >= attackSize) {
 			state = State::ATTACK;
 			attackSize += 3;
+		}
+
+		if (state == State::MOVE) {
+			for (SquadUnitPtr sunit : sunits) {
+				if (sunit->unit->isUnderAttack()) {
+					state = State::ATTACK;
+					attackSize += 1;
+					break;
+				}
+			}
 		}
 
 		// Action
@@ -156,7 +166,7 @@ namespace BlackCrow {
 
 		case State::ATTACK:
 			for (SquadUnitPtr sunit : sunits) {
-				EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) { 
+				EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [&](const EnemyUnit& eu) { 
 					Unit unit = Broodwar->getUnit(eu.id);
 					return !eu.type.isFlyer()
 						&& !eu.type.isInvincible()
@@ -164,9 +174,24 @@ namespace BlackCrow {
 						&& eu.type != UnitTypes::Zerg_Larva
 						&& eu.type != UnitTypes::Zerg_Egg
 						&& eu.type != UnitTypes::Zerg_Lurker_Egg
-						&& !(!unit->isDetected() && unit->isBurrowed());
+						&& !(!unit->isDetected() && unit->isBurrowed())
+						&& (!unit->getType().isBuilding() || isFightingBuilding(eu));
 						// Add under Disruption Web
 				});
+
+				if (!enemyUnit) {
+					enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) {
+						Unit unit = Broodwar->getUnit(eu.id);
+						return !eu.type.isFlyer()
+							&& !eu.type.isInvincible()
+							&& !eu.isGhost
+							&& eu.type != UnitTypes::Zerg_Larva
+							&& eu.type != UnitTypes::Zerg_Egg
+							&& eu.type != UnitTypes::Zerg_Lurker_Egg
+							&& !(!unit->isDetected() && unit->isBurrowed());
+						// Add under Disruption Web
+					});
+				}
 
 				if (enemyUnit)
 					sunit->setAttackTarget(enemyUnit->id);
@@ -181,5 +206,12 @@ namespace BlackCrow {
 
 			break;
 		}
+	}
+
+	bool AttackSquad::isFightingBuilding(const EnemyUnit& eu) {
+		return eu.type == UnitTypes::Zerg_Sunken_Colony
+			|| eu.type == UnitTypes::Zerg_Spore_Colony
+			|| eu.type == UnitTypes::Protoss_Photon_Cannon
+			|| eu.type == UnitTypes::Terran_Bunker;
 	}
 }

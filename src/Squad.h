@@ -27,6 +27,7 @@ namespace BlackCrow {
 	protected:
 		BlackCrow &bc;
 		Squad(BlackCrow &parent);
+
 	};
 
 	class ScoutSquad : public Squad {
@@ -64,7 +65,7 @@ namespace BlackCrow {
 		State state = State::MOVE;
 
 		// Functions
-		
+		bool isFightingBuilding(const EnemyUnit& eu);
 
 	};
 
