@@ -126,4 +126,24 @@ namespace BlackCrow {
 		scoutSquads.emplace_back(std::make_shared<ScoutSquad>(bc));
 		return scoutSquads.back();
 	}
+
+	void Army::workerUnderAttack(WorkerPtr workerUnderAttack, Base& base) {
+		std::vector<WorkerPtr> closeWorkers;
+
+		for (WorkerPtr worker : base.workers) {
+			if (Util::distance(workerUnderAttack->unit->getPosition(), worker->unit->getPosition()) < 48)
+				closeWorkers.push_back(worker);
+		}
+
+		EnemyUnit* eu = bc.enemy.getClosestEnemy(workerUnderAttack->unit->getPosition(), [](EnemyUnit& eu) { return true; });
+		if (eu) {
+			for (WorkerPtr worker : closeWorkers) {
+				if (!worker->unit->isAttacking()) {
+					worker->stopMining();
+					worker->unit->attack(Broodwar->getUnit(eu->id));
+				}
+				worker->resetAfterAttackFrameCounter = 40;
+			}
+		}
+	}
 }

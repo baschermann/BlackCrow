@@ -112,6 +112,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Overlords.cpp" />
     <ClCompile Include="src\Army.cpp" />
     <ClCompile Include="src\Macro.cpp" />
     <ClCompile Include="src\Geyser.cpp" />
@@ -136,6 +137,7 @@
     <ClCompile Include="src\UnitMix.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Overlords.h" />
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\Army.h" />
     <ClInclude Include="src\Macro.h" />

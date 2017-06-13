@@ -18,6 +18,10 @@ namespace BlackCrow {
 				continueMining();
 			}
 		}
+
+		resetAfterAttackFrameCounter--;
+		if (resetAfterAttackFrameCounter == 0)
+			continueMining();
 	}
 
 	void Worker::stopMining() {

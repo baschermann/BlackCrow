@@ -129,7 +129,7 @@ namespace BlackCrow {
 	void AttackSquad::onFrame() {
 		Squad::onFrame();
 
-		static int attackSize = 10;
+		static int attackSize = 14;
 		// Decide
 		if ((int)sunits.size() >= attackSize) {
 			state = State::ATTACK;
@@ -209,9 +209,10 @@ namespace BlackCrow {
 	}
 
 	bool AttackSquad::isFightingBuilding(const EnemyUnit& eu) {
-		return eu.type == UnitTypes::Zerg_Sunken_Colony
+		return (eu.type == UnitTypes::Zerg_Sunken_Colony
 			|| eu.type == UnitTypes::Zerg_Spore_Colony
 			|| eu.type == UnitTypes::Protoss_Photon_Cannon
-			|| eu.type == UnitTypes::Terran_Bunker;
+			|| eu.type == UnitTypes::Terran_Bunker)
+			&& Broodwar->getUnit(eu.id)->isCompleted();
 	}
 }

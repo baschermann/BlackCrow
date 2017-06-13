@@ -31,6 +31,9 @@ namespace BlackCrow {
 	void Base::onFrame() {
 		for (WorkerPtr worker : workers) {
 			worker->onFrame();
+
+			if (worker->unit->isUnderAttack())
+				bc.army.workerUnderAttack(worker, *this);
 		}
 	}
 
@@ -175,9 +178,9 @@ namespace BlackCrow {
 				worker->continueMining();
 				return true;
 			}
-			Broodwar->sendText("No worker could be shifted from minerals to gas. This should not happen");
+			//Broodwar->sendText("No worker could be shifted from minerals to gas. This should not happen");
 		}
-		Broodwar->sendText("Could not find geyser that needs worker for the chosen base. This should not happen");
+		//Broodwar->sendText("Could not find geyser that needs worker for the chosen base. This should not happen");
 		return false;
 	}
 

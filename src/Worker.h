@@ -22,6 +22,7 @@ namespace BlackCrow {
 		MiningTarget miningTarget = MiningTarget::NONE;
 		Mineral* mineral = nullptr;
 		Geyser* geyser = nullptr;
+		int resetAfterAttackFrameCounter = 0;
 
 		void onFrame();
 		void stopMining();

@@ -8,6 +8,7 @@ namespace BlackCrow {
 	class BlackCrow;
 	class ScoutSquad;
 	class AttackSquad;
+	class Base;
 
 	class Army {
 	public:
@@ -33,6 +34,7 @@ namespace BlackCrow {
 		void assignAutomaticScoutSquad(SquadUnitPtr sunit);
 		void startInitialScout();
 		ScoutSquadPtr convertToScoutSquad(AttackSquadPtr attackSquad);
+		void workerUnderAttack(WorkerPtr worker, Base& base);
 
 	private:
 		BlackCrow &bc;

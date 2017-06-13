@@ -266,7 +266,6 @@ namespace BlackCrow {
 		return nullptr;
 	}
 
-
 	// Gas
 	int Macro::getGasWorkerSlotsAvailable() {
 		return std::accumulate(bases.begin(), bases.end(), 0, [](int sum, Base& base) { return sum + base.getGasWorkerSlotsAvailable(); });

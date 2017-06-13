@@ -111,6 +111,9 @@
     <ClCompile Include="src\UnitMix.cpp">
       <Filter>Source Files\Strategy</Filter>
     </ClCompile>
+    <ClCompile Include="src\Overlords.cpp">
+      <Filter>Source Files\Army</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Army.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="src\BlackCrow.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Overlords.h">
+      <Filter>Source Files\Army</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
