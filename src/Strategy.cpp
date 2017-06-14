@@ -101,7 +101,7 @@ namespace BlackCrow {
 			productionMultiplier = std::min(productionMultiplierMinerals, productionMultiplierLarvae);
 
 			// Supply first
-			if (bc.macro.getFreeSupply() / (unitMix->supplyPerFrame() * productionMultiplier) < UnitTypes::Zerg_Overlord.buildTime()) {
+			if (bc.macro.getFreeSupply() / (unitMix->supplyPerFrame() * productionMultiplier) < UnitTypes::Zerg_Overlord.buildTime() && bc.macro.getFreeSupply() <= 20) {
 				bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition);
 			}
 
@@ -119,8 +119,17 @@ namespace BlackCrow {
 			}
 
 			// Additional Hatcheries
-			if (productionMultiplierLarvae < productionMultiplierMinerals && bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Hatchery) <= 0)
-				bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery));
+			if (productionMultiplierLarvae < productionMultiplierMinerals && bc.macro.getTotalLarvaeAmount() <= 0) {
+				int amountPlannedHatcheries = bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Hatchery);
+
+				if (amountPlannedHatcheries <= 0) {
+					if (bc.macro.getUnreservedResources().minerals >= 250)
+						bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery));
+				} else {
+					if ((double)bc.macro.getUnreservedResources().minerals / ((double)amountPlannedHatcheries * (double)300) >= 0.75)
+						bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery));
+				}
+			}
 		}
 	}
 
