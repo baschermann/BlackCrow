@@ -152,7 +152,7 @@ namespace BlackCrow {
 			for (SquadUnitPtr sunit : sunits) {
 				if (sunit->isIdle()) {
 
-					const BWEM::Area* area = bc.bwem.GetArea(sunit->unit->getTilePosition());
+					const BWEM::Area* area = bc.bwem.GetArea(TilePosition(bc.macro.startPosition));
 					if (area) {
 						for (const BWEM::ChokePoint* cp : area->ChokePoints()) {
 							if (!cp->Blocked()) {

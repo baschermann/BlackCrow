@@ -8,7 +8,7 @@ namespace BlackCrow {
 
 	UnitMix::UnitMix(BlackCrow& blackCrow) : bc(blackCrow) {}
 
-	void UnitMix::set(BWAPI::UnitType type, double weight) {
+	void UnitMix::set(BWAPI::UnitType type, double weight, bool reset) {
 		auto propertyIt = std::find_if(propertyUnits.begin(), propertyUnits.end(), [type](SpawnProperty& property) { return property.type == type; });
 		if (propertyIt == propertyUnits.end())
 			propertyUnits.emplace_back(type, weight, weight);
@@ -16,7 +16,8 @@ namespace BlackCrow {
 			propertyIt->weight = weight;
 
 		calculate();
-		resetSpawnValues();
+		if (reset)
+			resetSpawnValues();
 		chooseNext();
 	}
 

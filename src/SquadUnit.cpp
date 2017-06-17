@@ -15,7 +15,7 @@ namespace BlackCrow {
 		if (enemyUnit) {
 			Unit enemyBwapiUnit = Broodwar->getUnit(enemyUnit->id);
 
-			if (enemyBwapiUnit->exists()) {
+			if (enemyBwapiUnit->exists() && enemyBwapiUnit->isVisible()) {
 				// TODO Override attack move
 				if (enemyBwapiUnit && unit->getOrderTarget() != enemyBwapiUnit && !commandInQueue()) {
 					unit->attack(enemyBwapiUnit, false);

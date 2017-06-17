@@ -18,7 +18,7 @@ namespace BlackCrow {
 	void Strategy::onStart() {
 		fillBuildOrder(getStartBuildOrder());
 
-		unitMix->set(BWAPI::UnitTypes::Zerg_Drone, 1);
+		unitMix->set(BWAPI::UnitTypes::Zerg_Drone, 1, true);
 	}
 
 	void Strategy::onFrame() {
@@ -63,7 +63,7 @@ namespace BlackCrow {
 		// Check if we need drones, add them to the mix
 		if (bc.macro.getWorkersNeededForSaturation() - bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Drone) > 0 || bc.macro.getTotalWorkerAmount() >= bc.config.maxDrones) {
 			if (!unitMix->exists(UnitTypes::Zerg_Drone))
-				unitMix->set(UnitTypes::Zerg_Drone, 1);
+				unitMix->set(UnitTypes::Zerg_Drone, 1, true);
 		} else {
 			if (unitMix->exists(UnitTypes::Zerg_Drone))
 				unitMix->remove(UnitTypes::Zerg_Drone);
@@ -90,7 +90,7 @@ namespace BlackCrow {
 
 			// Building Zerglings
 			if (!unitMix->exists(UnitTypes::Zerg_Zergling))
-				unitMix->set(UnitTypes::Zerg_Zergling, 1);
+				unitMix->set(UnitTypes::Zerg_Zergling, 2, true);
 		}
 		
 		if (unitMix->size() > 0) {
@@ -109,6 +109,7 @@ namespace BlackCrow {
 			if (unitMix->peek() == UnitTypes::Zerg_Drone) {
 				if (bc.macro.getUnreservedResources().minerals >= 50 && bc.macro.getUnreservedLarvaeAmount() > 0) {
 					bc.macro.buildWorkerDrone();
+					unitMix->set(UnitTypes::Zerg_Drone, std::max(unitMix->get(UnitTypes::Zerg_Drone) - 0.1, 0.15), false);
 					unitMix->pop();
 				}
 					

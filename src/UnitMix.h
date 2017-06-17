@@ -10,7 +10,7 @@ namespace BlackCrow {
 	public:
 		UnitMix(BlackCrow& blackCrow);
 
-		void set(BWAPI::UnitType type, double weight);
+		void set(BWAPI::UnitType type, double weight, bool reset);
 		void remove(BWAPI::UnitType type);
 		double get(BWAPI::UnitType type);
 		bool exists(BWAPI::UnitType type);

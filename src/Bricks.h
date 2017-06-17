@@ -5,9 +5,11 @@ namespace BlackCrow {
 
 	class BlackCrow;
 
-	class Overlords {
+
+
+	class Bricks {
 	public:
-		Overlords(BlackCrow& parent);
+		Bricks(BlackCrow& parent);
 		void onStart();
 		void onFrame();
 

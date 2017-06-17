@@ -114,6 +114,9 @@
     <ClCompile Include="src\Overlords.cpp">
       <Filter>Source Files\Army</Filter>
     </ClCompile>
+    <ClCompile Include="src\Bricks.cpp">
+      <Filter>Source Files\Strategy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Army.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="src\Overlords.h">
       <Filter>Source Files\Army</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bricks.h">
+      <Filter>Source Files\Strategy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
