@@ -12,6 +12,7 @@ namespace BlackCrow {
 	}
 
 	void Brick::onFrame() {
+
 	}
 
 }
