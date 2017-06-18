@@ -43,18 +43,24 @@ namespace BlackCrow {
 			if (type.isBuilding()) {
 				if (type == UnitTypes::Zerg_Extractor) {
 					bc.macro.buildExtractor();
+					buildOrder.pop_front();
 				} else if (type == UnitTypes::Zerg_Hatchery) {
 					bc.macro.expand();
+					buildOrder.pop_front();
 				} else {
 					TilePosition buildPosition = bc.builder.getBuildingSpot(type, false);
-					if (buildPosition != TilePositions::None)
+					if (buildPosition != TilePositions::None) {
 						bc.macro.planBuilding(type, buildPosition);
+						buildOrder.pop_front();
+					}
 				}
 			} else {
-				if (bc.macro.getUnreservedLarvaeAmount() > 0)
+				if (bc.macro.getUnreservedLarvaeAmount() > 0) {
 					bc.macro.planUnit(type, bc.macro.startPosition);
+					buildOrder.pop_front();
+				}
 			}
-			buildOrder.pop_front();
+			
 		}
 	}
 
@@ -131,6 +137,12 @@ namespace BlackCrow {
 						bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery));
 				}
 			}
+		}
+
+		// Give up
+		if (Broodwar->self()->minerals() < 50 && Broodwar->self()->supplyUsed() <= 0) {
+			Broodwar->sendText("gaw gaw!");
+			Broodwar->leaveGame();
 		}
 	}
 

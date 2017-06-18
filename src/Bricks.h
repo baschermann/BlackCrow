@@ -1,19 +1,26 @@
 #pragma once
 #include <BWAPI.h>
+#include <memory>
 
 namespace BlackCrow {
 
 	class BlackCrow;
 
-
-
-	class Bricks {
+	class Brick {
 	public:
-		Bricks(BlackCrow& parent);
+		Brick();
 		void onStart();
 		void onFrame();
+		
+		//std::vector<std::unique_ptr<?????>> requirementPreds;
+		std::vector<std::unique_ptr<Brick>> requirementBricks;
 
-	protected:
-		BlackCrow &bc;
+		template <class UnaryPredicate>
+		void requirement(UnaryPredicate requirement) {
+		}
+
+		void requirement(Brick requirement) {
+
+		}
 	};
 }

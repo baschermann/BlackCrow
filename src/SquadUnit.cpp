@@ -22,8 +22,10 @@ namespace BlackCrow {
 					commandExecuted();
 				}
 			} else {
-				attackMove(enemyUnit->position, false);
-				commandExecuted();
+				if (!commandInQueue()) {
+					attackMove(enemyUnit->position, false);
+					commandExecuted();
+				}
 			}
 		}
 	}

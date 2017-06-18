@@ -5,13 +5,13 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Bricks::Bricks(BlackCrow &parent) : bc(parent) {}
+	Brick::Brick() {}
 
-	void Bricks::onStart() {
+	void Brick::onStart() {
 
 	}
 
-	void Bricks::onFrame() {
+	void Brick::onFrame() {
 	}
 
 }
