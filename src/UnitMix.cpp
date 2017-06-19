@@ -1,5 +1,6 @@
 #include "UnitMix.h"
 #include "BlackCrow.h"
+#include <set>
 
 namespace BlackCrow {
 
