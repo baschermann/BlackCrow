@@ -192,7 +192,4 @@
       <Filter>Source Files\Strategy</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\Entwicklung\BWAPI\Crow\Additional Setup.txt" />
-  </ItemGroup>
 </Project>
