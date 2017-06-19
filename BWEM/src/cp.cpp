@@ -58,8 +58,8 @@ ChokePoint::ChokePoint(detail::Graph * pGraph, index idx, const Area * area1, co
 			nodeInArea = GetMap()->BreadthFirstSearch(m_nodes[n],
 				[pArea, this](const MiniTile & miniTile, WalkPosition w)	// findCond
 					{ return (miniTile.AreaId() == pArea->Id()) && !GetMap()->GetTile(TilePosition(w), check_t::no_check).GetNeutral(); },
-				[pArea, this](const MiniTile & miniTile, WalkPosition)		// visitCond
-					{ return (miniTile.AreaId() == pArea->Id()) || (Blocked() && (miniTile.Blocked())); }
+				[pArea, this](const MiniTile & miniTile, WalkPosition w)    // visitCond
+					{ return (miniTile.AreaId() == pArea->Id()) || (Blocked() && (miniTile.Blocked() || GetMap()->GetTile(TilePosition(w), check_t::no_check).GetNeutral())); }
 				);
 		}
 }
