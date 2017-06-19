@@ -1,0 +1,37 @@
+// To read the current setLocalSpeed. From Adakite in IRC on freenode.net #BWAPI
+
+1. Copy the "BW" and "Util" directories to the same directory as your
+"BWAPI" include directory.
+ 
+e.g.
+include/BWAPI/
+include/BWAPI.h
+include/BW/
+include/Util/
+ 
+Location of "Util":
+https://github.com/bwapi/bwapi/tree/master/bwapi/Util/Source/Util
+ 
+Location of "BW":
+https://github.com/bwapi/bwapi/tree/master/bwapi/BWAPI/Source/BW
+ 
+2. You'll also need the storm files:
+ 
+e.g.
+include/storm.cpp
+include/storm.def
+include/storm.h
+ 
+Location of "storm" files:
+https://github.com/bwapi/bwapi/tree/master/bwapi/Storm
+ 
+3. Include the Offsets.h file with:
+#include <BW/Offsets.h>
+ 
+4. Example of usage:
+ 
+BWAPI::Broodwar->setLocalSpeed(20);
+int currSpeed = BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0];
+BWAPI::Broodwar->sendText("Speed: %d", currSpeed);
+ 
+5. Done.

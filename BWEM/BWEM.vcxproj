@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{991E323C-E61E-4039-97FF-6C7C75097409}</ProjectGuid>
     <RootNamespace>BWEM</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -39,12 +40,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)BWAPI\include;$(ProjectDir)include\BWEM;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)BWAPI\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>$(SolutionDir)bwapi\bwapi\include;$(ProjectDir)include\BWEM;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)bwapi\bwapi\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)BWAPI\include;$(ProjectDir)include\BWEM;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)BWAPI\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>$(SolutionDir)bwapi\bwapi\include;$(ProjectDir)include\BWEM;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)bwapi\bwapi\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

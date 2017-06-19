@@ -42,15 +42,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)BWAPI\include;$(SolutionDir)BWEM\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(OutDir);$(SolutionDir)BWAPI\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)bwapi\bwapi\include;$(SolutionDir)bwapi\bwapi\Storm;$(SolutionDir)bwapi\bwapi\BWAPI\Source;$(SolutionDir)bwapi\bwapi\Util\Source;$(SolutionDir)BWEM\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OutDir);$(SolutionDir)bwapi\bwapi\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
     <TargetName>$(ProjectName)d</TargetName>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)BWAPI\include;$(SolutionDir)BWEM\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(OutDir);$(SolutionDir)BWAPI\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)bwapi\bwapi\include;$(SolutionDir)bwapi\bwapi\Storm;$(SolutionDir)bwapi\bwapi\BWAPI\Source;$(SolutionDir)bwapi\bwapi\Util\Source;$(SolutionDir)BWEM\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OutDir);$(SolutionDir)bwapi\bwapi\lib;$(LibraryPath)</LibraryPath>
     <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
@@ -63,7 +63,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>BWAPId.lib;BWEM.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BWAPId.lib;BWEMd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
       <Command>copy /y "$(OutputPath)$(TargetFileName)" "$(StarcraftAIPath)$(TargetFileName)"</Command>
