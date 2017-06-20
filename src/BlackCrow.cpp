@@ -81,10 +81,10 @@ namespace BlackCrow {
 
 			// EXTRA set SPEED per KEEB
 			if (Broodwar->getKeyState(K_1))
-				Broodwar->setLocalSpeed(50);
+				Broodwar->setLocalSpeed(42);
 
 			if (Broodwar->getKeyState(K_2))
-				Broodwar->setLocalSpeed(25);
+				Broodwar->setLocalSpeed(21);
 
 			if (Broodwar->getKeyState(K_3))
 				Broodwar->setLocalSpeed(8);

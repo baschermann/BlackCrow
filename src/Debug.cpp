@@ -180,10 +180,11 @@ namespace BlackCrow {
 		Broodwar->drawTextScreen(ox, yx + 70, "prod multi: %f", bc.strategy.productionMultiplier);
 		*/
 
-		// Draw APM
+		// Draw APM, LSpeed, Time
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
 		Broodwar->drawTextScreen(175, 0, "LSpeed: %i", BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]);
+		Broodwar->drawTextScreen(230, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, Broodwar->elapsedTime() % 60);
 		Broodwar->setTextSize(BWAPI::Text::Size::Default);
 
 		// Draw Mouse Tile Position

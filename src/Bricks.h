@@ -65,7 +65,9 @@ namespace BlackCrow {
 	};
 
 	namespace Bricks {
-		BrickPtr newBrick(BlackCrow& bc, std::string description);
-		BrickPtr newBrickBuildUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::Position nearTo, BrickPtr predecessor);
+		BrickPtr makeBlank(BlackCrow& bc, std::string description);
+		BrickPtr makePlanUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::Position nearTo, BrickPtr predecessor);
+		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildPosition, BrickPtr predecessor);
+		BrickPtr makePlanExtractorOnce(BlackCrow& bc, std::string description, const BrickPtr predecessor);
 	}
 }

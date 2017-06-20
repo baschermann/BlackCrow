@@ -21,22 +21,22 @@ namespace BlackCrow {
 	void Strategy::onStart() {
 		//fillBuildOrder(getStartBuildOrder());
 
-		BrickPtr protossBo = Bricks::newBrick(bc, "Enemy Protoss BO");
+		BrickPtr protossBo = Bricks::makeBlank(bc, "Enemy Protoss BO");
 		protossBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
 		protossBo->once([]() { Broodwar->sendText("Protoss brick once!"); });
 		start.successor(protossBo);
 
-		BrickPtr terranBo = Bricks::newBrick(bc, "Enemy Terran BO");
+		BrickPtr terranBo = Bricks::makeBlank(bc, "Enemy Terran BO");
 		terranBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Terran"; });
 		terranBo->once([]() { Broodwar->sendText("Terran brick once!"); });
 		start.successor(terranBo);
 
-		BrickPtr zergBo = Bricks::newBrick(bc, "Enemy Zerg BO");
+		BrickPtr zergBo = Bricks::makeBlank(bc, "Enemy Zerg BO");
 		zergBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Zerg"; });
 		zergBo->once([]() { Broodwar->sendText("Zerg brick once!"); });
 		start.successor(zergBo);
 
-		BrickPtr randomBo = Bricks::newBrick(bc, "Random BO");
+		BrickPtr randomBo = Bricks::makeBlank(bc, "Random BO");
 		randomBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Unknown"; });
 		randomBo->once([&]() { Broodwar->sendText("Random brick once!"); });
 		start.successor(randomBo);
@@ -46,19 +46,29 @@ namespace BlackCrow {
 		terranBo->disableSelfWhenActive(randomBo);
 		zergBo->disableSelfWhenActive(randomBo);
 
-		BrickPtr dynamicStart = Bricks::newBrick(bc, "Dynamic decisions");
+		BrickPtr dynamicStart = Bricks::makeBlank(bc, "Dynamic decisions");
 
 		unitMix->set(BWAPI::UnitTypes::Zerg_Drone, 1, true);
 
 	}
 
 	BrickPtr Strategy::buildorderOverpool(BrickPtr predecessor) {
-		BrickPtr d4 = Bricks::newBrickBuildUnitOnce(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition, predecessor);
-		BrickPtr d5 = Bricks::newBrickBuildUnitOnce(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition, d4);
-		BrickPtr d6 = Bricks::newBrickBuildUnitOnce(bc, "Drone @6", UnitTypes::Zerg_Drone, bc.macro.startPosition, d5);
-		BrickPtr d7 = Bricks::newBrickBuildUnitOnce(bc, "Drone @7", UnitTypes::Zerg_Drone, bc.macro.startPosition, d6);
+		BrickPtr d4 = Bricks::makePlanUnitOnce(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition, predecessor);
+		BrickPtr d5 = Bricks::makePlanUnitOnce(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition, d4);
+		BrickPtr d6 = Bricks::makePlanUnitOnce(bc, "Drone @6", UnitTypes::Zerg_Drone, bc.macro.startPosition, d5);
+		BrickPtr d7 = Bricks::makePlanUnitOnce(bc, "Drone @7", UnitTypes::Zerg_Drone, bc.macro.startPosition, d6);
+		BrickPtr d8 = Bricks::makePlanUnitOnce(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, d7);
+		BrickPtr overlord = Bricks::makePlanUnitOnce(bc, "Overlord @9", UnitTypes::Zerg_Overlord, bc.macro.startPosition, d8);
+		BrickPtr pool = Bricks::makePlanBuildingOnce(bc, "Pool @9", UnitTypes::Zerg_Spawning_Pool, bc.builder.getBuildingSpot(UnitTypes::Zerg_Spawning_Pool), overlord);
+		BrickPtr d8two = Bricks::makePlanUnitOnce(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, pool);
+		BrickPtr d9 = Bricks::makePlanUnitOnce(bc, "Drone @9", UnitTypes::Zerg_Drone, bc.macro.startPosition, d8two);
+		BrickPtr d10 = Bricks::makePlanUnitOnce(bc, "Drone @10", UnitTypes::Zerg_Drone, bc.macro.startPosition, d9);
+		BrickPtr extractor = Bricks::makePlanExtractorOnce(bc, "Extractor @11", d10); // Go parallel for case extractor blocked?
+		BrickPtr z1 = Bricks::makePlanUnitOnce(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, extractor);
+		BrickPtr z2 = Bricks::makePlanUnitOnce(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z1);
+		BrickPtr z3 = Bricks::makePlanUnitOnce(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z2);
 
-		return d7;
+		return z3;
 	}
 
 	void Strategy::onFrame() {

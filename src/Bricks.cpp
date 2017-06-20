@@ -88,12 +88,12 @@ namespace BlackCrow {
 	// Brick Namespace
 	namespace Bricks {
 
-		BrickPtr newBrick(BlackCrow& bc, std::string description) {
+		BrickPtr makeBlank(BlackCrow& bc, std::string description) {
 			return std::make_shared<Brick>(bc, description);
 		}
 
-		BrickPtr newBrickBuildUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, const BWAPI::Position nearTo, const BrickPtr predecessor) {
-			BrickPtr brick = newBrick(bc, description);
+		BrickPtr makePlanUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, const BWAPI::Position nearTo, const BrickPtr predecessor) {
+			BrickPtr brick = makeBlank(bc, description);
 
 			brick->requiredOnce([&bc, type]() {
 				auto resources = bc.macro.getUnreservedResources();
@@ -101,6 +101,38 @@ namespace BlackCrow {
 			});
 
 			brick->once([&bc, type, nearTo]() { bc.macro.planUnit(type, nearTo); });
+
+			if (predecessor)
+				predecessor->successor(brick);
+
+			return brick;
+		}
+
+		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildPosition, BrickPtr predecessor) {
+			BrickPtr brick = makeBlank(bc, description);
+
+			brick->requiredOnce([&bc, type]() {
+				auto resources = bc.macro.getUnreservedResources();
+				return resources.minerals >= type.mineralPrice() && resources.gas >= type.gasPrice();
+			});
+
+			brick->once([&bc, type, buildPosition]() { bc.macro.planBuilding(type, buildPosition); });
+
+			if (predecessor)
+				predecessor->successor(brick);
+
+			return brick;
+		}
+
+		BrickPtr makePlanExtractorOnce(BlackCrow& bc, std::string description, const BrickPtr predecessor) {
+			BrickPtr brick = makeBlank(bc, description);
+
+			brick->requiredOnce([&bc]() {
+				auto resources = bc.macro.getUnreservedResources();
+				return resources.minerals >= UnitTypes::Zerg_Extractor.mineralPrice();
+			});
+
+			brick->once([&bc]() { bc.macro.buildExtractor(); });
 
 			if (predecessor)
 				predecessor->successor(brick);
