@@ -311,6 +311,7 @@ namespace BlackCrow {
 		// Strategy Manager
 		// Build Order
 
+		/*
 		if (bc.strategy.buildOrder.size() > 0) {
 			int xStart = 500;
 			int yStart = 20;
@@ -323,7 +324,7 @@ namespace BlackCrow {
 				Broodwar->drawTextScreen(xStart + 5, yStart + 17 + offset, item.c_str());
 				offset += 10;
 			}
-		}
+		}*/
 
 		{
 			// Macro Manager

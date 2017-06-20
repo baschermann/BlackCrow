@@ -1,11 +1,13 @@
 #include "Bricks.h"
+#include "BlackCrow.h"
 
 namespace BlackCrow {
 
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Brick::Brick(std::string desc) : description(desc) {}
+
+	Brick::Brick(BlackCrow& blackcrow, std::string desc) : bc(blackcrow), description(desc) {}
 
 	void Brick::run() {
 		
@@ -84,8 +86,25 @@ namespace BlackCrow {
 
 	// Brick Namespace
 	namespace Bricks {
-		BrickPtr newBrick(std::string description) {
-			return std::make_shared<Brick>(description);
+
+		BrickPtr newBrick(BlackCrow& bc, std::string description) {
+			return std::make_shared<Brick>(bc, description);
+		}
+
+		BrickPtr newBrickBuildUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::Position nearTo, BrickPtr predecessor) {
+			BrickPtr brick = newBrick(bc, description);
+
+			brick->requirement([&]() {
+				auto resources = bc.macro.getUnreservedResources();
+				return type.mineralPrice() >= resources.minerals && type.gasPrice() >= resources.gas && bc.macro.getUnreservedLarvaeAmount() >= 1;
+			});
+
+			brick->once([&]() { bc.macro.planUnit(type, nearTo); });
+
+			if (predecessor)
+				predecessor->successor(brick);
+
+			return brick;
 		}
 	}
 }

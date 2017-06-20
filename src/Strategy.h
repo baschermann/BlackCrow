@@ -29,14 +29,14 @@ namespace BlackCrow {
 		Strategy(BlackCrow &parent);
 		void onStart();
 		void onFrame();
-		void dynamicDecision();
+		//void dynamicDecision();
 
 		// Build Order
-		std::list<BWAPI::UnitType> buildOrder;
+		//std::list<BWAPI::UnitType> buildOrder;
 		BuildOrder bo;
 
 		// Unit Mix
-		double droneProbability = 1; // 1 = 100%
+		double droneProbability = 1; // 1 drone before round is being reset
 		UnitMixPtr unitMix = nullptr;
 
 		// Decision decisions
@@ -50,10 +50,12 @@ namespace BlackCrow {
 		bool initialScoutStarted = false;
 		std::unique_ptr<Brick> start;
 
+		BrickPtr buildorderOverpool(BrickPtr predecessor);
+
 		// Buildorder
-		BuildOrder getStartBuildOrder();
-		void fillBuildOrder(BuildOrder build);
-		void fillBuildOrderItem(BWAPI::UnitType item);
-		void followBuildOrder();
+		//BuildOrder getStartBuildOrder();
+		//void fillBuildOrder(BuildOrder build);
+		//void fillBuildOrderItem(BWAPI::UnitType item);
+		//void followBuildOrder();
 	};
 }

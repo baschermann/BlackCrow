@@ -9,7 +9,7 @@ namespace BlackCrow {
 
 	class Brick {
 	public:
-		Brick(std::string desc);
+		Brick(BlackCrow& blackcrow, std::string desc);
 		void run();
 		
 		std::vector<std::function<bool(void)>> requirements;
@@ -54,6 +54,7 @@ namespace BlackCrow {
 		void disableSelfWhenActive(BrickPtr disabler);
 
 	private:
+		BlackCrow& bc;
 		std::string description;
 		bool requirementsMet = false;
 		bool oncesHaveRun = false;
@@ -64,6 +65,7 @@ namespace BlackCrow {
 	};
 
 	namespace Bricks {
-		BrickPtr newBrick(std::string description);
+		BrickPtr newBrick(BlackCrow& bc, std::string description);
+		BrickPtr newBrickBuildUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::Position nearTo, BrickPtr predecessor);
 	}
 }
