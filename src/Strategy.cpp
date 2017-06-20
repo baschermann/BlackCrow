@@ -19,55 +19,102 @@ namespace BlackCrow {
 	}
 
 	void Strategy::onStart() {
-		//fillBuildOrder(getStartBuildOrder());
-
+		
+		// Buildorders against enemy Race
+		// Protoss
 		BrickPtr protossBo = Bricks::makeBlank(bc, "Enemy Protoss BO");
 		protossBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
-		protossBo->once([]() { Broodwar->sendText("Protoss brick once!"); });
 		start.successor(protossBo);
+		BrickPtr protossBoLast = buildorderOverpool(protossBo);
 
+		// Terran
 		BrickPtr terranBo = Bricks::makeBlank(bc, "Enemy Terran BO");
 		terranBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Terran"; });
-		terranBo->once([]() { Broodwar->sendText("Terran brick once!"); });
 		start.successor(terranBo);
+		BrickPtr terranBoLast = buildorderTwelveHatch(terranBo);
 
+		// Zerg
 		BrickPtr zergBo = Bricks::makeBlank(bc, "Enemy Zerg BO");
 		zergBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Zerg"; });
-		zergBo->once([]() { Broodwar->sendText("Zerg brick once!"); });
 		start.successor(zergBo);
+		BrickPtr zergBoLast = buildorderNinePool(zergBo);
 
+		// Random
 		BrickPtr randomBo = Bricks::makeBlank(bc, "Random BO");
 		randomBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Unknown"; });
 		randomBo->once([&]() { Broodwar->sendText("Random brick once!"); });
 		start.successor(randomBo);
-		buildorderOverpool(randomBo);
+		BrickPtr randomBoLast = buildorderOverpool(randomBo);
 
+		// Disable race specific openings when enemy plays random
 		protossBo->disableSelfWhenActive(randomBo);
 		terranBo->disableSelfWhenActive(randomBo);
 		zergBo->disableSelfWhenActive(randomBo);
 
+		// Go dynamic from here
 		BrickPtr dynamicStart = Bricks::makeBlank(bc, "Dynamic decisions");
+		dynamicStart->once([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
 
 		unitMix->set(BWAPI::UnitTypes::Zerg_Drone, 1, true);
 
 	}
 
 	BrickPtr Strategy::buildorderOverpool(BrickPtr predecessor) {
-		BrickPtr d4 = Bricks::makePlanUnitOnce(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition, predecessor);
-		BrickPtr d5 = Bricks::makePlanUnitOnce(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition, d4);
-		BrickPtr d6 = Bricks::makePlanUnitOnce(bc, "Drone @6", UnitTypes::Zerg_Drone, bc.macro.startPosition, d5);
-		BrickPtr d7 = Bricks::makePlanUnitOnce(bc, "Drone @7", UnitTypes::Zerg_Drone, bc.macro.startPosition, d6);
-		BrickPtr d8 = Bricks::makePlanUnitOnce(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, d7);
-		BrickPtr overlord = Bricks::makePlanUnitOnce(bc, "Overlord @9", UnitTypes::Zerg_Overlord, bc.macro.startPosition, d8);
-		BrickPtr pool = Bricks::makePlanBuildingOnce(bc, "Pool @9", UnitTypes::Zerg_Spawning_Pool, bc.builder.getBuildingSpot(UnitTypes::Zerg_Spawning_Pool), overlord);
-		BrickPtr d8two = Bricks::makePlanUnitOnce(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, pool);
-		BrickPtr d9 = Bricks::makePlanUnitOnce(bc, "Drone @9", UnitTypes::Zerg_Drone, bc.macro.startPosition, d8two);
-		BrickPtr d10 = Bricks::makePlanUnitOnce(bc, "Drone @10", UnitTypes::Zerg_Drone, bc.macro.startPosition, d9);
-		BrickPtr extractor = Bricks::makePlanExtractorOnce(bc, "Extractor @11", d10); // Go parallel for case extractor blocked?
-		BrickPtr z1 = Bricks::makePlanUnitOnce(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, extractor);
-		BrickPtr z2 = Bricks::makePlanUnitOnce(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z1);
-		BrickPtr z3 = Bricks::makePlanUnitOnce(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z2);
+		BrickPtr d4			= Bricks::makePlanUnitOnce		(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition, predecessor);
+		BrickPtr d5			= Bricks::makePlanUnitOnce		(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition, d4);
+		BrickPtr d6			= Bricks::makePlanUnitOnce		(bc, "Drone @6", UnitTypes::Zerg_Drone, bc.macro.startPosition, d5);
+		BrickPtr d7			= Bricks::makePlanUnitOnce		(bc, "Drone @7", UnitTypes::Zerg_Drone, bc.macro.startPosition, d6);
+		BrickPtr d8			= Bricks::makePlanUnitOnce		(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, d7);
+		BrickPtr overlord	= Bricks::makePlanUnitOnce		(bc, "Overlord @9", UnitTypes::Zerg_Overlord, bc.macro.startPosition, d8);
+		BrickPtr pool		= Bricks::makePlanBuildingOnce	(bc, "Pool @9", UnitTypes::Zerg_Spawning_Pool, bc.builder.getBuildingSpot(UnitTypes::Zerg_Spawning_Pool), overlord);
+		BrickPtr d8two		= Bricks::makePlanUnitOnce		(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, pool);
+		BrickPtr d9			= Bricks::makePlanUnitOnce		(bc, "Drone @9", UnitTypes::Zerg_Drone, bc.macro.startPosition, d8two);
+		BrickPtr d10		= Bricks::makePlanUnitOnce		(bc, "Drone @10", UnitTypes::Zerg_Drone, bc.macro.startPosition, d9);
+		BrickPtr extractor	= Bricks::makePlanExtractorOnce	(bc, "Extractor @11", d10); // Go parallel for case extractor blocked?
+		BrickPtr z1			= Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, extractor);
+		BrickPtr z2			= Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z1);
+		BrickPtr z3			= Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z2);
 
+		return z3;
+	}
+
+	BrickPtr Strategy::buildorderTwelveHatch(BrickPtr predecessor) {
+		BrickPtr d4 =			Bricks::makePlanUnitOnce		(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition, predecessor);
+		BrickPtr d5 =			Bricks::makePlanUnitOnce		(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition, d4);
+		BrickPtr d6 =			Bricks::makePlanUnitOnce		(bc, "Drone @6", UnitTypes::Zerg_Drone, bc.macro.startPosition, d5);
+		BrickPtr d7 =			Bricks::makePlanUnitOnce		(bc, "Drone @7", UnitTypes::Zerg_Drone, bc.macro.startPosition, d6);
+		BrickPtr d8 =			Bricks::makePlanUnitOnce		(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, d7);
+		BrickPtr overlord =		Bricks::makePlanUnitOnce		(bc, "Overlord @9", UnitTypes::Zerg_Overlord, bc.macro.startPosition, d8);
+		BrickPtr d9 =			Bricks::makePlanUnitOnce		(bc, "Drone @9", UnitTypes::Zerg_Drone, bc.macro.startPosition, overlord);
+		BrickPtr d10 =			Bricks::makePlanUnitOnce		(bc, "Drone @10", UnitTypes::Zerg_Drone, bc.macro.startPosition, d9);
+		BrickPtr d11 =			Bricks::makePlanUnitOnce		(bc, "Drone @11", UnitTypes::Zerg_Drone, bc.macro.startPosition, d10);
+		BrickPtr d12 =			Bricks::makePlanUnitOnce		(bc, "Drone @12", UnitTypes::Zerg_Drone, bc.macro.startPosition, d11);
+		BrickPtr hatchery =		Bricks::makePlanBuildingOnce	(bc, "Hatchery @12", UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery, false), d12);
+		BrickPtr pool =			Bricks::makePlanBuildingOnce	(bc, "Pool @11", UnitTypes::Zerg_Spawning_Pool, bc.builder.getBuildingSpot(UnitTypes::Zerg_Spawning_Pool, false), hatchery);
+		BrickPtr extractor =	Bricks::makePlanExtractorOnce	(bc, "Extractor @10", pool); // Go parallel for case extractor blocked?
+		BrickPtr z1 =			Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, extractor);
+		BrickPtr z2 =			Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z1);
+		BrickPtr z3 =			Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z2);
+
+		return z3;
+	}
+
+	BrickPtr Strategy::buildorderNinePool(BrickPtr predecessor) {
+
+		BrickPtr d4 =			Bricks::makePlanUnitOnce		(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition, predecessor);
+		BrickPtr d5 =			Bricks::makePlanUnitOnce		(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition, d4);
+		BrickPtr d6 =			Bricks::makePlanUnitOnce		(bc, "Drone @6", UnitTypes::Zerg_Drone, bc.macro.startPosition, d5);
+		BrickPtr d7 =			Bricks::makePlanUnitOnce		(bc, "Drone @7", UnitTypes::Zerg_Drone, bc.macro.startPosition, d6);
+		BrickPtr d8 =			Bricks::makePlanUnitOnce		(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, d7);
+		BrickPtr pool =			Bricks::makePlanBuildingOnce	(bc, "Pool @9", UnitTypes::Zerg_Spawning_Pool, bc.builder.getBuildingSpot(UnitTypes::Zerg_Spawning_Pool, false), d8);
+		BrickPtr d8two =		Bricks::makePlanUnitOnce		(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, pool);
+		BrickPtr extractor =	Bricks::makePlanExtractorOnce	(bc, "Extractor @9", d8two); // Go parallel for case extractor blocked?
+		BrickPtr overlord =		Bricks::makePlanUnitOnce		(bc, "Overlord @8", UnitTypes::Zerg_Overlord, bc.macro.startPosition, extractor);
+		BrickPtr d8three =		Bricks::makePlanUnitOnce		(bc, "Drone @8", UnitTypes::Zerg_Drone, bc.macro.startPosition, overlord);
+		BrickPtr z1 =			Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, d8three);
+		BrickPtr z2 =			Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z1);
+		BrickPtr z3 =			Bricks::makePlanUnitOnce		(bc, "Zergling @10", UnitTypes::Zerg_Zergling, bc.macro.startPosition, z2);
+		
 		return z3;
 	}
 

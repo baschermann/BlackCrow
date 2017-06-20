@@ -51,6 +51,8 @@ namespace BlackCrow {
 		Brick start;
 
 		BrickPtr buildorderOverpool(BrickPtr predecessor);
+		BrickPtr buildorderTwelveHatch(BrickPtr predecessor);
+		BrickPtr buildorderNinePool(BrickPtr predecessor);
 
 		// Buildorder
 		//BuildOrder getStartBuildOrder();
