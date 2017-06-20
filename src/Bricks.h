@@ -9,7 +9,7 @@ namespace BlackCrow {
 
 	class Brick {
 	public:
-		Brick();
+		Brick(std::string desc);
 		void run();
 		
 		std::vector<std::function<bool(void)>> requirements;
@@ -17,6 +17,12 @@ namespace BlackCrow {
 		std::vector<std::function<void(void)>> onces;
 		std::vector<std::function<void(void)>> repeats;
 		std::vector<std::shared_ptr<Brick>> successors;
+		std::vector<std::shared_ptr<Brick>> disablers;
+
+		// Misc
+		void setDescription(std::string description);
+		std::string getDescription();
+		bool hasRequirementsMet();
 
 		// Requirements
 		template <class UnaryPredicate>
@@ -44,10 +50,20 @@ namespace BlackCrow {
 		// Successor
 		void successor(BrickPtr requirement);
 
-		
+		// Disable
+		void disableSelfWhenActive(BrickPtr disabler);
+
+	private:
+		std::string description;
+		bool requirementsMet = false;
+		bool oncesHaveRun = false;
+		bool disabled = false;
+
+		bool checkConditions();
+		bool checkDisablers();
 	};
 
 	namespace Bricks {
-		BrickPtr newBrick();
+		BrickPtr newBrick(std::string description);
 	}
 }

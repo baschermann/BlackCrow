@@ -15,25 +15,36 @@ namespace BlackCrow {
 
 	Strategy::Strategy(BlackCrow &parent) : bc(parent) {
 		unitMix = std::make_unique<UnitMix>(bc);
-		start = std::make_unique<Brick>();
+		start = std::make_unique<Brick>("START");
 
-		BrickPtr protoss = Bricks::newBrick();
-		protoss->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
-		protoss->once([]() { Broodwar->sendText("Protoss brick once!"); });
-		protoss->repeat([]() { Broodwar->sendText("Protoss brick repeat!"); });
-		start->successor(protoss);
+		Broodwar->sendText("Enemy Race: \"%s\"", Broodwar->enemy()->getRace().getName().c_str());
 
-		BrickPtr terran = Bricks::newBrick();
-		terran->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
-		terran->once([]() { Broodwar->sendText("Terran brick once!"); });
-		terran->repeat([]() { Broodwar->sendText("Terran brick repeat!"); });
-		start->successor(terran);
+		BrickPtr protossBo = Bricks::newBrick("Enemy Protoss BO");
+		protossBo->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
+		protossBo->once([]() { Broodwar->sendText("Protoss brick once!"); });
+		start->successor(protossBo);
 
-		BrickPtr zerg = Bricks::newBrick();
-		zerg->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
-		zerg->once([]() { Broodwar->sendText("Zerg brick once!"); });
-		zerg->repeat([]() { Broodwar->sendText("Zerg brick repeat!"); });
-		start->successor(zerg);
+		
+		BrickPtr terranBo = Bricks::newBrick("Enemy Terran BO");
+		terranBo->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Terran"; });
+		terranBo->once([]() { Broodwar->sendText("Terran brick once!"); });
+		start->successor(terranBo);
+
+		BrickPtr zergBo = Bricks::newBrick("Enemy Zerg BO");
+		zergBo->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Zerg"; });
+		zergBo->once([]() { Broodwar->sendText("Zerg brick once!"); });
+		start->successor(zergBo);
+
+		BrickPtr randomBo = Bricks::newBrick("Random BO");
+		randomBo->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Unknown"; });
+		randomBo->once([]() { Broodwar->sendText("Random brick once!"); });
+		start->successor(randomBo);
+		
+		protossBo->disableSelfWhenActive(randomBo);
+		terranBo->disableSelfWhenActive(randomBo);
+		zergBo->disableSelfWhenActive(randomBo);
+
+		BrickPtr dynamicStart = Bricks::newBrick("Dynamic decisions");
 	}
 
 	void Strategy::onStart() {
@@ -43,6 +54,8 @@ namespace BlackCrow {
 	}
 
 	void Strategy::onFrame() {
+
+		start->run();
 
 		if (buildOrder.size() > 0) {
 			followBuildOrder();
