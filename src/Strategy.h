@@ -1,8 +1,10 @@
 #pragma once
 #include <BWAPI.h>
 #include <list>
+#include <memory>
 #include "Squad.h" // Can this be moved to .cpp?
 #include "UnitMix.h" // Needed for UnitMixPtr which is a unique_ptr, can this be moved to .cpp?
+#include "Bricks.h"
 
 namespace BlackCrow {
 
@@ -46,6 +48,7 @@ namespace BlackCrow {
 	private:
 		BlackCrow &bc;
 		bool initialScoutStarted = false;
+		std::unique_ptr<Brick> start;
 
 		// Buildorder
 		BuildOrder getStartBuildOrder();

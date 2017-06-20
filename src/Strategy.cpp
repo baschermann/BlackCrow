@@ -4,6 +4,8 @@
 #include "Area.h"
 #include "Planned.h"
 #include "Macro.h"
+#include "Bricks.h"
+#include "Common.h"
 
 
 namespace BlackCrow {
@@ -13,6 +15,25 @@ namespace BlackCrow {
 
 	Strategy::Strategy(BlackCrow &parent) : bc(parent) {
 		unitMix = std::make_unique<UnitMix>(bc);
+		start = std::make_unique<Brick>();
+
+		BrickPtr protoss = Bricks::newBrick();
+		protoss->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
+		protoss->once([]() { Broodwar->sendText("Protoss brick once!"); });
+		protoss->repeat([]() { Broodwar->sendText("Protoss brick repeat!"); });
+		start->successor(protoss);
+
+		BrickPtr terran = Bricks::newBrick();
+		terran->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
+		terran->once([]() { Broodwar->sendText("Terran brick once!"); });
+		terran->repeat([]() { Broodwar->sendText("Terran brick repeat!"); });
+		start->successor(terran);
+
+		BrickPtr zerg = Bricks::newBrick();
+		zerg->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
+		zerg->once([]() { Broodwar->sendText("Zerg brick once!"); });
+		zerg->repeat([]() { Broodwar->sendText("Zerg brick repeat!"); });
+		start->successor(zerg);
 	}
 
 	void Strategy::onStart() {
@@ -60,7 +81,6 @@ namespace BlackCrow {
 					buildOrder.pop_front();
 				}
 			}
-			
 		}
 	}
 

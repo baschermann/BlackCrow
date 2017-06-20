@@ -7,12 +7,17 @@ namespace BlackCrow {
 
 	Brick::Brick() {}
 
-	void Brick::onStart() {
+	void Brick::run() {
 
 	}
 
-	void Brick::onFrame() {
-
+	void Brick::successor(BrickPtr successor) {
+		successors.push_back(successor);
 	}
 
+	namespace Bricks {
+		BrickPtr newBrick() {
+			return std::make_shared<Brick>();
+		}
+	}
 }

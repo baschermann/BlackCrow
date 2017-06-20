@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include <memory>
+#include "Common.h"
 
 namespace BlackCrow {
 
@@ -9,19 +10,44 @@ namespace BlackCrow {
 	class Brick {
 	public:
 		Brick();
-		void onStart();
-		void onFrame();
+		void run();
 		
-		//std::vector<std::unique_ptr<?????>> requirementPreds;
-		std::vector<std::unique_ptr<Brick>> requirementBricks;
+		std::vector<std::function<bool(void)>> requirements;
+		std::vector<std::function<bool(void)>> conditions;
+		std::vector<std::function<void(void)>> onces;
+		std::vector<std::function<void(void)>> repeats;
+		std::vector<std::shared_ptr<Brick>> successors;
 
+		// Requirements
 		template <class UnaryPredicate>
 		void requirement(UnaryPredicate requirement) {
-			// save UnaryPredicate in requirementPreds for later calling
+			requirements.push_back(requirement);
+		}
+		
+		// Conditions
+		template <class UnaryPredicate>
+		void condition(UnaryPredicate condition) {
+			conditions.push_back(requirement);
 		}
 
-		void requirement(Brick requirement) {
-
+		// Actions
+		template <class UnaryFunction>
+		void once(UnaryFunction action) {
+			onces.push_back(action);
 		}
+
+		template <class UnaryFunction>
+		void repeat(UnaryFunction action) {
+			repeats.push_back(action);
+		}
+
+		// Successor
+		void successor(BrickPtr requirement);
+
+		
 	};
+
+	namespace Bricks {
+		BrickPtr newBrick();
+	}
 }
