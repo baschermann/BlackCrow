@@ -6,14 +6,13 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-
 	Brick::Brick(BlackCrow& blackcrow, std::string desc) : bc(blackcrow), description(desc) {}
 
 	void Brick::run() {
 		
 		if (!disabled)
 			if (checkDisablers())
-				disabled = true;
+				disabled = true; // Use std algorithm any_of etc.
 
 		if (!disabled) {
 
@@ -39,6 +38,8 @@ namespace BlackCrow {
 				for (auto action : repeats)
 					action();
 			}
+
+			int minerals = bc.macro.getUnreservedResources().minerals;
 
 			// Run Successors
 			for (auto successor : successors)
@@ -91,15 +92,15 @@ namespace BlackCrow {
 			return std::make_shared<Brick>(bc, description);
 		}
 
-		BrickPtr newBrickBuildUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::Position nearTo, BrickPtr predecessor) {
+		BrickPtr newBrickBuildUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, const BWAPI::Position nearTo, const BrickPtr predecessor) {
 			BrickPtr brick = newBrick(bc, description);
 
-			brick->requirement([&]() {
+			brick->requiredOnce([&bc, type]() {
 				auto resources = bc.macro.getUnreservedResources();
-				return type.mineralPrice() >= resources.minerals && type.gasPrice() >= resources.gas && bc.macro.getUnreservedLarvaeAmount() >= 1;
+				return resources.minerals >= type.mineralPrice() && resources.gas >= type.gasPrice() && bc.macro.getUnreservedLarvaeAmount() >= 1;
 			});
 
-			brick->once([&]() { bc.macro.planUnit(type, nearTo); });
+			brick->once([&bc, type, nearTo]() { bc.macro.planUnit(type, nearTo); });
 
 			if (predecessor)
 				predecessor->successor(brick);

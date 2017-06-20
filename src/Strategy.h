@@ -48,7 +48,7 @@ namespace BlackCrow {
 	private:
 		BlackCrow &bc;
 		bool initialScoutStarted = false;
-		std::unique_ptr<Brick> start;
+		Brick start;
 
 		BrickPtr buildorderOverpool(BrickPtr predecessor);
 

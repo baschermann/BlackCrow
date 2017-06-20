@@ -26,7 +26,7 @@ namespace BlackCrow {
 
 		// Requirements
 		template <class UnaryPredicate>
-		void requirement(UnaryPredicate requirement) {
+		void requiredOnce(UnaryPredicate requirement) {
 			requirements.push_back(requirement);
 		}
 		

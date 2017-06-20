@@ -13,7 +13,7 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Strategy::Strategy(BlackCrow &parent) : bc(parent) {
+	Strategy::Strategy(BlackCrow &parent) : bc(parent), start(bc, "START") {
 		unitMix = std::make_unique<UnitMix>(bc);
 		
 	}
@@ -21,27 +21,25 @@ namespace BlackCrow {
 	void Strategy::onStart() {
 		//fillBuildOrder(getStartBuildOrder());
 
-		start = std::make_unique<Brick>(bc, "START");
-
 		BrickPtr protossBo = Bricks::newBrick(bc, "Enemy Protoss BO");
-		protossBo->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
+		protossBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
 		protossBo->once([]() { Broodwar->sendText("Protoss brick once!"); });
-		start->successor(protossBo);
+		start.successor(protossBo);
 
 		BrickPtr terranBo = Bricks::newBrick(bc, "Enemy Terran BO");
-		terranBo->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Terran"; });
+		terranBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Terran"; });
 		terranBo->once([]() { Broodwar->sendText("Terran brick once!"); });
-		start->successor(terranBo);
+		start.successor(terranBo);
 
 		BrickPtr zergBo = Bricks::newBrick(bc, "Enemy Zerg BO");
-		zergBo->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Zerg"; });
+		zergBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Zerg"; });
 		zergBo->once([]() { Broodwar->sendText("Zerg brick once!"); });
-		start->successor(zergBo);
+		start.successor(zergBo);
 
 		BrickPtr randomBo = Bricks::newBrick(bc, "Random BO");
-		randomBo->requirement([]() { return Broodwar->enemy()->getRace().getName() == "Unknown"; });
+		randomBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Unknown"; });
 		randomBo->once([&]() { Broodwar->sendText("Random brick once!"); });
-		start->successor(randomBo);
+		start.successor(randomBo);
 		buildorderOverpool(randomBo);
 
 		protossBo->disableSelfWhenActive(randomBo);
@@ -51,6 +49,7 @@ namespace BlackCrow {
 		BrickPtr dynamicStart = Bricks::newBrick(bc, "Dynamic decisions");
 
 		unitMix->set(BWAPI::UnitTypes::Zerg_Drone, 1, true);
+
 	}
 
 	BrickPtr Strategy::buildorderOverpool(BrickPtr predecessor) {
@@ -63,7 +62,7 @@ namespace BlackCrow {
 	}
 
 	void Strategy::onFrame() {
-		start->run();
+		start.run();
 	}
 
 	/*
