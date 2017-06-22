@@ -16,7 +16,7 @@ namespace BlackCrow {
 
 	Debug::Debug(BlackCrow &parent) : bc(parent) {
 
-		showBaseInfo = true;
+		showBaseInfo = false;
 		showBuildable = false;
 		fastDrawBuildable = false;
 		showManagerInfos = true;
@@ -157,6 +157,11 @@ namespace BlackCrow {
 					Broodwar->drawLineMap(sunit->unit->getPosition(), eu->position, darkRed);
 			}
 		}
+
+		// Builder Debug
+		//int i = 0;
+		//for (BWAPI::TilePosition p : bc.builder.positions)
+		//	Broodwar->drawTextMap(Position(p), "%i", i++);
 
 		// Minerals
 		//Broodwar->drawTextScreen(10, 65, "Average Smoothed Minerals: %f", bc.macro.getAverageMineralsPerFrame());
@@ -346,7 +351,7 @@ namespace BlackCrow {
 
 				std::shared_ptr<PlannedUnit> plannedUnit = std::dynamic_pointer_cast<PlannedUnit>(planned);
 				//if (plannedUnit && plannedUnit->unit)
-					//Broodwar->drawTextScreen(xStart - 25, yStart + 13 * i, std::to_string(plannedUnit->unit->getID()).c_str());
+					//Broodwar->drawTextScreen(xStart - 22, yStart + 13 * i, std::to_string(plannedUnit->unit->getID()).c_str());
 				
 				i++;
 			}

@@ -52,30 +52,35 @@ namespace BlackCrow {
 	// ### Planned ###
 	PlannedUnitPtr Macro::planUnit(BWAPI::UnitType type, BWAPI::Position nearTo) {
 		auto unit = std::make_shared<PlannedUnit>(bc, type, nearTo);
+		unit->onFrame();
 		plannedStuff.push_back(unit);
 		return unit;
 	}
 
 	PlannedBuildingPtr Macro::planBuilding(BWAPI::UnitType type, BWAPI::TilePosition buildPosition) {
 		auto building = std::make_shared<PlannedBuilding>(bc, type, buildPosition);
+		building->onFrame();
 		plannedStuff.push_back(building);
 		return building;
 	}
 
 	PlannedExtractorPtr Macro::planExtractor(Geyser& geyser) {
 		auto extractor = std::make_shared<PlannedExtractor>(bc, geyser);
+		extractor->onFrame();
 		plannedStuff.push_back(extractor);
 		return extractor;
 	}
 
 	PlannedTechPtr Macro::planTech(BWAPI::TechType tech) {
 		auto pTech = std::make_shared<PlannedTech>(bc, tech);
+		pTech->onFrame();
 		plannedStuff.push_back(pTech);
 		return pTech;
 	}
 
 	PlannedUpgradePtr Macro::planUpgrade(BWAPI::UpgradeType upgrade, int level) {
 		auto pUpgrade = std::make_shared<PlannedUpgrade>(bc, upgrade, level);
+		pUpgrade->onFrame();
 		plannedStuff.push_back(pUpgrade);
 		return pUpgrade;
 	}

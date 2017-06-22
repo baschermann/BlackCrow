@@ -100,7 +100,9 @@ namespace BlackCrow {
 				return resources.minerals >= type.mineralPrice() && resources.gas >= type.gasPrice() && bc.macro.getUnreservedLarvaeAmount() >= 1;
 			});
 
-			brick->once([&bc, type, nearTo]() { bc.macro.planUnit(type, nearTo); });
+			brick->once([&bc, type, nearTo, description]() { 
+				bc.macro.planUnit(type, nearTo); 
+			});
 
 			if (predecessor)
 				predecessor->successor(brick);
@@ -108,7 +110,7 @@ namespace BlackCrow {
 			return brick;
 		}
 
-		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildPosition, BrickPtr predecessor) {
+		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildSearchStart, bool inMineralLine, BrickPtr predecessor) {
 			BrickPtr brick = makeBlank(bc, description);
 
 			brick->requiredOnce([&bc, type]() {
@@ -116,7 +118,7 @@ namespace BlackCrow {
 				return resources.minerals >= type.mineralPrice() && resources.gas >= type.gasPrice();
 			});
 
-			brick->once([&bc, type, buildPosition]() { bc.macro.planBuilding(type, buildPosition); });
+			brick->once([&bc, type, buildSearchStart]() { bc.macro.planBuilding(type, bc.builder.getBuildingSpot(type, buildSearchStart, false)); });
 
 			if (predecessor)
 				predecessor->successor(brick);
