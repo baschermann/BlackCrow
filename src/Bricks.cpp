@@ -6,7 +6,7 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Brick::Brick(BlackCrow& blackcrow, std::string desc) : bc(blackcrow), description(desc) {}
+	Brick::Brick(std::string desc) : description(desc) {}
 
 	void Brick::run() {
 		
@@ -38,8 +38,6 @@ namespace BlackCrow {
 				for (auto action : repeats)
 					action();
 			}
-
-			int minerals = bc.macro.getUnreservedResources().minerals;
 
 			// Run Successors
 			for (auto successor : successors)
@@ -88,12 +86,12 @@ namespace BlackCrow {
 	// Brick Namespace
 	namespace Bricks {
 
-		BrickPtr makeBlank(BlackCrow& bc, std::string description) {
-			return std::make_shared<Brick>(bc, description);
+		BrickPtr makeBlank(std::string description) {
+			return std::make_shared<Brick>(description);
 		}
 
 		BrickPtr makePlanUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, const BWAPI::Position nearTo) {
-			BrickPtr brick = makeBlank(bc, description);
+			BrickPtr brick = makeBlank(description);
 
 			brick->requiredOnce([&bc, type]() {
 				auto resources = bc.macro.getUnreservedResources();
@@ -108,7 +106,7 @@ namespace BlackCrow {
 		}
 
 		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildSearchStart, bool inMineralLine) {
-			BrickPtr brick = makeBlank(bc, description);
+			BrickPtr brick = makeBlank(description);
 
 			brick->requiredOnce([&bc, type]() {
 				auto resources = bc.macro.getUnreservedResources();
@@ -121,7 +119,7 @@ namespace BlackCrow {
 		}
 
 		BrickPtr makePlanExtractorOnce(BlackCrow& bc, std::string description) {
-			BrickPtr brick = makeBlank(bc, description);
+			BrickPtr brick = makeBlank(description);
 
 			brick->requiredOnce([&bc]() {
 				auto resources = bc.macro.getUnreservedResources();

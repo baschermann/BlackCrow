@@ -44,9 +44,9 @@ namespace BlackCrow {
 		double productionMultiplierGas = 0;
 		double productionMultiplierLarvae = 0;
 		double productionMultiplier = 0;
-
-	private:
 		BlackCrow &bc;
+	private:
+		
 		bool initialScoutStarted = false;
 		Brick start;
 
