@@ -65,9 +65,30 @@ namespace BlackCrow {
 	};
 
 	namespace Bricks {
+		struct SucessorInPredecessorChain {
+		private:
+			BrickPtr pr = nullptr;
+
+		public:
+			SucessorInPredecessorChain(BrickPtr predecessor) {
+				pr = predecessor;
+			}
+
+			void set(BrickPtr successor) {
+				if (pr)
+					pr->successor(successor);
+
+				pr = successor;
+			};
+
+			BrickPtr getLastSuccessor() {
+				return pr;
+			}
+		};
+
 		BrickPtr makeBlank(BlackCrow& bc, std::string description);
-		BrickPtr makePlanUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::Position nearTo, BrickPtr predecessor);
-		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildSearchStart, bool inMineralLine, BrickPtr predecessor);
-		BrickPtr makePlanExtractorOnce(BlackCrow& bc, std::string description, const BrickPtr predecessor);
+		BrickPtr makePlanUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::Position nearTo);
+		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildSearchStart, bool inMineralLine);
+		BrickPtr makePlanExtractorOnce(BlackCrow& bc, std::string description);
 	}
 }

@@ -189,7 +189,11 @@ namespace BlackCrow {
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
 		Broodwar->drawTextScreen(175, 0, "LSpeed: %i", BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]);
-		Broodwar->drawTextScreen(230, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, Broodwar->elapsedTime() % 60);
+		int seconds = Broodwar->elapsedTime() % 60;
+		if(seconds >= 10)
+			Broodwar->drawTextScreen(230, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, seconds);
+		else
+			Broodwar->drawTextScreen(230, 0, "Time: %i:0%i", Broodwar->elapsedTime() / 60, seconds);
 		Broodwar->setTextSize(BWAPI::Text::Size::Default);
 
 		// Draw Mouse Tile Position

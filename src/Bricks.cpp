@@ -92,7 +92,7 @@ namespace BlackCrow {
 			return std::make_shared<Brick>(bc, description);
 		}
 
-		BrickPtr makePlanUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, const BWAPI::Position nearTo, const BrickPtr predecessor) {
+		BrickPtr makePlanUnitOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, const BWAPI::Position nearTo) {
 			BrickPtr brick = makeBlank(bc, description);
 
 			brick->requiredOnce([&bc, type]() {
@@ -104,13 +104,10 @@ namespace BlackCrow {
 				bc.macro.planUnit(type, nearTo); 
 			});
 
-			if (predecessor)
-				predecessor->successor(brick);
-
 			return brick;
 		}
 
-		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildSearchStart, bool inMineralLine, BrickPtr predecessor) {
+		BrickPtr makePlanBuildingOnce(BlackCrow& bc, std::string description, BWAPI::UnitType type, BWAPI::TilePosition buildSearchStart, bool inMineralLine) {
 			BrickPtr brick = makeBlank(bc, description);
 
 			brick->requiredOnce([&bc, type]() {
@@ -120,13 +117,10 @@ namespace BlackCrow {
 
 			brick->once([&bc, type, buildSearchStart]() { bc.macro.planBuilding(type, bc.builder.getBuildingSpot(type, buildSearchStart, false)); });
 
-			if (predecessor)
-				predecessor->successor(brick);
-
 			return brick;
 		}
 
-		BrickPtr makePlanExtractorOnce(BlackCrow& bc, std::string description, const BrickPtr predecessor) {
+		BrickPtr makePlanExtractorOnce(BlackCrow& bc, std::string description) {
 			BrickPtr brick = makeBlank(bc, description);
 
 			brick->requiredOnce([&bc]() {
@@ -135,9 +129,6 @@ namespace BlackCrow {
 			});
 
 			brick->once([&bc]() { bc.macro.buildExtractor(); });
-
-			if (predecessor)
-				predecessor->successor(brick);
 
 			return brick;
 		}
