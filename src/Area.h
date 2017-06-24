@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include <BWEM/bwem.h>
 #include "EnemyUnit.h"
+#include "Common.h"
 
 namespace BlackCrow {
 
@@ -17,11 +18,12 @@ namespace BlackCrow {
 		bool isEnemyOwned;
 		std::vector<BWAPI::TilePosition> associatedTiles;
 
-		void addEnemyBuilding(const EnemyUnit& enemyBuilding);
-		void removeEnemyBuilding(const EnemyUnit& enemyBuilding);
+		void addEnemyBuilding(EnemyUnitPtr enemyBuilding);
+		void removeEnemyBuilding(EnemyUnitPtr enemyBuilding);
 
 	private:
 		BlackCrow &bc;
-		std::vector<EnemyUnit> enemyBuildings;
+		std::vector<EnemyUnitPtr> enemyBuildings;
+		std::vector<EnemyUnitPtr> enemyUnits;
 	};
 }

@@ -10,7 +10,7 @@ namespace BlackCrow {
 	SquadUnit::SquadUnit(BlackCrow& blackCrow, BWAPI::Unit unit) : bc(blackCrow), unit(unit) {}
 
 	void SquadUnit::onFrame() {
-		EnemyUnit* enemyUnit = bc.enemy.getEnemy(attackTargetId);
+		EnemyUnitPtr enemyUnit = bc.enemy.getEnemy(attackTargetId);
 
 		if (enemyUnit) {
 			Unit enemyBwapiUnit = Broodwar->getUnit(enemyUnit->id);
@@ -57,7 +57,7 @@ namespace BlackCrow {
 	}
 
 	bool SquadUnit::hasTarget() {
-		EnemyUnit* enemyUnit = bc.enemy.getEnemy(attackTargetId);
+		EnemyUnitPtr enemyUnit = bc.enemy.getEnemy(attackTargetId);
 
 		if (enemyUnit)
 			return true;

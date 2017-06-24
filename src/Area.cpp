@@ -9,11 +9,11 @@ namespace BlackCrow {
 
 	Area::Area(BlackCrow &parent, const BWEM::Area& bwemArea) : bc(parent), bwemArea(bwemArea), isEnemyOwned(false) {}
 
-	void Area::addEnemyBuilding(const EnemyUnit& enemyBuilding) {
+	void Area::addEnemyBuilding(EnemyUnitPtr enemyBuilding) {
 		enemyBuildings.push_back(enemyBuilding);
 	}
 
-	void Area::removeEnemyBuilding(const EnemyUnit& enemyBuilding) {
+	void Area::removeEnemyBuilding(EnemyUnitPtr enemyBuilding) {
 		enemyBuildings.erase(std::remove(enemyBuildings.begin(), enemyBuildings.end(), enemyBuilding), enemyBuildings.end());
 	}
 }

@@ -26,6 +26,10 @@ namespace BlackCrow {
 		initialScout->once([&bc = bc]() { bc.army.startInitialScout(); });
 		start.successor(initialScout);
 		
+		// Being rushed
+		BrickPtr rushDefense = Bricks::makeBlank("Rush Defense");
+		rushDefense->requiredOnce([&bc = bc]() { return bc.enemy.isRushing(); });
+
 		// Buildorders against enemy Race
 		// Protoss
 		BrickPtr protossBo = Bricks::makeBlank("Enemy Protoss BO");
@@ -56,7 +60,7 @@ namespace BlackCrow {
 		terranBo->disableSelfWhenActive(randomBo);
 		zergBo->disableSelfWhenActive(randomBo);
 
-		// Go dynamic from here
+		// Go dynamic
 		BrickPtr dynamicStart = Bricks::makeBlank("Dynamic decisions");
 		dynamicStart->once([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
 
@@ -64,6 +68,8 @@ namespace BlackCrow {
 		terranBoLast->successor(dynamicStart);
 		zergBoLast->successor(dynamicStart);
 		randomBoLast->successor(dynamicStart);
+
+
 	}
 
 	BrickPtr Strategy::buildorderOverpool(BrickPtr predecessor) {

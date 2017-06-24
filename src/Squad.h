@@ -65,7 +65,7 @@ namespace BlackCrow {
 		State state = State::MOVE;
 
 		// Functions
-		bool isFightingBuilding(const EnemyUnit& eu);
+		bool isFightingBuilding(const EnemyUnitPtr eu);
 
 	};
 

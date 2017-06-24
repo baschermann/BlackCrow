@@ -135,7 +135,7 @@ namespace BlackCrow {
 				closeWorkers.push_back(worker);
 		}
 
-		EnemyUnit* eu = bc.enemy.getClosestEnemy(workerUnderAttack->unit->getPosition(), [](EnemyUnit& eu) { return true; });
+		EnemyUnitPtr eu = bc.enemy.getClosestEnemy(workerUnderAttack->unit->getPosition(), [](EnemyUnitPtr eu) { return true; });
 		if (eu) {
 			for (WorkerPtr worker : closeWorkers) {
 				if (!worker->unit->isAttacking()) {

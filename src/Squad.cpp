@@ -166,28 +166,28 @@ namespace BlackCrow {
 
 		case State::ATTACK:
 			for (SquadUnitPtr sunit : sunits) {
-				EnemyUnit* enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [&](const EnemyUnit& eu) { 
-					Unit unit = Broodwar->getUnit(eu.id);
-					return !eu.type.isFlyer()
-						&& !eu.type.isInvincible()
-						&& !eu.isGhost
-						&& eu.type != UnitTypes::Zerg_Larva
-						&& eu.type != UnitTypes::Zerg_Egg
-						&& eu.type != UnitTypes::Zerg_Lurker_Egg
+				EnemyUnitPtr enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [&](const EnemyUnitPtr eu) { 
+					Unit unit = Broodwar->getUnit(eu->id);
+					return !eu->type.isFlyer()
+						&& !eu->type.isInvincible()
+						&& !eu->isGhost
+						&& eu->type != UnitTypes::Zerg_Larva
+						&& eu->type != UnitTypes::Zerg_Egg
+						&& eu->type != UnitTypes::Zerg_Lurker_Egg
 						&& !(!unit->isDetected() && unit->isBurrowed())
 						&& (!unit->getType().isBuilding() || isFightingBuilding(eu));
 						// Add under Disruption Web
 				});
 
 				if (!enemyUnit) {
-					enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnit& eu) {
-						Unit unit = Broodwar->getUnit(eu.id);
-						return !eu.type.isFlyer()
-							&& !eu.type.isInvincible()
-							&& !eu.isGhost
-							&& eu.type != UnitTypes::Zerg_Larva
-							&& eu.type != UnitTypes::Zerg_Egg
-							&& eu.type != UnitTypes::Zerg_Lurker_Egg
+					enemyUnit = bc.enemy.getClosestEnemy(sunit->unit->getPosition(), [](const EnemyUnitPtr eu) {
+						Unit unit = Broodwar->getUnit(eu->id);
+						return !eu->type.isFlyer()
+							&& !eu->type.isInvincible()
+							&& !eu->isGhost
+							&& eu->type != UnitTypes::Zerg_Larva
+							&& eu->type != UnitTypes::Zerg_Egg
+							&& eu->type != UnitTypes::Zerg_Lurker_Egg
 							&& !(!unit->isDetected() && unit->isBurrowed());
 						// Add under Disruption Web
 					});
@@ -208,11 +208,11 @@ namespace BlackCrow {
 		}
 	}
 
-	bool AttackSquad::isFightingBuilding(const EnemyUnit& eu) {
-		return (eu.type == UnitTypes::Zerg_Sunken_Colony
-			|| eu.type == UnitTypes::Zerg_Spore_Colony
-			|| eu.type == UnitTypes::Protoss_Photon_Cannon
-			|| eu.type == UnitTypes::Terran_Bunker)
-			&& Broodwar->getUnit(eu.id)->isCompleted();
+	bool AttackSquad::isFightingBuilding(const EnemyUnitPtr eu) {
+		return (eu->type == UnitTypes::Zerg_Sunken_Colony
+			|| eu->type == UnitTypes::Zerg_Spore_Colony
+			|| eu->type == UnitTypes::Protoss_Photon_Cannon
+			|| eu->type == UnitTypes::Terran_Bunker)
+			&& Broodwar->getUnit(eu->id)->isCompleted();
 	}
 }

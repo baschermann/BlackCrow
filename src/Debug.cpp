@@ -142,7 +142,7 @@ namespace BlackCrow {
 		int yOffset = 0;
 		Color darkRed = Color(96, 0, 0);
 		for (SquadUnitPtr sunit : bc.army.sunits) {
-			EnemyUnit* eu = bc.enemy.getEnemy(sunit->attackTargetId);
+			EnemyUnitPtr eu = bc.enemy.getEnemy(sunit->attackTargetId);
 
 			if (eu) {
 				if (sunit->unit->isSelected()) {
@@ -409,18 +409,18 @@ namespace BlackCrow {
 	void Debug::drawEnemyUnits() {
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 
-		for (EnemyUnit eu : bc.enemy.enemies) {
-			Unit unit = Broodwar->getUnit(eu.id);
+		for (EnemyUnitPtr eu : bc.enemy.enemies) {
+			Unit unit = Broodwar->getUnit(eu->id);
 			bool a = unit->isVisible();
 
 			if (!unit->isVisible()) {
-				if (eu.type.isBuilding()) {
-					Broodwar->drawBoxMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, eu.tilePosition.x * 32 + eu.type.tileWidth() * 32, eu.tilePosition.y * 32 + eu.type.tileHeight() * 32, Colors::Grey, false);
-					Broodwar->drawTextMap(eu.tilePosition.x * 32, eu.tilePosition.y * 32, getShortName(eu.type.getName()).c_str());
+				if (eu->type.isBuilding()) {
+					Broodwar->drawBoxMap(eu->tilePosition.x * 32, eu->tilePosition.y * 32, eu->tilePosition.x * 32 + eu->type.tileWidth() * 32, eu->tilePosition.y * 32 + eu->type.tileHeight() * 32, Colors::Grey, false);
+					Broodwar->drawTextMap(eu->tilePosition.x * 32, eu->tilePosition.y * 32, getShortName(eu->type.getName()).c_str());
 				} else {
-					Color borderColor = eu.isGhost ? Colors::Black : Colors::Grey;
-					Broodwar->drawBoxMap(eu.position.x, eu.position.y, eu.position.x + eu.type.width(), eu.position.y + eu.type.height(), borderColor, false);
-					Broodwar->drawTextMap(eu.position.x, eu.position.y, getShortName(eu.type.getName()).c_str());
+					Color borderColor = eu->isGhost ? Colors::Black : Colors::Grey;
+					Broodwar->drawBoxMap(eu->position.x, eu->position.y, eu->position.x + eu->type.width(), eu->position.y + eu->type.height(), borderColor, false);
+					Broodwar->drawTextMap(eu->position.x, eu->position.y, getShortName(eu->type.getName()).c_str());
 				}
 			}
 		}

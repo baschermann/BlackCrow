@@ -15,19 +15,19 @@ namespace BlackCrow {
 
 	void Enemy::enemyDiscovered(BWAPI::Unit unit) {
 		if (Broodwar->self()->isEnemy(unit->getPlayer())) {
-			EnemyUnit* enemy = getEnemy(unit->getID());
+			EnemyUnitPtr enemy = getEnemy(unit->getID());
 
 			if (!enemy) {
-				enemies.emplace_back();
-				EnemyUnit& newEnemy = enemies.back();
+				enemies.emplace_back(std::make_shared<EnemyUnit>());
+				EnemyUnitPtr newEnemy = enemies.back();
 
-				newEnemy.id = unit->getID();
-				newEnemy.isVisible = true;
-				newEnemy.lastSeen = Broodwar->getFrameCount();
-				newEnemy.type = unit->getType();
-				newEnemy.tilePosition = BWAPI::TilePositions::Invalid;
+				newEnemy->id = unit->getID();
+				newEnemy->isVisible = true;
+				newEnemy->lastSeen = Broodwar->getFrameCount();
+				newEnemy->type = unit->getType();
+				newEnemy->tilePosition = BWAPI::TilePositions::Invalid;
 
-				enemy = &newEnemy;
+				enemy = newEnemy;
 			}
 
 			if (enemy->type.isBuilding()) {
@@ -49,42 +49,42 @@ namespace BlackCrow {
 		auto euIt = enemies.begin();
 
 		while (euIt != enemies.end()) {
-			EnemyUnit& eu = *euIt;
-			Unit unit = Broodwar->getUnit(eu.id);
+			EnemyUnitPtr eu = *euIt;
+			Unit unit = Broodwar->getUnit(eu->id);
 
 			if (unit->isVisible()) {
-				eu.isGhost = false;
+				eu->isGhost = false;
 
-				if (eu.type.isBuilding() && (unit->getTilePosition().x != eu.tilePosition.x || unit->getTilePosition().y != eu.tilePosition.y)) {
-					eu.tilePosition.x = unit->getTilePosition().x;
-					eu.tilePosition.y = unit->getTilePosition().y;
+				if (eu->type.isBuilding() && (unit->getTilePosition().x != eu->tilePosition.x || unit->getTilePosition().y != eu->tilePosition.y)) {
+					eu->tilePosition.x = unit->getTilePosition().x;
+					eu->tilePosition.y = unit->getTilePosition().y;
 				} else {
-					eu.position.x = unit->getPosition().x;
-					eu.position.y = unit->getPosition().y;
+					eu->position.x = unit->getPosition().x;
+					eu->position.y = unit->getPosition().y;
 				}
 
-				if (unit->getType() != eu.type) {
-					eu.type = unit->getType();
+				if (unit->getType() != eu->type) {
+					eu->type = unit->getType();
 				}
 
-				eu.lastSeen = Broodwar->getFrameCount();	
+				eu->lastSeen = Broodwar->getFrameCount();
 
 				// Handling dead extractors
-				if (eu.type == UnitTypes::Resource_Vespene_Geyser) {
+				if (eu->type == UnitTypes::Resource_Vespene_Geyser) {
 					//Broodwar->sendText("Dead Geyser detected. Deleting that thing");
 					euIt = enemies.erase(euIt);
 				} else {
 					euIt++;
 				}
 			} else {
-				eu.isVisible = false;
+				eu->isVisible = false;
 
 				// Handling a ghost
-				if (Broodwar->isVisible(TilePosition(eu.position))) {
-					eu.isGhost = true;
+				if (Broodwar->isVisible(TilePosition(eu->position))) {
+					eu->isGhost = true;
 				} else {
-					if (!eu.type.isBuilding() && eu.lastSeen + ghostTime(eu.type) <= Broodwar->getFrameCount()) {
-						eu.isGhost = true;
+					if (!eu->type.isBuilding() && eu->lastSeen + ghostTime(eu->type) <= Broodwar->getFrameCount()) {
+						eu->isGhost = true;
 					}
 				}
 
@@ -96,7 +96,7 @@ namespace BlackCrow {
 	void Enemy::onUnitDestroyed(BWAPI::Unit unit) {
 		auto enemyUnitIt = enemies.begin();
 		while (enemyUnitIt != enemies.end()) {
-			if (enemyUnitIt->id == unit->getID()) {
+			if ((*enemyUnitIt)->id == unit->getID()) {
 				enemies.erase(enemyUnitIt);
 				return;
 			}
@@ -105,10 +105,10 @@ namespace BlackCrow {
 		}
 	}
 
-	EnemyUnit* Enemy::getEnemy(int id) {
-		for (EnemyUnit& enemyUnit : enemies) {
-			if (enemyUnit.id == id)
-				return &enemyUnit;
+	EnemyUnitPtr Enemy::getEnemy(int id) {
+		for (EnemyUnitPtr enemyUnit : enemies) {
+			if (enemyUnit->id == id)
+				return enemyUnit;
 		}
 		return nullptr;
 	}
@@ -118,9 +118,14 @@ namespace BlackCrow {
 	}
 
 	bool Enemy::hasKnownBuilding() {
-		auto buildingIt = std::find_if(enemies.begin(), enemies.end(), [](EnemyUnit& enemyUnit) {return enemyUnit.type.isBuilding(); });
+		auto buildingIt = std::find_if(enemies.begin(), enemies.end(), [](EnemyUnitPtr enemyUnit) { return enemyUnit->type.isBuilding(); });
 		if (buildingIt != enemies.end())
 			return true;
+		return false;
+	}
+
+	bool Enemy::isRushing()
+	{
 		return false;
 	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include "Common.h"
 
 namespace BlackCrow {
 
@@ -12,26 +13,28 @@ namespace BlackCrow {
 
 		void onStart();
 		void onFrame();
-		std::list<EnemyUnit> enemies;
+		std::list<EnemyUnitPtr> enemies;
 		void enemyDiscovered(BWAPI::Unit unit);
 		void onUnitDestroyed(BWAPI::Unit unit);
 
-		EnemyUnit* getEnemy(int id);
+		EnemyUnitPtr getEnemy(int id);
 		bool hasKnownBuilding();
+		bool isRushing();
 
-		// Predicate for whether to include the unit or not
-		// bool pred(const EnemyUnit& enemyUnit)
+		// Can return nullptr
+		// Predicate for whether to include the unit or not.
+		// bool pred(const EnemyUnitPtr enemyUnit)
 		template<class UnaryPredicate>
-		EnemyUnit* getClosestEnemy(BWAPI::Position closestTo, UnaryPredicate condition) {
-			EnemyUnit* closestEnemy = nullptr;
+		EnemyUnitPtr getClosestEnemy(BWAPI::Position closestTo, UnaryPredicate condition) {
+			EnemyUnitPtr closestEnemy = nullptr;
 			double closestDistance = std::numeric_limits<double>().max();
 
-			for (EnemyUnit& enemyUnit : enemies) {
+			for (EnemyUnitPtr enemyUnit : enemies) {
 				if (condition(enemyUnit)) {
-					double distance = Util::distance(closestTo, enemyUnit.position);
+					double distance = Util::distance(closestTo, enemyUnit->position);
 
 					if (distance < closestDistance) {
-						closestEnemy = &enemyUnit;
+						closestEnemy = enemyUnit;
 						closestDistance = distance;
 					}
 				}
