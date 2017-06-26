@@ -91,19 +91,13 @@ namespace BlackCrow {
 	}
 
 	void ScoutSquad::addExpansions(bool addIslands) {
-		auto startAreaGroupId = bc.bwem.GetArea(TilePosition(bc.macro.startPosition))->GroupId();
-
-		for (const BWEM::Area& area : bc.bwem.Areas()) {
-			for (const BWEM::Base& base : area.Bases()) {
-				if (!Broodwar->isVisible(base.Location())) {
-					if (addIslands) {
-						addScoutPosition(base.Location());
-					} else {
-						if (area.GroupId() == startAreaGroupId)
-							addScoutPosition(base.Location());
-					}
-				}
-			}
+		for (const Base& base : bc.macro.bases) {
+			if (!Broodwar->isVisible(base.bwemBase.Location()))
+				if (addIslands)
+					addScoutPosition(base.bwemBase.Location());
+				else
+					if(!base.isIsland)
+						addScoutPosition(base.bwemBase.Location());
 		}
 	}
 

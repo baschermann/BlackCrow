@@ -25,7 +25,8 @@ namespace BlackCrow {
 		}
 
 		// Is Island
-		//TODO
+		auto startAreaGroupId = bc.bwem.GetArea(TilePosition(bc.macro.startPosition))->GroupId();
+		isIsland = area->bwemArea.GroupId() == startAreaGroupId ? false : true;
 	}
 
 	void Base::onFrame() {

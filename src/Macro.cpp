@@ -12,9 +12,9 @@ namespace BlackCrow {
 	Macro::Macro(BlackCrow &parent) : bc(parent) {}
 
 	void Macro::onStart() {
+		startPosition = getStartingHatchery()->getPosition();
 		bases.reserve(bc.bwem.BaseCount()); // Cause of the Big Bug of April 2017. Minerals would be copied and workers would have the wrong pointers to it
 		initBases();
-		startPosition = getStartingHatchery()->getPosition();
 	}
 
 	void Macro::onFrame() {
