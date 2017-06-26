@@ -530,12 +530,11 @@ namespace BlackCrow {
 	}
 
 	void DebugPerformanceDisplay::updateAndDraw(int xStart, int yStart) {
-
-		// Get Current Logical Speed
-		// Read from BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]; the local game speed, see Additional Setup.txt in the Project Folder.
-
-		//int logicalFrameSpeed = 8; // Use this if no additional setup was done
 		int logicalFrameSpeed = BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0];
+
+		// Don't show if speed is 0
+		if (logicalFrameSpeed == 0)
+			return;
 
 		//Framerates
 		if (frameTimeHistory.size() >= Broodwar->getFPS() * .5) {
