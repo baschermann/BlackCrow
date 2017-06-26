@@ -45,7 +45,7 @@ namespace BlackCrow {
 	void Builder::setBuildable(int xStart, int xEnd, int yStart, int yEnd, bool buildable) {
 		for (int x = xStart; x <= xEnd; x++) {
 			for (int y = yStart; y <= yEnd; y++) {
-				if (x >= 0 && x < bc.map.tileWidth && y >= 0 && y < bc.map.tileHeight)
+				if (x >= 0 && x < Broodwar->mapWidth() && y >= 0 && y < Broodwar->mapHeight())
 					bc.map.mapTiles[x][y].buildable = buildable;
 			}
 		}
@@ -54,7 +54,7 @@ namespace BlackCrow {
 	void Builder::setResourceBuildable(int xStart, int xEnd, int yStart, int yEnd, bool buildable) {
 		for (int x = xStart; x <= xEnd; x++) {
 			for (int y = yStart; y <= yEnd; y++) {
-				if (x >= 0 && x < bc.map.tileWidth && y >= 0 && y < bc.map.tileHeight)
+				if (x >= 0 && x < Broodwar->mapWidth() && y >= 0 && y < Broodwar->mapHeight())
 					bc.map.mapTiles[x][y].resourceBuildable = buildable;
 			}
 		}
@@ -65,7 +65,7 @@ namespace BlackCrow {
 
 		for (int x = xStart; x <= xEnd; x++) {
 			for (int y = yStart; y <= yEnd; y++) {
-				if (x >= 0 && x < bc.map.tileWidth && y >= 0 && y < bc.map.tileHeight)
+				if (x >= 0 && x < Broodwar->mapWidth() && y >= 0 && y < Broodwar->mapHeight())
 					if (Util::distance(x * 32 + 16, y * 32 + 16, base.x, base.y) + 42 < distanceBetween)
 						bc.map.mapTiles[x][y].mineralLine = buildable;
 			}
@@ -96,7 +96,7 @@ namespace BlackCrow {
 
 		positions.clear(); // DEBUG
 
-		for (int i = 0; i < bc.map.tileWidth * bc.map.tileHeight; i++) {
+		for (int i = 0; i < Broodwar->mapWidth() * Broodwar->mapHeight(); i++) {
 			if (canBuildTypeAt(type, spiral.x + searchPosition.x, spiral.y + searchPosition.y, inMineralLine))
 				return TilePosition(spiral.x + searchPosition.x, spiral.y + searchPosition.y);
 			else
@@ -108,7 +108,7 @@ namespace BlackCrow {
 	}
 
 	bool Builder::canBuildTypeAt(UnitType type, int x, int y, bool inMineralLine) {
-		if (x < 0 || x >= bc.map.tileWidth || y < 0 || y >= bc.map.tileHeight || !bc.map.mapTiles[x][y].buildable)
+		if (x < 0 || x >= Broodwar->mapWidth() || y < 0 || y >= Broodwar->mapHeight() || !bc.map.mapTiles[x][y].buildable)
 			return false;
 
 		positions.push_back(TilePosition(x, y)); // DEBUG
@@ -118,7 +118,7 @@ namespace BlackCrow {
 		for (int tilePosX = x; tilePosX < x + type.tileWidth(); tilePosX++) {
 			for (int tilePosY = y; tilePosY < y + type.tileHeight(); tilePosY++) {
 
-				if (tilePosX < 0 || tilePosX >= bc.map.tileWidth || tilePosY < 0 || tilePosY >= bc.map.tileHeight) {
+				if (tilePosX < 0 || tilePosX >= Broodwar->mapWidth() || tilePosY < 0 || tilePosY >= Broodwar->mapHeight()) {
 					return false;
 				}
 

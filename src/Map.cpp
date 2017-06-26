@@ -8,40 +8,39 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	Map::Map(BlackCrow &parent) : bc(parent) {
-		tileWidth = Broodwar->mapWidth();
-		tileHeight = Broodwar->mapHeight();
-
-		mapTiles = std::vector<std::vector<Cell>>(tileWidth, std::vector<Cell>(tileHeight));
+		mapTiles = std::vector<std::vector<Cell>>(Broodwar->mapWidth(), std::vector<Cell>(Broodwar->mapHeight()));
 	}
 
 	void Map::onStart() {
 
 		// Create Ares
 		for (const BWEM::Area& bwemArea : bc.bwem.Areas()) {
-			areas.emplace_back(Area(bc, bwemArea));
+			areas.emplace_back(std::make_shared<Area>(bc, bwemArea));
 		}
 
 		// Set Tile Information
-		for (int x = 0; x < tileWidth; x++) {
-			for (int y = 0; y < tileHeight; y++) {
+		for (int x = 0; x < Broodwar->mapWidth(); x++) {
+			for (int y = 0; y < Broodwar->mapHeight(); y++) {
 				mapTiles[x][y].buildable = Broodwar->isBuildable(x, y, true);
 				mapTiles[x][y].resourceBuildable = true;
 				mapTiles[x][y].mineralLine = true;
 
-				// Let the areas know which tiles they contain
-				// ??? Is this more effective to use its own loop to not screw with the cache of mapTiles?
 				int areaId = bc.bwem.GetTile(TilePosition(x, y)).AreaId();
 				if (areaId >= 1)
-					getArea(areaId).associatedTiles.emplace_back(TilePosition(x, y));
+					getArea(areaId)->associatedTiles.emplace_back(TilePosition(x, y));
 			}
 		}
 	}
 
-	Area& Map::getArea(int id) {
+	AreaPtr Map::getArea(int id) {
 		return areas[id - 1];
 	}
 
-	Area& Map::getArea(const BWEM::Area& bwemArea) {
+	AreaPtr Map::getArea(const BWEM::Area& bwemArea) {
 		return areas[bwemArea.Id() - 1];
+	}
+
+	AreaPtr Map::getNearestArea(TilePosition position) {
+		return getArea(*bc.bwem.GetNearestArea(position));
 	}
 }

@@ -13,7 +13,7 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Base::Base(BlackCrow& parent, const BWEM::Base& bwemBase, Area& area) : bc(parent), bwemBase(bwemBase), area(area) {
+	Base::Base(BlackCrow& parent, const BWEM::Base& bwemBase, AreaPtr area) : bc(parent), bwemBase(bwemBase), area(area) {
 		// Minerals
 		for (const BWEM::Mineral* bwemMineral : bwemBase.Minerals()) {
 			minerals.emplace_back(bwemMineral);

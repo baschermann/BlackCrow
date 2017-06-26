@@ -47,6 +47,8 @@ namespace BlackCrow {
 		BlackCrow &bc;
 
 		double ghostTime(BWAPI::UnitType type);
+		void setEnemyUnitArea(const EnemyUnitPtr& eu, const AreaPtr& area);
+		void removeEnemyUnitFromArea(const EnemyUnitPtr& eu, const AreaPtr& area);
 	};
 
 }

@@ -2,24 +2,24 @@
 #include <BWEM/bwem.h>
 #include "Geyser.h"
 #include "Mineral.h"
+#include "Common.h"
 
 namespace BlackCrow {
 
 	class BlackCrow;
-	class Area;
 	class Worker;
 	class Geyser;
 	class Mineral;
 
 	class Base {
 	public:
-		Base(BlackCrow& parent, const BWEM::Base& bwemBase, Area& area);
+		Base(BlackCrow& parent, const BWEM::Base& bwemBase, AreaPtr area);
 		void onFrame();
 		bool onUnitDestroyed(BWAPI::Unit unit);
 
 		const BWEM::Base& bwemBase;
 		BWAPI::Unit hatchery = nullptr;
-		Area& area;
+		AreaPtr area;
 		bool isIsland;
 		bool isExpanding = false;
 		bool selfSustained = false;

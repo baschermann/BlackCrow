@@ -7,7 +7,6 @@
 namespace BlackCrow {
 
 	class BlackCrow;
-	class EnemyUnit;
 	class BWEM::Area;
 
 	class Area {
@@ -15,15 +14,13 @@ namespace BlackCrow {
 		Area(BlackCrow &parent, const BWEM::Area& bwemArea);
 		const BWEM::Area& bwemArea;
 
-		bool isEnemyOwned;
 		std::vector<BWAPI::TilePosition> associatedTiles;
-
-		void addEnemyBuilding(EnemyUnitPtr enemyBuilding);
-		void removeEnemyBuilding(EnemyUnitPtr enemyBuilding);
+		std::vector<EnemyUnitPtr> enemies;
 
 	private:
 		BlackCrow &bc;
-		std::vector<EnemyUnitPtr> enemyBuildings;
-		std::vector<EnemyUnitPtr> enemyUnits;
 	};
+
+	bool operator==(const Area& left, const Area& right);
+		
 }

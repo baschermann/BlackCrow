@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include "Common.h"
 
 namespace BlackCrow {
 
@@ -8,7 +9,7 @@ namespace BlackCrow {
 		EnemyUnit();
 
 		int id;
-		int areaId;
+		AreaPtr area;
 		BWAPI::UnitType type;
 		BWAPI::Position position;
 		BWAPI::TilePosition tilePosition;

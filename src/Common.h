@@ -14,6 +14,7 @@ namespace BlackCrow {
 	class PlannedTech;
 	class Brick;
 	class EnemyUnit;
+	class Area;
 
 	typedef std::shared_ptr<Worker> WorkerPtr;
 	typedef std::shared_ptr<SquadUnit> SquadUnitPtr;
@@ -28,4 +29,5 @@ namespace BlackCrow {
 	typedef std::shared_ptr<PlannedTech> PlannedTechPtr;
 	typedef std::shared_ptr<Brick> BrickPtr;
 	typedef std::shared_ptr<EnemyUnit> EnemyUnitPtr;
+	typedef std::shared_ptr<Area> AreaPtr;
 }

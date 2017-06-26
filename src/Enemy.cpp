@@ -15,9 +15,9 @@ namespace BlackCrow {
 
 	void Enemy::enemyDiscovered(BWAPI::Unit unit) {
 		if (Broodwar->self()->isEnemy(unit->getPlayer())) {
-			EnemyUnitPtr enemy = getEnemy(unit->getID());
+			EnemyUnitPtr eu = getEnemy(unit->getID());
 
-			if (!enemy) {
+			if (!eu) {
 				enemies.emplace_back(std::make_shared<EnemyUnit>());
 				EnemyUnitPtr newEnemy = enemies.back();
 
@@ -26,21 +26,22 @@ namespace BlackCrow {
 				newEnemy->lastSeen = Broodwar->getFrameCount();
 				newEnemy->type = unit->getType();
 				newEnemy->tilePosition = BWAPI::TilePositions::Invalid;
+				setEnemyUnitArea(newEnemy, bc.map.getNearestArea(TilePosition(unit->getPosition())));
 
-				enemy = newEnemy;
+				eu = newEnemy;
 			}
 
-			if (enemy->type.isBuilding()) {
-				if (enemy->tilePosition.x != unit->getTilePosition().x || enemy->tilePosition.y != unit->getTilePosition().y) {
-					enemy->tilePosition = unit->getTilePosition();
-
-					assert(enemy->tilePosition != BWAPI::TilePositions::Invalid);
-
-					const BWEM::Area* area = bc.bwem.GetNearestArea(enemy->tilePosition);
-					enemy->areaId = area->Id();
+			if (eu->type.isBuilding()) {
+				if (eu->tilePosition.x != unit->getTilePosition().x || eu->tilePosition.y != unit->getTilePosition().y) {
+					eu->tilePosition = unit->getTilePosition();
+					assert(eu->tilePosition != BWAPI::TilePositions::Invalid);
+					setEnemyUnitArea(eu, bc.map.getNearestArea(eu->tilePosition));
 				}
 			} else {
-				enemy->position = unit->getPosition();
+				if (eu->position != unit->getPosition()) {
+					eu->position = unit->getPosition();
+					setEnemyUnitArea(eu, bc.map.getNearestArea(TilePosition(unit->getPosition())));
+				}
 			}
 		}
 	}
@@ -58,9 +59,11 @@ namespace BlackCrow {
 				if (eu->type.isBuilding() && (unit->getTilePosition().x != eu->tilePosition.x || unit->getTilePosition().y != eu->tilePosition.y)) {
 					eu->tilePosition.x = unit->getTilePosition().x;
 					eu->tilePosition.y = unit->getTilePosition().y;
+					setEnemyUnitArea(eu, bc.map.getNearestArea(eu->tilePosition));
 				} else {
 					eu->position.x = unit->getPosition().x;
 					eu->position.y = unit->getPosition().y;
+					setEnemyUnitArea(eu, bc.map.getNearestArea(TilePosition(unit->getPosition())));
 				}
 
 				if (unit->getType() != eu->type) {
@@ -97,10 +100,11 @@ namespace BlackCrow {
 		auto enemyUnitIt = enemies.begin();
 		while (enemyUnitIt != enemies.end()) {
 			if ((*enemyUnitIt)->id == unit->getID()) {
+				EnemyUnitPtr& eu = *enemyUnitIt;
+				removeEnemyUnitFromArea(eu, eu->area);
 				enemies.erase(enemyUnitIt);
 				return;
-			}
-			else
+			} else
 				enemyUnitIt++;
 		}
 	}
@@ -124,8 +128,18 @@ namespace BlackCrow {
 		return false;
 	}
 
-	bool Enemy::isRushing()
-	{
+	bool Enemy::isRushing() {
 		return false;
+	}
+
+	void Enemy::setEnemyUnitArea(const EnemyUnitPtr& eu, const AreaPtr& area) {
+		removeEnemyUnitFromArea(eu, eu->area);
+		eu->area = area;
+		area->enemies.push_back(eu);
+	}
+
+	void Enemy::removeEnemyUnitFromArea(const EnemyUnitPtr& eu, const AreaPtr& area) {
+		if (eu->area)
+			area->enemies.erase(std::remove(area->enemies.begin(), area->enemies.end(), eu), area->enemies.end());
 	}
 }

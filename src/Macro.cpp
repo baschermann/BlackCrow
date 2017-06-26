@@ -373,7 +373,7 @@ namespace BlackCrow {
 	void Macro::initBases() {
 		for (const BWEM::Area& bwemArea : bc.bwem.Areas()) {
 			
-			Area& area = bc.map.getArea(bwemArea);
+			AreaPtr area = bc.map.getArea(bwemArea);
 			for (const BWEM::Base& bwemBase : bwemArea.Bases()) {
 				bases.emplace_back(bc, bwemBase, area); // Big Bug of April 2017. Member me!
 				Base& base = bases.back();

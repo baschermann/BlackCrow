@@ -170,6 +170,9 @@ namespace BlackCrow {
 		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
 		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
 
+		
+
+
 		/* 
 		// Unit Mix and Strategy calculation numbers
 		int ox = 250;
@@ -184,6 +187,12 @@ namespace BlackCrow {
 		Broodwar->drawTextScreen(ox, yx + 60, "prod multi larvae: %f", bc.strategy.productionMultiplierLarvae);
 		Broodwar->drawTextScreen(ox, yx + 70, "prod multi: %f", bc.strategy.productionMultiplier);
 		*/
+
+		// Draw Area information
+		for (const AreaPtr& area : bc.map.areas) {
+			auto center = (area->bwemArea.TopLeft() + area->bwemArea.BottomRight()) / 2;
+			Broodwar->drawTextMap(Position(center), "%i enemy units", area->enemies.size());
+		}
 
 		// Draw APM, LSpeed, Time
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);

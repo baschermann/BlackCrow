@@ -1,4 +1,5 @@
 #include "EnemyUnit.h"
+#include "BlackCrow.h"
 
 namespace BlackCrow {
 

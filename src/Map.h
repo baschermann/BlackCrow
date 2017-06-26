@@ -22,15 +22,14 @@ namespace BlackCrow {
 			bool chokepoint;
 		};
 
-		int tileWidth; // Tiles TILE_SIZE or 32 pixels per tile
-		int tileHeight;
 		std::vector<std::vector<Cell>> mapTiles;
-		std::vector<Area> areas;
+		std::vector<AreaPtr> areas;
 
 		Map(BlackCrow &parent);
 		void onStart();
-		Area& getArea(int id);
-		Area& getArea(const BWEM::Area& bwemArea);
+		AreaPtr getArea(int id);
+		AreaPtr getArea(const BWEM::Area& bwemArea);
+		AreaPtr getNearestArea(BWAPI::TilePosition position);
 
 	private:
 		BlackCrow &bc;
