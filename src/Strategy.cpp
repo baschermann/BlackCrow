@@ -112,7 +112,7 @@ namespace BlackCrow {
 
 		// ##### Go dynamic #####
 		BrickPtr dynamicStart = Bricks::makeBlank("Dynamic decisions");
-		//dynamicStart->onceAfterRequirements([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
+		dynamicStart->onceAfterRequirements([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
 
 		protossBoLast->runAfterRequirements(dynamicStart);
 		terranBoLast->runAfterRequirements(dynamicStart);
@@ -205,6 +205,17 @@ namespace BlackCrow {
 		buildSpawningPool->repeatWhenTrue([&bc = bc]() { bc.macro.planBuilding(UnitTypes::Zerg_Spawning_Pool, TilePosition(bc.macro.startPosition)); });
 		predecessor->runAfterRequirements(buildSpawningPool);
 
+		// Build a extractor if none exists
+		BrickPtr buildExtractor = Bricks::makeBlank("Build extractor");
+		buildExtractor->condition([&bc = bc]() {
+			return bc.macro.hasAmountOf(UnitTypes::Zerg_Extractor) <= 0
+				&& bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Extractor) <= 0
+				&& bc.macro.hasAmountOf(UnitTypes::Zerg_Drone) >= 9;
+		});
+		buildExtractor->onceWhenTrue([]() { Broodwar->sendText("Build extractor!"); });
+		buildExtractor->repeatWhenTrue([&bc = bc]() { bc.macro.buildExtractor(); });
+		predecessor->runAfterRequirements(buildExtractor);
+
 		// Drones in the unitMix
 		BrickPtr dronesInUnitMix = Bricks::makeBlank("Add/Remove drones in UnitMix");
 		dronesInUnitMix->condition([&bc = bc]() { 
@@ -288,7 +299,7 @@ namespace BlackCrow {
 		BrickPtr buildSupply = Bricks::makeBlank("Build supply");
 		buildSupply->condition([&bc = bc, &unitMix = unitMix, unitMixData]() {
 			return bc.macro.getFreeSupply() / (unitMix->supplyPerFrame() * unitMixData->productionMultiplier) < UnitTypes::Zerg_Overlord.buildTime()
-				&& bc.macro.getFreeSupply() <= 20;
+				&& bc.macro.getFreeSupply() <= 10;
 		});
 		buildSupply->repeatWhenTrue([&bc = bc]() { bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition); });
 		checkUnitMix->runAfterRequirements(buildSupply);
