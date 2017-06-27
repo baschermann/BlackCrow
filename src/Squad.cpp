@@ -169,6 +169,7 @@ namespace BlackCrow {
 						&& eu->type != UnitTypes::Zerg_Egg
 						&& eu->type != UnitTypes::Zerg_Lurker_Egg
 						&& !(!unit->isDetected() && unit->isBurrowed())
+						&& !(unit->isCloaked() && !unit->isDetected())
 						&& (!unit->getType().isBuilding() || isFightingBuilding(eu));
 						// Add under Disruption Web
 				});
@@ -182,6 +183,8 @@ namespace BlackCrow {
 							&& eu->type != UnitTypes::Zerg_Larva
 							&& eu->type != UnitTypes::Zerg_Egg
 							&& eu->type != UnitTypes::Zerg_Lurker_Egg
+							&& !(!unit->isDetected() && unit->isBurrowed())
+							&& !(unit->isCloaked() && !unit->isDetected())
 							&& !(!unit->isDetected() && unit->isBurrowed());
 						// Add under Disruption Web
 					});
