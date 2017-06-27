@@ -115,8 +115,11 @@ namespace BlackCrow {
 			return;
 
 		if (!droneOrBuilding) {
-			droneOrBuilding = bc.macro.getDroneForBuilding(Position(buildPosition));
-			if (!droneOrBuilding)
+			if (Broodwar->self()->minerals() >= type.mineralPrice() && Broodwar->self()->gas() >= type.gasPrice()) {
+				droneOrBuilding = bc.macro.getDroneForBuilding(Position(buildPosition));
+				if (!droneOrBuilding)
+					return;
+			} else
 				return;
 		}
 
