@@ -29,7 +29,7 @@ namespace BlackCrow {
 
 		// ##### Rush Defense #####
 		BrickPtr rushDefense = Bricks::makeBlank("Rush Defense");
-		rushDefense->requiredOnce([&bc = bc]() { return bc.map.getNearestArea(TilePosition(bc.macro.startPosition))->enemies.size() >= 2 || Broodwar->getKeyState(K_R); });
+		rushDefense->requiredOnce([&bc = bc]() { return bc.map.getNearestArea(TilePosition(bc.macro.startPosition))->enemies.size() >= 2; });
 		//rushDefense->once([]() { Broodwar->sendText("Rush defense activated!"); });
 		start.runAfterRequirements(rushDefense);
 
@@ -68,7 +68,7 @@ namespace BlackCrow {
 
 		// # Rush defense end #
 		BrickPtr rushDefenseEnd = Bricks::makeBlank("Rush Defense End");
-		rushDefenseEnd->requiredOnce([rushDefense]() { return rushDefense->isActive() && Broodwar->getKeyState(K_E); });
+		rushDefenseEnd->requiredOnce([rushDefense]() { return rushDefense->isActive(); });
 		rushDefenseEnd->requiredOnce([&bc = bc]() { return bc.map.getNearestArea(TilePosition(bc.macro.startPosition))->enemies.size() == 0; });
 		//rushDefenseEnd->once([]() { Broodwar->sendText("Rush Defense ended"); });
 		rushDefense->disableSelfWhenActive(rushDefenseEnd);
