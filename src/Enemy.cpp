@@ -128,10 +128,6 @@ namespace BlackCrow {
 		return false;
 	}
 
-	bool Enemy::isRushing() {
-		return false;
-	}
-
 	void Enemy::setEnemyUnitArea(const EnemyUnitPtr& eu, const AreaPtr& area) {
 		removeEnemyUnitFromArea(eu, eu->area);
 		eu->area = area;

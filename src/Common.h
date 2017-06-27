@@ -21,7 +21,7 @@ namespace BlackCrow {
 	typedef std::shared_ptr<Squad> SquadPtr;
 	typedef std::shared_ptr<ScoutSquad> ScoutSquadPtr;
 	typedef std::shared_ptr<AttackSquad> AttackSquadPtr;
-	typedef std::unique_ptr<UnitMix> UnitMixPtr;
+	typedef std::shared_ptr<UnitMix> UnitMixPtr;
 	typedef std::shared_ptr<PlannedUnit> PlannedUnitPtr;
 	typedef std::shared_ptr<PlannedBuilding> PlannedBuildingPtr;
 	typedef std::shared_ptr<PlannedExtractor> PlannedExtractorPtr;

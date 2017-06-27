@@ -11,13 +11,6 @@ namespace BlackCrow {
 	public:
 		Brick(std::string desc);
 		void run();
-		
-		std::vector<std::function<bool(void)>> requirements;
-		std::vector<std::function<bool(void)>> conditions;
-		std::vector<std::function<void(void)>> onces;
-		std::vector<std::function<void(void)>> repeats;
-		std::vector<std::shared_ptr<Brick>> successors;
-		std::vector<std::shared_ptr<Brick>> disablers;
 
 		// Misc
 		void setDescription(std::string description);
@@ -29,38 +22,78 @@ namespace BlackCrow {
 		void requiredOnce(UnaryPredicate requirement) {
 			requirements.push_back(requirement);
 		}
+
+		template <class UnaryFunction>
+		void onceAfterRequirements(UnaryFunction action) {
+			oncesRequirement.push_back(action);
+		}
+
+		template <class UnaryFunction>
+		void repeatAfterRequirements(UnaryFunction action) {
+			repeatsRequirement.push_back(action);
+		}
 		
 		// Conditions
 		template <class UnaryPredicate>
 		void condition(UnaryPredicate condition) {
-			conditions.push_back(requirement);
-		}
-
-		// Actions
-		template <class UnaryFunction>
-		void once(UnaryFunction action) {
-			onces.push_back(action);
+			conditions.push_back(condition);
 		}
 
 		template <class UnaryFunction>
-		void repeat(UnaryFunction action) {
-			repeats.push_back(action);
+		void onceWhenTrue(UnaryFunction action) {
+			oncesTrue.push_back(action);
+		}
+
+		template <class UnaryFunction>
+		void onceWhenFalse(UnaryFunction action) {
+			oncesFalse.push_back(action);
+		}
+
+		template <class UnaryFunction>
+		void repeatWhenTrue(UnaryFunction action) {
+			repeatsTrue.push_back(action);
+		}
+
+		template <class UnaryFunction>
+		void repeatWhenFalse(UnaryFunction action) {
+			repeatsFalse.push_back(action);
 		}
 
 		// Successor
-		void successor(BrickPtr requirement);
+		void runAfterRequirements(BrickPtr& requirement);
+		void runWhenTrue(BrickPtr& requirement);
+		void runWhenFalse(BrickPtr& requirement);
 
 		// Disable
-		void disableSelfWhenActive(BrickPtr disabler);
+		void disableSelfWhenActive(BrickPtr& disabler);
+
+		// Misc
+		const bool isActive() {
+			return requirementsMet && !disabled;
+		}
 
 	private:
+		std::vector<std::function<bool(void)>> requirements;
+		std::vector<std::function<void(void)>> oncesRequirement;
+		std::vector<std::function<void(void)>> repeatsRequirement;
+		std::vector<std::function<bool(void)>> conditions;
+		std::vector<std::function<void(void)>> oncesTrue;
+		std::vector<std::function<void(void)>> oncesFalse;
+		std::vector<std::function<void(void)>> repeatsTrue;
+		std::vector<std::function<void(void)>> repeatsFalse;
+		std::vector<std::shared_ptr<Brick>> successorsRequirement;
+		std::vector<std::shared_ptr<Brick>> successorsTrue;
+		std::vector<std::shared_ptr<Brick>> successorsFalse;
+		std::vector<std::shared_ptr<Brick>> disablers;
+
 		std::string description;
 		bool requirementsMet = false;
-		bool oncesHaveRun = false;
+		bool oncesRequirementHaveRun = false;
+		bool oncesTrueHaveRun = false;
+		bool oncesFalseHaveRun = false;
 		bool disabled = false;
 
 		bool checkConditions();
-		bool checkDisablers();
 	};
 
 	namespace Bricks {
@@ -69,13 +102,13 @@ namespace BlackCrow {
 			BrickPtr pr = nullptr;
 
 		public:
-			SucessorInPredecessorChain(BrickPtr predecessor) {
+			SucessorInPredecessorChain(BrickPtr& predecessor) {
 				pr = predecessor;
 			}
 
 			void set(BrickPtr successor) {
 				if (pr)
-					pr->successor(successor);
+					pr->runAfterRequirements(successor);
 
 				pr = successor;
 			};

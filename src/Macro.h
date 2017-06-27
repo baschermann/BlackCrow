@@ -51,6 +51,7 @@ namespace BlackCrow {
 		bool isCurrentlyPlanned(BWAPI::UpgradeType upgrade, int level = 1);
 		bool isCurrentlyPlanned(BWAPI::TechType tech);
 		std::vector<std::shared_ptr<PlannedUnit>> getPlannedUnits();
+		void removePlanned(std::shared_ptr<Planned> planned);
 		
 		// Expansions and Bases
 		Base* getSafestToExpand();
@@ -83,6 +84,7 @@ namespace BlackCrow {
 		int getUnreservedLarvaeAmount();
 
 		// Statistics and Numbers
+		int hasAmountOf(BWAPI::UnitType type);
 		Resources getUnreservedResources();
 		int getUsedSupply();
 		int getMaxSupply();

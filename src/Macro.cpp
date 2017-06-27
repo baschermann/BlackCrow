@@ -153,6 +153,10 @@ namespace BlackCrow {
 		return plannedUnits;
 	}
 
+	void Macro::removePlanned(std::shared_ptr<Planned> planned) {
+		plannedStuff.erase(std::remove(plannedStuff.begin(), plannedStuff.end(), planned), plannedStuff.end());
+	}
+
 	// ### Expansions and Bases ### // TODO Need enemy information to do this
 	Base* Macro::getSafestToExpand() {
 		return &bases.front();
@@ -312,6 +316,14 @@ namespace BlackCrow {
 	// Larva
 	int Macro::getTotalLarvaeAmount() {
 		return getAllLarvae().size();
+	}
+
+	int Macro::hasAmountOf(UnitType type) {
+		int amount = 0;
+		for (const auto unit : Broodwar->self()->getUnits())
+			if (unit->getType() == type)
+				amount++;
+		return amount;
 	}
 
 	// Can return nullptr

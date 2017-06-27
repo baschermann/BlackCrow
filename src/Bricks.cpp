@@ -11,8 +11,8 @@ namespace BlackCrow {
 	void Brick::run() {
 		
 		if (!disabled)
-			if (checkDisablers())
-				disabled = true; // Use std algorithm any_of etc.
+			if (std::any_of(disablers.begin(), disablers.end(), [](BrickPtr& brick) { return brick->hasRequirementsMet(); }))
+				disabled = true;
 
 		if (!disabled) {
 
@@ -26,45 +26,79 @@ namespace BlackCrow {
 				requirementsMet = true;
 			}
 
-			// Condition and Actions
-			if (checkConditions()) {
+			// Run onces after requirements
+			if (!oncesRequirementHaveRun) {
+				for (auto& action : oncesRequirement)
+					action();
+				oncesRequirementHaveRun = true;
+			}
 
-				if (!oncesHaveRun) {
-					for (auto action : onces)
+			// run repeats after requirements
+			for (auto& action : repeatsRequirement)
+				action();
+
+
+			// Condition
+			bool conditions = checkConditions();
+			//bool conditions = std::all_of(conditions.begin(), conditions.end(), []() {}); // TODO how does this work?
+			if (conditions) {
+
+				// Onces when true
+				if (!oncesTrueHaveRun) {
+					for (auto& action : oncesTrue)
 						action();
-					oncesHaveRun = true;
+					oncesTrueHaveRun = true;
 				}
 
-				for (auto action : repeats)
+				// Repeats when true
+				for (auto& action : repeatsTrue)
+					action();
+
+			} else {
+				// Onces when false
+				if (!oncesFalseHaveRun) {
+					for (auto& action : oncesFalse)
+						action();
+					oncesFalseHaveRun = true;
+				}
+
+				// Repeat when false
+				for (auto& action : repeatsFalse)
 					action();
 			}
 
-			// Run Successors
-			for (auto successor : successors)
+			// Run Successors after Requirements
+			for (auto& successor : successorsRequirement)
 				successor->run();
+
+			if(conditions)
+				// Run Successors when conditions are true
+				for (auto& successor : successorsTrue)
+					successor->run();
+			else
+				// Run Successors when conditions are false
+				for (auto& successor : successorsFalse)
+					successor->run();
 		}
 	}
 
-	void Brick::successor(BrickPtr successor) {
-		successors.push_back(successor);
+	void Brick::runAfterRequirements(BrickPtr& successor) {
+		successorsRequirement.push_back(successor);
+	}
+
+	void Brick::runWhenTrue(BrickPtr& successor) {
+		successorsTrue.push_back(successor);
+	}
+
+	void Brick::runWhenFalse(BrickPtr& successor) {
+		successorsFalse.push_back(successor);
 	}
 
 	bool Brick::checkConditions() {
-		for (auto condition : conditions) {
+		for (auto& condition : conditions)
 			if (!condition())
 				return false;
-		}
-
 		return true;
-	}
-
-	bool Brick::checkDisablers() {
-		for (auto disabler : disablers) {
-			if (disabler->hasRequirementsMet())
-				return true;
-		}
-
-		return false;
 	}
 
 	void Brick::setDescription(std::string des) {
@@ -79,7 +113,7 @@ namespace BlackCrow {
 		return requirementsMet;
 	}
 
-	void Brick::disableSelfWhenActive(BrickPtr disabler) {
+	void Brick::disableSelfWhenActive(BrickPtr& disabler) {
 		disablers.push_back(disabler);
 	}
 
@@ -98,7 +132,7 @@ namespace BlackCrow {
 				return resources.minerals >= type.mineralPrice() && resources.gas >= type.gasPrice() && bc.macro.getUnreservedLarvaeAmount() >= 1;
 			});
 
-			brick->once([&bc, type, nearTo, description]() { 
+			brick->onceAfterRequirements([&bc, type, nearTo, description]() { 
 				bc.macro.planUnit(type, nearTo); 
 			});
 
@@ -113,7 +147,7 @@ namespace BlackCrow {
 				return resources.minerals >= type.mineralPrice() && resources.gas >= type.gasPrice();
 			});
 
-			brick->once([&bc, type, buildSearchStart]() { bc.macro.planBuilding(type, bc.builder.getBuildingSpot(type, buildSearchStart, false)); });
+			brick->onceAfterRequirements([&bc, type, buildSearchStart]() { bc.macro.planBuilding(type, bc.builder.getBuildingSpot(type, buildSearchStart, false)); });
 
 			return brick;
 		}
@@ -126,7 +160,7 @@ namespace BlackCrow {
 				return resources.minerals >= UnitTypes::Zerg_Extractor.mineralPrice();
 			});
 
-			brick->once([&bc]() { bc.macro.buildExtractor(); });
+			brick->onceAfterRequirements([&bc]() { bc.macro.buildExtractor(); });
 
 			return brick;
 		}

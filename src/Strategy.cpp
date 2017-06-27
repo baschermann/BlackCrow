@@ -23,36 +23,80 @@ namespace BlackCrow {
 		// Initial Scout
 		BrickPtr initialScout = Bricks::makeBlank("Initial Scout");
 		initialScout->requiredOnce([&bc = bc]() { return bc.macro.getUsedSupply() >= 18; });
-		initialScout->once([&bc = bc]() { bc.army.startInitialScout(); });
-		start.successor(initialScout);
+		initialScout->onceAfterRequirements([&bc = bc]() { bc.army.startInitialScout(); });
+		start.runAfterRequirements(initialScout);
 		
-		// Being rushed
-		BrickPtr rushDefense = Bricks::makeBlank("Rush Defense");
-		rushDefense->requiredOnce([&bc = bc]() { return bc.enemy.isRushing(); });
 
-		// Buildorders against enemy Race
+		// ##### Rush Defense #####
+		BrickPtr rushDefense = Bricks::makeBlank("Rush Defense");
+		rushDefense->requiredOnce([&bc = bc]() { return bc.map.getNearestArea(TilePosition(bc.macro.startPosition))->enemies.size() >= 2 || Broodwar->getKeyState(K_R); });
+		//rushDefense->once([]() { Broodwar->sendText("Rush defense activated!"); });
+		start.runAfterRequirements(rushDefense);
+
+		// Build a spawning pool immedietly
+		BrickPtr rushDefenseSpawningPool = Bricks::makeBlank("Rush Defense: Build Spawning Pool");
+		rushDefenseSpawningPool->condition([&bc = bc]() { return bc.macro.hasAmountOf(UnitTypes::Zerg_Spawning_Pool) <= 0 && bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Spawning_Pool) <= 0; });
+		rushDefenseSpawningPool->repeatWhenTrue([&bc = bc]() { bc.macro.planBuilding(UnitTypes::Zerg_Spawning_Pool, bc.builder.getBuildingSpot(UnitTypes::Zerg_Spawning_Pool)); });
+		rushDefense->runAfterRequirements(rushDefenseSpawningPool);
+
+		// Build Overlords rush defense
+		BrickPtr rushDefenseBuildOverlords = Bricks::makeBlank("Rush Defense: Build Overlords");
+		rushDefenseBuildOverlords->condition([&bc = bc]() { return bc.macro.getFreeSupply() <= 0; });
+		rushDefenseBuildOverlords->repeatWhenTrue([&bc = bc]() { bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition); });
+		rushDefense->runAfterRequirements(rushDefenseBuildOverlords);
+
+		// Stop a planned overlord if we have free supply
+		BrickPtr rushDefenseCancelOverlords = Bricks::makeBlank("Rush Defense: Cancel non started planned Overlords");
+		rushDefenseCancelOverlords->condition([&bc = bc]() { return bc.macro.getFreeSupply() >= 1 && bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Overlord) >= 1; });
+		rushDefenseCancelOverlords->repeatWhenTrue([&bc = bc]() {
+			for (auto pu : bc.macro.getPlannedUnits()) {
+				if (pu->type == UnitTypes::Zerg_Overlord && !pu->unit)
+					bc.macro.removePlanned(pu);
+			}
+		});
+		rushDefense->runAfterRequirements(rushDefenseCancelOverlords);
+
+		// Build Zerglings
+		BrickPtr rushDefenseBuildZerglings = Bricks::makeBlank("Rush Defense: Build Zerglings");
+		rushDefenseBuildZerglings->condition([&bc = bc]() {
+			return Broodwar->canMake(UnitTypes::Zerg_Zergling)
+				&& bc.macro.getUnreservedResources().minerals >= UnitTypes::Zerg_Zergling.mineralPrice()
+				&& bc.macro.getUnreservedLarvaeAmount() >= 1;
+		});
+		rushDefenseBuildZerglings->repeatWhenTrue([&bc = bc]() { bc.macro.planUnit(UnitTypes::Zerg_Zergling, bc.macro.startPosition); });
+		rushDefense->runAfterRequirements(rushDefenseBuildZerglings);
+
+		// # Rush defense end #
+		BrickPtr rushDefenseEnd = Bricks::makeBlank("Rush Defense End");
+		rushDefenseEnd->requiredOnce([rushDefense]() { return rushDefense->isActive() && Broodwar->getKeyState(K_E); });
+		rushDefenseEnd->requiredOnce([&bc = bc]() { return bc.map.getNearestArea(TilePosition(bc.macro.startPosition))->enemies.size() == 0; });
+		//rushDefenseEnd->once([]() { Broodwar->sendText("Rush Defense ended"); });
+		rushDefense->disableSelfWhenActive(rushDefenseEnd);
+		start.runAfterRequirements(rushDefenseEnd);
+
+		// ##### Buildorders against enemy Race #####
 		// Protoss
 		BrickPtr protossBo = Bricks::makeBlank("Enemy Protoss BO");
 		protossBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Protoss"; });
-		start.successor(protossBo);
+		start.runAfterRequirements(protossBo);
 		BrickPtr protossBoLast = buildorderOverpool(protossBo);
 
 		// Terran
 		BrickPtr terranBo = Bricks::makeBlank("Enemy Terran BO");
 		terranBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Terran"; });
-		start.successor(terranBo);
+		start.runAfterRequirements(terranBo);
 		BrickPtr terranBoLast = buildorderTwelveHatch(terranBo);
 
 		// Zerg
 		BrickPtr zergBo = Bricks::makeBlank("Enemy Zerg BO");
 		zergBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Zerg"; });
-		start.successor(zergBo);
+		start.runAfterRequirements(zergBo);
 		BrickPtr zergBoLast = buildorderNinePool(zergBo);
 
 		// Random
 		BrickPtr randomBo = Bricks::makeBlank("Random BO");
 		randomBo->requiredOnce([]() { return Broodwar->enemy()->getRace().getName() == "Unknown"; });
-		start.successor(randomBo);
+		start.runAfterRequirements(randomBo);
 		BrickPtr randomBoLast = buildorderOverpool(randomBo);
 
 		// Disable race specific openings when enemy plays random
@@ -60,16 +104,32 @@ namespace BlackCrow {
 		terranBo->disableSelfWhenActive(randomBo);
 		zergBo->disableSelfWhenActive(randomBo);
 
-		// Go dynamic
+		// Disable all openings when rush defence is active
+		protossBo->disableSelfWhenActive(rushDefense);
+		terranBo->disableSelfWhenActive(rushDefense);
+		zergBo->disableSelfWhenActive(rushDefense);
+		randomBo->disableSelfWhenActive(rushDefense);
+
+		// ##### Go dynamic #####
 		BrickPtr dynamicStart = Bricks::makeBlank("Dynamic decisions");
-		dynamicStart->once([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
+		//dynamicStart->once([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
 
-		protossBoLast->successor(dynamicStart);
-		terranBoLast->successor(dynamicStart);
-		zergBoLast->successor(dynamicStart);
-		randomBoLast->successor(dynamicStart);
+		protossBoLast->runAfterRequirements(dynamicStart);
+		terranBoLast->runAfterRequirements(dynamicStart);
+		zergBoLast->runAfterRequirements(dynamicStart);
+		randomBoLast->runAfterRequirements(dynamicStart);
+		rushDefenseEnd->runAfterRequirements(dynamicStart);
 
+		// Give up
+		BrickPtr giveUp = Bricks::makeBlank("Give up");
+		giveUp->requiredOnce([]() { return Broodwar->self()->minerals() < 50 && Broodwar->self()->supplyUsed() <= 0; });
+		giveUp->onceAfterRequirements([]() { 
+			Broodwar->sendText("gaw gaw!");	
+			Broodwar->leaveGame(); 
+		});
 
+		// Use Standard Strategy for now
+		standardStrategy(dynamicStart);
 	}
 
 	BrickPtr Strategy::buildorderOverpool(BrickPtr predecessor) {
@@ -132,6 +192,10 @@ namespace BlackCrow {
 
 	void Strategy::onFrame() {
 		start.run();
+	}
+
+	BrickPtr Strategy::standardStrategy(BrickPtr predecessor) {
+		return nullptr;
 	}
 
 

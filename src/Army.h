@@ -33,7 +33,6 @@ namespace BlackCrow {
 		void assignAutomaticAttackSquad(SquadUnitPtr sunit);
 		void assignAutomaticScoutSquad(SquadUnitPtr sunit);
 		void startInitialScout();
-		ScoutSquadPtr convertToScoutSquad(AttackSquadPtr attackSquad);
 		void workerUnderAttack(WorkerPtr worker, Base& base);
 
 	private:

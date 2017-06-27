@@ -18,25 +18,12 @@ namespace BlackCrow {
 
 	class Strategy {
 	public:
-
-		enum class BuildOrder {
-			NINE_POOL,
-			OVERPOOL,
-			TWELVE_HATCH
-		};
-
 		// General
 		Strategy(BlackCrow &parent);
 		void onStart();
 		void onFrame();
-		//void dynamicDecision();
-
-		// Build Order
-		//std::list<BWAPI::UnitType> buildOrder;
-		BuildOrder bo;
 
 		// Unit Mix
-		double droneProbability = 1; // 1 drone before round is being reset
 		UnitMixPtr unitMix = nullptr;
 
 		// Decision decisions
@@ -44,20 +31,15 @@ namespace BlackCrow {
 		double productionMultiplierGas = 0;
 		double productionMultiplierLarvae = 0;
 		double productionMultiplier = 0;
-		BlackCrow &bc;
-	private:
 		
+	private:
+		BlackCrow &bc;
 		bool initialScoutStarted = false;
 		Brick start;
 
 		BrickPtr buildorderOverpool(BrickPtr predecessor);
 		BrickPtr buildorderTwelveHatch(BrickPtr predecessor);
 		BrickPtr buildorderNinePool(BrickPtr predecessor);
-
-		// Buildorder
-		//BuildOrder getStartBuildOrder();
-		//void fillBuildOrder(BuildOrder build);
-		//void fillBuildOrderItem(BWAPI::UnitType item);
-		//void followBuildOrder();
+		BrickPtr standardStrategy(BrickPtr predecessor);
 	};
 }

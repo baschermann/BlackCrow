@@ -19,7 +19,6 @@ namespace BlackCrow {
 
 		EnemyUnitPtr getEnemy(int id);
 		bool hasKnownBuilding();
-		bool isRushing();
 
 		// Can return nullptr
 		// Predicate for whether to include the unit or not.
