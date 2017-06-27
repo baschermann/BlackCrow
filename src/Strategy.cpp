@@ -112,7 +112,7 @@ namespace BlackCrow {
 
 		// ##### Go dynamic #####
 		BrickPtr dynamicStart = Bricks::makeBlank("Dynamic decisions");
-		dynamicStart->onceAfterRequirements([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
+		//dynamicStart->onceAfterRequirements([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
 
 		protossBoLast->runAfterRequirements(dynamicStart);
 		terranBoLast->runAfterRequirements(dynamicStart);
