@@ -203,6 +203,7 @@ namespace BlackCrow {
 				&& bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Spawning_Pool) <= 0;
 		});
 		buildSpawningPool->repeatWhenTrue([&bc = bc]() { bc.macro.planBuilding(UnitTypes::Zerg_Spawning_Pool, TilePosition(bc.macro.startPosition)); });
+		predecessor->runAfterRequirements(buildSpawningPool);
 
 		// Drones in the unitMix
 		BrickPtr dronesInUnitMix = Bricks::makeBlank("Add/Remove drones in UnitMix");
