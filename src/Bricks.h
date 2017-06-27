@@ -92,6 +92,7 @@ namespace BlackCrow {
 		bool oncesTrueHaveRun = false;
 		bool oncesFalseHaveRun = false;
 		bool disabled = false;
+		int lastFrameRun = -1;
 
 		bool checkConditions();
 	};

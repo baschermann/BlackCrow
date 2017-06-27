@@ -39,7 +39,7 @@ namespace BlackCrow {
 		rushDefenseSpawningPool->repeatWhenTrue([&bc = bc]() { bc.macro.planBuilding(UnitTypes::Zerg_Spawning_Pool, bc.builder.getBuildingSpot(UnitTypes::Zerg_Spawning_Pool)); });
 		rushDefense->runAfterRequirements(rushDefenseSpawningPool);
 
-		// Build Overlords rush defense
+		// Build Overlords
 		BrickPtr rushDefenseBuildOverlords = Bricks::makeBlank("Rush Defense: Build Overlords");
 		rushDefenseBuildOverlords->condition([&bc = bc]() { return bc.macro.getFreeSupply() <= 0; });
 		rushDefenseBuildOverlords->repeatWhenTrue([&bc = bc]() { bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition); });
@@ -112,7 +112,7 @@ namespace BlackCrow {
 
 		// ##### Go dynamic #####
 		BrickPtr dynamicStart = Bricks::makeBlank("Dynamic decisions");
-		//dynamicStart->once([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
+		//dynamicStart->onceAfterRequirements([]() { Broodwar->sendText("Dynamic stuff starts here!"); });
 
 		protossBoLast->runAfterRequirements(dynamicStart);
 		terranBoLast->runAfterRequirements(dynamicStart);
@@ -132,7 +132,7 @@ namespace BlackCrow {
 		standardStrategy(dynamicStart);
 	}
 
-	BrickPtr Strategy::buildorderOverpool(BrickPtr predecessor) {
+	BrickPtr Strategy::buildorderOverpool(BrickPtr& predecessor) {
 		Bricks::SucessorInPredecessorChain chain(predecessor);
 		chain.set(Bricks::makePlanUnitOnce		(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition));
 		chain.set(Bricks::makePlanUnitOnce		(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition));
@@ -151,7 +151,7 @@ namespace BlackCrow {
 		return chain.getLastSuccessor();
 	}
 
-	BrickPtr Strategy::buildorderTwelveHatch(BrickPtr predecessor) {
+	BrickPtr Strategy::buildorderTwelveHatch(BrickPtr& predecessor) {
 		Bricks::SucessorInPredecessorChain chain(predecessor);
 		chain.set(Bricks::makePlanUnitOnce		(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition));
 		chain.set(Bricks::makePlanUnitOnce		(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition));
@@ -172,7 +172,7 @@ namespace BlackCrow {
 		return chain.getLastSuccessor();
 	}
 
-	BrickPtr Strategy::buildorderNinePool(BrickPtr predecessor) {
+	BrickPtr Strategy::buildorderNinePool(BrickPtr& predecessor) {
 		Bricks::SucessorInPredecessorChain chain(predecessor);
 		chain.set(Bricks::makePlanUnitOnce		(bc, "Drone @4", UnitTypes::Zerg_Drone, bc.macro.startPosition));
 		chain.set(Bricks::makePlanUnitOnce		(bc, "Drone @5", UnitTypes::Zerg_Drone, bc.macro.startPosition));
@@ -194,92 +194,131 @@ namespace BlackCrow {
 		start.run();
 	}
 
-	BrickPtr Strategy::standardStrategy(BrickPtr predecessor) {
-		return nullptr;
-	}
-
-
-	/*
-	void Strategy::dynamicDecision() {
+	void Strategy::standardStrategy(BrickPtr& predecessor) {
 		
-		// Check if we need drones, add them to the mix
-		if (bc.macro.getWorkersNeededForSaturation() - bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Drone) > 0 || bc.macro.getTotalWorkerAmount() >= bc.config.maxDrones) {
-			if (!unitMix->exists(UnitTypes::Zerg_Drone))
+		// Drones in the unitMix
+		BrickPtr dronesInUnitMix = Bricks::makeBlank("Add/Remove drones in UnitMix");
+		dronesInUnitMix->condition([&bc = bc]() { 
+			return bc.macro.getWorkersNeededForSaturation() - bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Drone) > 0 
+				|| bc.macro.getTotalWorkerAmount() >= bc.config.maxDrones; 
+		});
+		dronesInUnitMix->repeatWhenTrue([&unitMix = unitMix]() {
+			if(!unitMix->exists(UnitTypes::Zerg_Drone))
 				unitMix->set(UnitTypes::Zerg_Drone, 1, true);
-		} else {
+		});
+		dronesInUnitMix->repeatWhenFalse([&unitMix = unitMix]() {
 			if (unitMix->exists(UnitTypes::Zerg_Drone))
 				unitMix->remove(UnitTypes::Zerg_Drone);
-		}
+		});
+		predecessor->runAfterRequirements(dronesInUnitMix);
 
-		// Collect up to 100 gas
-		if (Broodwar->self()->gas() + Broodwar->self()->spentGas() < 100) {
+		// Collect 100 Gas
+		BrickPtr collectGas = Bricks::makeBlank("Collect 100 Gas");
+		collectGas->condition([]() { return Broodwar->self()->gas() + Broodwar->self()->spentGas() < 100; });
+		collectGas->repeatWhenTrue([&bc = bc]() { 
 			if (bc.macro.getGasWorkerSlotsAvailable() > 0)
 				if (bc.macro.getTotalGasWorkerAmount() < 3)
 					bc.macro.addGasWorker();
-		} else {
+		});
+		collectGas->repeatWhenFalse([&bc = bc]() {
 			if (bc.macro.getTotalGasWorkerAmount() > 0)
 				bc.macro.removeGasWorker();
-		}
+		});
+		predecessor->runAfterRequirements(collectGas);
 
-		// Check if we have a spawning pool
-		auto ownUnits = Broodwar->self()->getUnits();
-		if (std::find_if(ownUnits.begin(), ownUnits.end(), [](Unit unit) { return unit->getType() == UnitTypes::Zerg_Spawning_Pool; }) != ownUnits.end() && !bc.macro.getCurrentlyPlannedAmount(BWAPI::UnitTypes::Zerg_Spawning_Pool)) {
+		// Check if we have a finished spawning pool
+		BrickPtr spawningPoolStuff = Bricks::makeBlank("Own a completed Spawning Pool");
+		spawningPoolStuff->requiredOnce([]() {
+			auto ownUnits = Broodwar->self()->getUnits();
+			auto spawnPoolIt = std::find_if(ownUnits.begin(), ownUnits.end(), [](Unit unit) { return unit->getType() == UnitTypes::Zerg_Spawning_Pool && unit->isCompleted(); });
+			return spawnPoolIt != ownUnits.end();
+		});
+		predecessor->runAfterRequirements(spawningPoolStuff);
+		// Zerglings Speed
+		BrickPtr zerglingSpeed = Bricks::makeBlank("Zergling Speed");
+		zerglingSpeed->condition([&bc = bc]() {
+			return bc.macro.getUnreservedResources().gas >= 100 
+				&& !bc.macro.isCurrentlyPlanned(UpgradeTypes::Metabolic_Boost) 
+				&& Broodwar->self()->getUpgradeLevel(UpgradeTypes::Metabolic_Boost) <= 0;
+		});
+		zerglingSpeed->repeatWhenTrue([&bc = bc]() { bc.macro.planUpgrade(UpgradeTypes::Metabolic_Boost, 1); });
+		spawningPoolStuff->runAfterRequirements(zerglingSpeed);
+		// Add Zerglings to UnitMix
+		BrickPtr addZerglings = Bricks::makeBlank("Add Zerglings into unitMix");
+		addZerglings->onceAfterRequirements([&unitMix = unitMix]() {
+			unitMix->set(UnitTypes::Zerg_Zergling, 2, true);
+		});
+		spawningPoolStuff->runAfterRequirements(addZerglings);
 
-			// Zergling Speed
-			if (bc.macro.getUnreservedResources().gas >= 100 && !bc.macro.isCurrentlyPlanned(UpgradeTypes::Metabolic_Boost) && Broodwar->self()->getUpgradeLevel(UpgradeTypes::Metabolic_Boost) <= 0) {
-				bc.macro.planUpgrade(UpgradeTypes::Metabolic_Boost, 1);
+
+		// ### Build units from unitMix ###
+		BrickPtr checkUnitMix = Bricks::makeBlank("Unit Mix");
+		checkUnitMix->condition([&unitMix = unitMix]() { return unitMix->size() > 0; });
+		predecessor->runAfterRequirements(checkUnitMix);
+
+		// Calculate some data from the unit mix based on current economy
+		struct UnitMixData {
+			double productionMultiplierMinerals = 0;
+			double productionMultiplierGas = 0;
+			double productionMultiplierLarvae = 0;
+			double productionMultiplier = 0;
+
+			void update(BlackCrow& bc, UnitMix& unitMix) {
+				productionMultiplierMinerals = bc.macro.getAverageMineralsPerFrame() / unitMix.mineralPerFrame();
+				//productionMultiplierGas = bc.macro.getAverageGasPerFrame() / unitMix->gasPerFrame(); // TODO Gas units not included
+				productionMultiplierLarvae = bc.macro.getAverageLarvaePerFrame() / unitMix.larvaPerFrame();
+				productionMultiplier = std::min(productionMultiplierMinerals, productionMultiplierLarvae);
 			}
+		};
 
-			// Building Zerglings
-			if (!unitMix->exists(UnitTypes::Zerg_Zergling))
-				unitMix->set(UnitTypes::Zerg_Zergling, 2, true);
-		}
-		
-		if (unitMix->size() > 0) {
+		// Make a new unitMixData and update it every frame
+		auto unitMixData = std::make_shared<UnitMixData>();
+		checkUnitMix->repeatAfterRequirements([&bc = bc, &unitMix = unitMix, unitMixData]() { unitMixData->update(bc, *unitMix); });
 
-			productionMultiplierMinerals = bc.macro.getAverageMineralsPerFrame() / unitMix->mineralPerFrame();
-			//productionMultiplierGas = bc.macro.getAverageGasPerFrame() / unitMix->gasPerFrame(); // TODO Gas units not included
-			productionMultiplierLarvae = bc.macro.getAverageLarvaePerFrame() / unitMix->larvaPerFrame();
-			productionMultiplier = std::min(productionMultiplierMinerals, productionMultiplierLarvae);
+		// Build Supply
+		BrickPtr buildSupply = Bricks::makeBlank("Build supply");
+		buildSupply->condition([&bc = bc, &unitMix = unitMix, unitMixData]() {
+			return bc.macro.getFreeSupply() / (unitMix->supplyPerFrame() * unitMixData->productionMultiplier) < UnitTypes::Zerg_Overlord.buildTime()
+				&& bc.macro.getFreeSupply() <= 20;
+		});
+		buildSupply->repeatWhenTrue([&bc = bc]() { bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition); });
+		checkUnitMix->runAfterRequirements(buildSupply);
 
-			// Supply first
-			if (bc.macro.getFreeSupply() / (unitMix->supplyPerFrame() * productionMultiplier) < UnitTypes::Zerg_Overlord.buildTime() && bc.macro.getFreeSupply() <= 20) {
-				bc.macro.planUnit(UnitTypes::Zerg_Overlord, bc.macro.startPosition);
-			}
-
-			// Drone
+		// Build Units from Unit Mix
+		BrickPtr buildUnits = Bricks::makeBlank("Build units");
+		buildUnits->condition([&bc = bc, &unitMix = unitMix]() {
+			return bc.macro.getUnreservedResources().minerals >= unitMix->peek().mineralPrice()
+				&& bc.macro.getUnreservedLarvaeAmount() > 0;
+		});
+		buildUnits->repeatWhenTrue([&bc = bc, &unitMix = unitMix]() {
 			if (unitMix->peek() == UnitTypes::Zerg_Drone) {
-				if (bc.macro.getUnreservedResources().minerals >= 50 && bc.macro.getUnreservedLarvaeAmount() > 0) {
-					bc.macro.buildWorkerDrone();
-					unitMix->set(UnitTypes::Zerg_Drone, std::max(unitMix->get(UnitTypes::Zerg_Drone) - 0.1, 0.15), false);
-					unitMix->pop();
-				}
-					
-			// Combat  Units
+				bc.macro.buildWorkerDrone();
+				unitMix->set(UnitTypes::Zerg_Drone, std::max(unitMix->get(UnitTypes::Zerg_Drone) - 0.1, 0.15), false);
+				unitMix->pop();
 			} else {
-				if (bc.macro.getUnreservedResources().minerals >= unitMix->peek().mineralPrice() && bc.macro.getUnreservedLarvaeAmount() > 0)
-					bc.macro.planUnit(unitMix->pop(), bc.macro.startPosition);
+				bc.macro.planUnit(unitMix->pop(), bc.macro.startPosition);
 			}
+		});
+		checkUnitMix->runAfterRequirements(buildUnits);
 
-			// Additional Hatcheries
-			if (productionMultiplierLarvae < productionMultiplierMinerals && bc.macro.getTotalLarvaeAmount() <= 0) {
-				int amountPlannedHatcheries = bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Hatchery);
+		// Additional Hatcheries
+		BrickPtr buildhatcheries = Bricks::makeBlank("Build hatcheries");
+		buildhatcheries->condition([&bc = bc, unitMixData]() {
+			return unitMixData->productionMultiplierLarvae < unitMixData->productionMultiplierMinerals
+				&& bc.macro.getTotalLarvaeAmount() <= 0;
+		});
+		buildhatcheries->repeatWhenTrue([&bc = bc]() {
+			int amountPlannedHatcheries = bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Hatchery);
 
-				if (amountPlannedHatcheries <= 0) {
-					if (bc.macro.getUnreservedResources().minerals >= 250)
-						bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery));
-				} else {
-					if ((double)bc.macro.getUnreservedResources().minerals / ((double)amountPlannedHatcheries * (double)300) >= 0.75)
-						bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery));
-				}
+			if (amountPlannedHatcheries <= 0) {
+				if (bc.macro.getUnreservedResources().minerals >= 250)
+					bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery));
 			}
-		}
-
-		// Give up
-		if (Broodwar->self()->minerals() < 50 && Broodwar->self()->supplyUsed() <= 0) {
-			Broodwar->sendText("gaw gaw!");
-			Broodwar->leaveGame();
-		}
+			else {
+				if ((double)bc.macro.getUnreservedResources().minerals / ((double)amountPlannedHatcheries * (double)300) >= 0.75)
+					bc.macro.planBuilding(UnitTypes::Zerg_Hatchery, bc.builder.getBuildingSpot(UnitTypes::Zerg_Hatchery));
+			}
+		});
+		checkUnitMix->runAfterRequirements(buildhatcheries);
 	}
-	*/
 }

@@ -37,9 +37,9 @@ namespace BlackCrow {
 		bool initialScoutStarted = false;
 		Brick start;
 
-		BrickPtr buildorderOverpool(BrickPtr predecessor);
-		BrickPtr buildorderTwelveHatch(BrickPtr predecessor);
-		BrickPtr buildorderNinePool(BrickPtr predecessor);
-		BrickPtr standardStrategy(BrickPtr predecessor);
+		BrickPtr buildorderOverpool(BrickPtr& predecessor);
+		BrickPtr buildorderTwelveHatch(BrickPtr& predecessor);
+		BrickPtr buildorderNinePool(BrickPtr& predecessor);
+		void standardStrategy(BrickPtr& predecessor);
 	};
 }

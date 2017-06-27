@@ -16,69 +16,76 @@ namespace BlackCrow {
 
 		if (!disabled) {
 
-			// Requirements
-			if (!requirementsMet) {
-				for (auto requirement : requirements) {
-					if (!requirement())
-						return;
+			// Run only once per frame
+			if (Broodwar->getFrameCount() != lastFrameRun) {
+				lastFrameRun = Broodwar->getFrameCount();
+
+				// Requirements
+				if (!requirementsMet) {
+					for (auto requirement : requirements) {
+						if (!requirement())
+							return;
+					}
+
+					requirementsMet = true;
 				}
 
-				requirementsMet = true;
-			}
-
-			// Run onces after requirements
-			if (!oncesRequirementHaveRun) {
-				for (auto& action : oncesRequirement)
-					action();
-				oncesRequirementHaveRun = true;
-			}
-
-			// run repeats after requirements
-			for (auto& action : repeatsRequirement)
-				action();
-
-
-			// Condition
-			bool conditions = checkConditions();
-			//bool conditions = std::all_of(conditions.begin(), conditions.end(), []() {}); // TODO how does this work?
-			if (conditions) {
-
-				// Onces when true
-				if (!oncesTrueHaveRun) {
-					for (auto& action : oncesTrue)
+				// Run onces after requirements
+				if (!oncesRequirementHaveRun) {
+					for (auto& action : oncesRequirement)
 						action();
-					oncesTrueHaveRun = true;
+					oncesRequirementHaveRun = true;
 				}
 
-				// Repeats when true
-				for (auto& action : repeatsTrue)
+				// run repeats after requirements
+				for (auto& action : repeatsRequirement)
 					action();
 
-			} else {
-				// Onces when false
-				if (!oncesFalseHaveRun) {
-					for (auto& action : oncesFalse)
+
+				// Condition
+				bool conditions = checkConditions();
+				//bool conditions = std::all_of(conditions.begin(), conditions.end(), []() {}); // TODO how does this work?
+				if (conditions) {
+
+					// Onces when true
+					if (!oncesTrueHaveRun) {
+						for (auto& action : oncesTrue)
+							action();
+						oncesTrueHaveRun = true;
+					}
+
+					// Repeats when true
+					for (auto& action : repeatsTrue)
 						action();
-					oncesFalseHaveRun = true;
+
 				}
+				else {
+					// Onces when false
+					if (!oncesFalseHaveRun) {
+						for (auto& action : oncesFalse)
+							action();
+						oncesFalseHaveRun = true;
+					}
 
-				// Repeat when false
-				for (auto& action : repeatsFalse)
-					action();
+					// Repeat when false
+					for (auto& action : repeatsFalse)
+						action();
+				}
+			
+
+				// Run Successors after Requirements
+				for (auto& successor : successorsRequirement)
+					successor->run();
+
+				if(conditions)
+					// Run Successors when conditions are true
+					for (auto& successor : successorsTrue)
+						successor->run();
+				else
+					// Run Successors when conditions are false
+					for (auto& successor : successorsFalse)
+						successor->run();
 			}
-
-			// Run Successors after Requirements
-			for (auto& successor : successorsRequirement)
-				successor->run();
-
-			if(conditions)
-				// Run Successors when conditions are true
-				for (auto& successor : successorsTrue)
-					successor->run();
-			else
-				// Run Successors when conditions are false
-				for (auto& successor : successorsFalse)
-					successor->run();
 		}
 	}
 

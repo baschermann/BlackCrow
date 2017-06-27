@@ -38,7 +38,7 @@ namespace BlackCrow {
 			auto end = std::chrono::high_resolution_clock::now();
 
 			std::chrono::duration<double, std::milli> diff = end - start;
-			Broodwar->sendText("Init has taken %fms", diff.count());
+			//Broodwar->sendText("Init has taken %fms", diff.count());
 			//Broodwar->sendText("black sheep wall");
 
 
