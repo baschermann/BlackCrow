@@ -196,6 +196,14 @@ namespace BlackCrow {
 
 	void Strategy::standardStrategy(BrickPtr& predecessor) {
 		
+		// Build a spawning pool if none exists
+		BrickPtr buildSpawningPool = Bricks::makeBlank("Build spawning pool");
+		buildSpawningPool->condition([&bc = bc]() {
+			return bc.macro.hasAmountOf(UnitTypes::Zerg_Spawning_Pool) <= 0
+				&& bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Spawning_Pool) <= 0;
+		});
+		buildSpawningPool->repeatWhenTrue([&bc = bc]() { bc.macro.planBuilding(UnitTypes::Zerg_Spawning_Pool, TilePosition(bc.macro.startPosition)); });
+
 		// Drones in the unitMix
 		BrickPtr dronesInUnitMix = Bricks::makeBlank("Add/Remove drones in UnitMix");
 		dronesInUnitMix->condition([&bc = bc]() { 
