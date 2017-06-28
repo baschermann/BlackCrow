@@ -114,7 +114,7 @@
     <ClCompile Include="src\Bricks.cpp">
       <Filter>Source Files\Strategy</Filter>
     </ClCompile>
-    <ClCompile Include="Client.cpp">
+    <ClCompile Include="src\Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

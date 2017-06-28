@@ -21,7 +21,7 @@ namespace BlackCrow {
 			bool startingLocationsOK = bwem.FindBasesForStartingLocations();
 			assert(startingLocationsOK);
 
-			BWEM::utils::MapPrinter::Initialize(&bwem);
+			//BWEM::utils::MapPrinter::Initialize(&bwem);
 			//BWEM::utils::printMap(*map);      // will print the map into the file <StarCraftFolder>bwapi-data/map.bmp
 			//BWEM::utils::pathExample(*map);   // add to the printed map a path between two starting locations
 			// END of BWEM

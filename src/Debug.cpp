@@ -197,7 +197,7 @@ namespace BlackCrow {
 		// Draw APM, LSpeed, Time
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
-		Broodwar->drawTextScreen(175, 0, "LSpeed: %i", BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]);
+		//Broodwar->drawTextScreen(175, 0, "LSpeed: %i", BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]); // TODO crasht
 		int seconds = Broodwar->elapsedTime() % 60;
 		if(seconds >= 10)
 			Broodwar->drawTextScreen(230, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, seconds);

@@ -115,7 +115,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="src\Client.cpp" />
     <ClCompile Include="src\Bricks.cpp" />
     <ClCompile Include="src\Overlords.cpp" />
     <ClCompile Include="src\Army.cpp" />

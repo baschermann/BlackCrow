@@ -20,7 +20,6 @@ namespace BlackCrow {
 	
 	class BlackCrow {
 	public:
-		// Virtual functions for callbacks, leave these as they are.
 		void onStart();
 		void onEnd(bool isWinner);
 		void onFrame();
@@ -38,7 +37,6 @@ namespace BlackCrow {
 		void onUnitRenegade(BWAPI::Unit unit);
 		void onSaveGame(std::string gameName);
 		void onUnitComplete(BWAPI::Unit unit);
-		// Everything below this line is safe to modify.
 
 		BWEM::Map &bwem;
 		Builder builder;
