@@ -3,6 +3,7 @@
 #include "Planned.h"
 #include "Worker.h"
 #include <numeric>
+#include <iterator>
 
 namespace BlackCrow {
 
