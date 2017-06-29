@@ -38,9 +38,6 @@ int main(int argc, const char* argv[]) {
 				case EventType::MatchFrame:
 					bot.onFrame();
 					break;
-				case EventType::MenuFrame:
-					bot.onFrame();
-					break;
 				case EventType::SendText:
 					bot.onSendText(e.getText());
 					break;

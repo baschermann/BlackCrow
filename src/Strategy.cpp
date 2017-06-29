@@ -212,7 +212,6 @@ namespace BlackCrow {
 				&& bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Extractor) <= 0
 				&& bc.macro.hasAmountOf(UnitTypes::Zerg_Drone) >= 9;
 		});
-		buildExtractor->onceWhenTrue([]() { Broodwar->sendText("Build extractor!"); });
 		buildExtractor->repeatWhenTrue([&bc = bc]() { bc.macro.buildExtractor(); });
 		predecessor->runAfterRequirements(buildExtractor);
 
