@@ -94,7 +94,8 @@ int main(int argc, const char* argv[]) {
 		}
 		std::cout << "Game ended" << std::endl;
 	}
-	std::cout << "Press ENTER to continue..." << std::endl;
-	std::cin.ignore();
+	std::cout << "Exiting..." << std::endl;
+	//std::cout << "Press ENTER to continue..." << std::endl;
+	//std::cin.ignore();
 	return 0;
 }

@@ -59,7 +59,6 @@ public:
 	// It is equal to use Map::Instance() each time, or to store the returned reference and use it instead.
 	static Map &						Instance();
 
-
 	// This has to be called before any other function is called.
 	// A good place to do this is in ExampleAIModule::onStart()
 	virtual void						Initialize() = 0;

@@ -52,7 +52,8 @@ unique_ptr<Map> Map::m_gInstance = nullptr;
 
 Map & Map::Instance()
 {
-	if (!m_gInstance) m_gInstance = make_unique<MapImpl>();
+	if (m_gInstance) m_gInstance.reset();
+	m_gInstance = make_unique<MapImpl>();
 
 	return *m_gInstance.get();
 }
