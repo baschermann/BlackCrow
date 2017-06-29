@@ -17,10 +17,12 @@ int main(int argc, const char* argv[]) {
 
 	while (BWAPI::BWAPIClient.isConnected()) {
 
-		std::cout << "Waiting for a game to begin..." << std::endl;
-		while (!Broodwar->isInGame()) // Crashes when Broodwar is closed
-			BWAPI::BWAPIClient.update();
+		while(BWAPI::BWAPIClient.isConnected() && !BWAPI::Broodwar->isInGame())
+			BWAPI::BWAPIClient.update(); // push/pull server
+
+		if (!BWAPI::BWAPIClient.isConnected()) break;
 				
+		
 		BlackCrow::BlackCrow bot;
 
 		while (Broodwar->isInGame()) {
@@ -88,6 +90,7 @@ int main(int argc, const char* argv[]) {
 			}
 
 			BWAPI::BWAPIClient.update();
+			
 		}
 		std::cout << "Game ended" << std::endl;
 	}
