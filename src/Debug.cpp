@@ -173,7 +173,7 @@ namespace BlackCrow {
 		
 
 
-		/* 
+		/*
 		// Unit Mix and Strategy calculation numbers
 		int ox = 250;
 		int yx = 250;
@@ -182,6 +182,7 @@ namespace BlackCrow {
 		Broodwar->drawTextScreen(ox, yx + 10, "UMix m/pf: %f", bc.strategy.unitMix->mineralPerFrame());
 		Broodwar->drawTextScreen(ox, yx + 20, "UMix l/pf: %f", bc.strategy.unitMix->larvaPerFrame());
 		Broodwar->drawTextScreen(ox, yx + 30, "avg m/pf: %f", bc.macro.getAverageMineralsPerFrame());
+		Broodwar->drawTextScreen(ox + 100, yx + 30, "avger m/pf: %f", bc.macro.mineralIncomeAverager.average);
 		Broodwar->drawTextScreen(ox, yx + 40, "avg l/pr: %f", bc.macro.getAverageLarvaePerFrame());
 		Broodwar->drawTextScreen(ox, yx + 50, "prod multi min: %f", bc.strategy.productionMultiplierMinerals);
 		Broodwar->drawTextScreen(ox, yx + 60, "prod multi larvae: %f", bc.strategy.productionMultiplierLarvae);
@@ -197,7 +198,7 @@ namespace BlackCrow {
 		// Draw APM, LSpeed, Time
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
-		//Broodwar->drawTextScreen(175, 0, "LSpeed: %i", BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]); // TODO crash
+		Broodwar->drawTextScreen(175, 0, "LS: %.1f", bc.getAverageFrameTime());
 		int seconds = Broodwar->elapsedTime() % 60;
 		if(seconds >= 10)
 			Broodwar->drawTextScreen(230, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, seconds);
@@ -236,8 +237,8 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawFrameTimeDisplay() {
-		displayBot.updateAndDraw(0, 0);
-		displayBroodwar.updateAndDraw(0, 10);
+		displayBot.updateAndDraw(bc, 0, 0);
+		//displayBroodwar.updateAndDraw(bc, 0, 10); // TODO fix, broke with taking the average of frame time
 	}
 
 	void Debug::drawBaseInformation() {
@@ -529,12 +530,12 @@ namespace BlackCrow {
 		backgroundColor = color;
 	}
 
-	void DebugPerformanceDisplay::updateAndDraw(int xStart, int yStart) {
-		//int logicalFrameSpeed = BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]; // TODO Crash
-		int logicalFrameSpeed = 8;
+	void DebugPerformanceDisplay::updateAndDraw(BlackCrow& bc, int xStart, int yStart) {
+		//int logicalFrameSpeed = BW::BWDATA::GameSpeedModifiers.gameSpeedModifiers[0]; // TODO when getLocalSpeed gets implemented
+		double logicalFrameSpeed = bc.getAverageFrameTime();
 
 		// Don't show if speed is 0
-		if (logicalFrameSpeed == 0)
+		if (logicalFrameSpeed <= 0 || logicalFrameSpeed >= 500)
 			return;
 
 		//Framerates

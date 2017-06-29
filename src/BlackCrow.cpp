@@ -5,7 +5,18 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	BlackCrow::BlackCrow() : builder(*this), debug(*this), enemy(*this), macro(*this), map(*this), strategy(*this), tech(*this), army(*this), bwem(BWEM::Map::Instance()) {}
+	BlackCrow::BlackCrow() : 
+		builder(*this), 
+		debug(*this), 
+		enemy(*this), 
+		macro(*this), 
+		map(*this), 
+		strategy(*this), 
+		tech(*this), 
+		army(*this), 
+		bwem(BWEM::Map::Instance()), 
+		frameTimeAverager(60, 0.024) 
+	{}
 
 	void BlackCrow::onStart() {
 
@@ -78,6 +89,10 @@ namespace BlackCrow {
 			std::chrono::duration<double, std::milli> diffLastFrame = end - lastFrame;
 			lastFrame = end;
 			debug.displayBroodwar.elapsedTime(diffLastFrame.count());
+
+			// Average frame time
+			frameTimeAverager.add(diffLastFrame.count()); // TODO replace with getLocalSpeed when available
+			
 
 			// EXTRA set SPEED per KEEB
 			if (Broodwar->getKeyState(K_1))
@@ -220,5 +235,9 @@ namespace BlackCrow {
 			return true;
 
 		return false;
+	}
+
+	double BlackCrow::getAverageFrameTime() {
+		return frameTimeAverager.average;
 	}
 }

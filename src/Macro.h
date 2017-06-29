@@ -4,6 +4,7 @@
 #include <deque>
 #include "Base.h"
 #include "Common.h"
+#include "Util.h"
 
 namespace BlackCrow {
 
@@ -95,13 +96,6 @@ namespace BlackCrow {
 		double getAverageGasPerFrame();
 		double getAverageMineralsPerFrame();
 
-
-
-		double mineralFrameAverage = 0;
-		double gasFrameAverage = 0;
-
-		
-
 	private:
 		BlackCrow &bc;
 
@@ -113,13 +107,11 @@ namespace BlackCrow {
 
 		void calculateResourceAverages();
 		// Minerals
-		std::deque<int> mineralIncomeList;
 		int lastFrameTotalMinerals = 0;
-		double averageMineralsPerFrame = 0;
+		Util::DampenedAverager mineralIncomeAverager;
 		// Gas
-		std::deque<int> gasIncomeList;
-		int lastFrameTotalGas = 0;
-		double averageGasPerFrame = 0;
+		int lastFrameTotalGas = 0; 
+		Util::DampenedAverager gasIncomeAverager;
 	};
 
 }

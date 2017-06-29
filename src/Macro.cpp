@@ -10,7 +10,7 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	Macro::Macro(BlackCrow &parent) : bc(parent) {}
+	Macro::Macro(BlackCrow &parent) : bc(parent), mineralIncomeAverager(350, 0.008), gasIncomeAverager(350, 0.008) {}
 
 	void Macro::onStart() {
 		startPosition = getStartingHatchery()->getPosition();
@@ -371,11 +371,11 @@ namespace BlackCrow {
 	}
 
 	double Macro::getAverageMineralsPerFrame() {
-		return averageMineralsPerFrame;
+		return mineralIncomeAverager.average;
 	}
 
 	double Macro::getAverageGasPerFrame() {
-		return averageGasPerFrame;
+		return gasIncomeAverager.average;
 	}
 
 	double Macro::getAverageLarvaePerFrame() {
@@ -458,55 +458,19 @@ namespace BlackCrow {
 	void Macro::calculateResourceAverages() {
 
 		// Minerals
-		{
-			int totalMinerals = Broodwar->self()->gatheredMinerals();;
-			
-			if (lastFrameTotalMinerals == totalMinerals || Broodwar->getFrameCount() == 0) {
-				mineralIncomeList.push_back(0);
-			} else {
-				mineralIncomeList.push_back(totalMinerals - lastFrameTotalMinerals);
-			}
-
-			if (mineralIncomeList.size() > 350)
-				mineralIncomeList.pop_front();
-
-			lastFrameTotalMinerals = totalMinerals;
-
-			double averageTotal = 0;
-			for (int frameIncome : mineralIncomeList) {
-				averageTotal += frameIncome;
-			}
-
-			mineralFrameAverage = averageTotal / mineralIncomeList.size();
-			double difference = averageMineralsPerFrame - mineralFrameAverage;
-			averageMineralsPerFrame += -difference * 0.008;
-		}
-		// --
+		int totalMinerals = Broodwar->self()->gatheredMinerals();
+		if (lastFrameTotalMinerals == totalMinerals || Broodwar->getFrameCount() == 0)
+			mineralIncomeAverager.add(0);
+		else
+			mineralIncomeAverager.add(totalMinerals - lastFrameTotalMinerals);
+		lastFrameTotalMinerals = totalMinerals;
 
 		// Gas
-		{
-			int totalGas = Broodwar->self()->gatheredGas();
-
-			if (lastFrameTotalGas == totalGas) {
-				gasIncomeList.push_back(0);
-			} else {
-				gasIncomeList.push_back(totalGas - lastFrameTotalGas);
-			}
-
-			if (gasIncomeList.size() > 350)
-				gasIncomeList.pop_front();
-
-			lastFrameTotalGas = totalGas;
-
-			double averageTotal = 0;
-			for (int frameIncome : gasIncomeList) {
-				averageTotal += frameIncome;
-			}
-
-			gasFrameAverage = averageTotal / gasIncomeList.size();
-			double difference = averageGasPerFrame - gasFrameAverage;
-			averageGasPerFrame += -difference * 0.008;
-		}
-		// --
+		int totalGas = Broodwar->self()->gatheredGas();
+		if (lastFrameTotalGas == totalGas)
+			gasIncomeAverager.add(0);
+		else
+			gasIncomeAverager.add(totalGas - lastFrameTotalGas);
+		lastFrameTotalGas = totalGas;
 	}
 }

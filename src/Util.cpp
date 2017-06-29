@@ -135,5 +135,24 @@ namespace BlackCrow {
 
 			return uni(rng);
 		}
+
+		DampenedAverager::DampenedAverager(int size, double dampFactor) : maxSize(size), dampFactor(dampFactor) {}
+
+		void DampenedAverager::add(double number) {
+			list.push_back(number);
+
+			if ((int)list.size() > maxSize)
+				list.pop_front();
+
+			double averageTotal = 0;
+			for (double frameIncome : list) {
+				averageTotal += frameIncome;
+			}
+
+			double frameAverage = averageTotal / (double)list.size();
+			average += -(average - frameAverage) * dampFactor;
+		}
 	}
+
+	
 }

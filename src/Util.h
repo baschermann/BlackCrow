@@ -27,6 +27,18 @@ namespace BlackCrow {
 			void goNext();
 		};
 
+		/// TODO make template class
+		class DampenedAverager {
+		public:
+			double average = 0;
+			DampenedAverager(int size, double dampFactor);
+			void add(double number);
+		private:
+			std::deque<double> list;
+			int maxSize = 10;
+			double dampFactor = 0.05;
+		};
+
 		RgbColor HsvToRgb(HsvColor hsv);
 		HsvColor RgbToHsv(RgbColor rgb);
 

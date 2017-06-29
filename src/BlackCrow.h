@@ -52,8 +52,10 @@ namespace BlackCrow {
 		BlackCrow();
 		void init();
 		bool isExecutingCommandFrame();
-
+		double getAverageFrameTime();
+		
 	private:
 		std::chrono::high_resolution_clock::time_point lastFrame;
+		Util::DampenedAverager frameTimeAverager;
 	};
 }

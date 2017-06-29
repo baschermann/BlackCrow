@@ -11,7 +11,7 @@ namespace BlackCrow {
 	class DebugPerformanceDisplay {
 	public:
 		void elapsedTime(double millis);
-		void updateAndDraw(int x, int y);
+		void updateAndDraw(BlackCrow& bc, int x, int y);
 		void setBackgroundColor(BWAPI::Color color);
 		void setShowPercentage(double percentage);
 		void setShowSpikes(bool show);
