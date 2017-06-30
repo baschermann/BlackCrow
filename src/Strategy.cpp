@@ -66,6 +66,12 @@ namespace BlackCrow {
 		rushDefenseBuildZerglings->repeatWhenTrue([&bc = bc]() { bc.macro.planUnit(UnitTypes::Zerg_Zergling, bc.macro.startPosition); });
 		rushDefense->runAfterRequirements(rushDefenseBuildZerglings);
 
+		// Pull from gas
+		BrickPtr rushDefensePullFromGas = Bricks::makeBlank("Rush Defense: Pull workers from Gas");
+		rushDefensePullFromGas->condition([&bc = bc]() { bc.macro.getTotalGasWorkerAmount() > 0; });
+		rushDefensePullFromGas->repeatWhenTrue([&bc = bc]() { bc.macro.removeGasWorker(); });
+		rushDefense->runAfterRequirements(rushDefensePullFromGas);
+
 		// # Rush defense end #
 		BrickPtr rushDefenseEnd = Bricks::makeBlank("Rush Defense End");
 		rushDefenseEnd->requiredOnce([rushDefense]() { return rushDefense->isActive(); });
