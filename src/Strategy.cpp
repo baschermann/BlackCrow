@@ -68,7 +68,7 @@ namespace BlackCrow {
 
 		// Pull from gas
 		BrickPtr rushDefensePullFromGas = Bricks::makeBlank("Rush Defense: Pull workers from Gas");
-		rushDefensePullFromGas->condition([&bc = bc]() { bc.macro.getTotalGasWorkerAmount() > 0; });
+		rushDefensePullFromGas->condition([&bc = bc]() { return bc.macro.getTotalGasWorkerAmount() > 0; });
 		rushDefensePullFromGas->repeatWhenTrue([&bc = bc]() { bc.macro.removeGasWorker(); });
 		rushDefense->runAfterRequirements(rushDefensePullFromGas);
 

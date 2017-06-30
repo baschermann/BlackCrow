@@ -67,6 +67,10 @@ MapImpl::~MapImpl()
 
 void MapImpl::Initialize()
 {
+////Destroy and create a new MapImpl to not persist between games in a exe client enviroment
+	this->~MapImpl();
+	new (this) MapImpl();
+
 ///	Timer overallTimer;
 ///	Timer timer;
 
