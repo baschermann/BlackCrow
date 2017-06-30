@@ -6,6 +6,26 @@
 #include "UnitMix.h" // Needed for UnitMixPtr which is a unique_ptr, can this be moved to .cpp?
 #include "Bricks.h"
 
+
+
+/////////////////////////////////////////////////////
+// General Questions, summarized by IronfistJaiden //
+/////////////////////////////////////////////////////
+
+//// questions i think every bot wants to be able to answer(and few / none do)
+// What does my opponent have ?
+// Where are my opponent's units?
+// What would happen if these units fought ?
+// What can I and my opponent do X minutes from now ?
+//
+//// Out of the answers to those questions flow the answers to everything else :
+// Can I kill my opponent right now ?
+// Do I need to build additional defense to survive ?
+// If I build all units, will I be able to kill my opponent ?
+// Do I need to take risks to get ahead ?
+
+/////////////////////////////////////////////////////
+
 namespace BlackCrow {
 
 	class BlackCrow;
