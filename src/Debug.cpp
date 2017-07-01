@@ -447,27 +447,45 @@ namespace BlackCrow {
 				int bars = (int)(length / (barSize + 1));
 				int pixelLength = (int)(bars * barSize + 2);
 
-				Position barPos = unit->getPosition() - Position((int)(pixelLength * 0.5), (int)(unit->getType().dimensionUp() * 1.2));
-				float percentage = (float)unit->getHitPoints() / (float)unit->getType().maxHitPoints();
+				Position barPosHealth = unit->getPosition() - Position((int)(pixelLength * 0.5), (int)(unit->getType().dimensionUp() * 1.2));
+				Position barPosShield = barPosHealth - Position(0, (int)barSize + 1);
+				float percentageHealth = (float)unit->getHitPoints() / (float)unit->getType().maxHitPoints();
+				float percentageShield = 0;
+
+				bool hasShields = unit->getType().maxShields() > 0 ? true : false;
+				if(hasShields)
+					percentageShield = ((float)unit->getShields()) / (float)unit->getType().maxShields();
 
 				// TODO Colors are cacheable
 				Util::HsvColor hsvColor;
-				hsvColor.h = (char)(-(0xFF * 0.33) * percentage);
+				hsvColor.h = (char)(-(0xFF * 0.33) * percentageHealth);
 				hsvColor.s = 0xFF;
 				hsvColor.v = (char)(0xFF * 0.7);
 
 				Util::RgbColor rgbColor = Util::HsvToRgb(hsvColor);
-				Color barColor(rgbColor.r, rgbColor.b, rgbColor.g);
+				Color healthBarColor(rgbColor.r, rgbColor.b, rgbColor.g);
 
-				// Draw
-				Broodwar->drawBoxMap(barPos, barPos + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
+				// Draw Health
+				Broodwar->drawBoxMap(barPosHealth, barPosHealth + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
 				for (int i = 0; i < bars; i++) {
-					Color color = i < (float)bars * percentage ? barColor : Colors::Grey;
+					Color color = i < (float)bars * percentageHealth ? healthBarColor : Colors::Grey;
 					int barSizePixel = (int)(barSize * i);
 
 					Position topLeft(1 + barSizePixel, 1);
 					Position bottomRight((int)barSize + barSizePixel, (int)barSize + 1);
-					Broodwar->drawBoxMap(barPos + topLeft, barPos + bottomRight, color, true);
+					Broodwar->drawBoxMap(barPosHealth + topLeft, barPosHealth + bottomRight, color, true);
+				}
+
+				if (hasShields) {
+					Broodwar->drawBoxMap(barPosShield, barPosShield + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
+					for (int i = 0; i < bars; i++) {
+						Color color = i < (float)bars * percentageShield ? Colors::Blue : Colors::Grey;
+						int barSizePixel = (int)(barSize * i);
+
+						Position topLeft(1 + barSizePixel, 1);
+						Position bottomRight((int)barSize + barSizePixel, (int)barSize + 1);
+						Broodwar->drawBoxMap(barPosShield + topLeft, barPosShield + bottomRight, color, true);
+					}
 				}
 			}
 		}
