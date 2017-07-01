@@ -29,7 +29,19 @@ namespace BlackCrow {
 
 		// ##### Rush Defense #####
 		BrickPtr rushDefense = Bricks::makeBlank("Rush Defense");
-		rushDefense->requiredOnce([&bc = bc]() { return bc.map.getNearestArea(TilePosition(bc.macro.startPosition))->enemies.size() >= 2; });
+		rushDefense->requiredOnce([&bc = bc]() { 
+			int numberOfEnemies = 0;
+			for (auto& enemy : bc.map.getNearestArea(TilePosition(bc.macro.startPosition))->enemies) {
+				if (!enemy->type.isWorker())
+					return true;
+				numberOfEnemies++;
+			}
+			
+			if (numberOfEnemies >= 2)
+				return true;
+
+			return false;
+		});
 		//rushDefense->once([]() { Broodwar->sendText("Rush defense activated!"); });
 		start.runAfterRequirements(rushDefense);
 
