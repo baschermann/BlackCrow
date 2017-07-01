@@ -3,6 +3,25 @@
 #include "Geyser.h"
 #include "Base.h"
 
+///////////////////////////////////////////////////////////
+//				Worker mining notes                      //
+///////////////////////////////////////////////////////////
+//
+// - Speed of Workers is exactly 5 not 4.920
+// - Acceleration is 0.261719 or 67/256
+// - Base size is important
+// - Workers need to turn to mineral before mining (usually 1 frame)
+// - The mining animation is "AlmostBuilt" (makes total sense)
+// - Mining timer is 75 frames
+//   - Can only be checked every 8 frames that runs on a global timer
+//   - Global timer is being reset every 150 frames to a random number
+//     - Iterates through all the units and resets the timer
+//	   - This can cause a bad pattern where it takes 6 [150 mod 8 = 4] + 8 frames to check
+//     - Random unit timer is wrapped at 8
+//
+/////////////////////////////////////////////////////////////
+
+
 namespace BlackCrow {
 
 	using namespace BWAPI;
