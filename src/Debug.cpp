@@ -479,7 +479,7 @@ namespace BlackCrow {
 				if (hasShields) {
 					Broodwar->drawBoxMap(barPosShield, barPosShield + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
 					for (int i = 0; i < bars; i++) {
-						Color color = i < (float)bars * percentageShield ? Colors::Blue : Colors::Grey;
+						Color color = i + 1 < ((float)bars + 1) * percentageShield ? Colors::Blue : Colors::Grey;
 						int barSizePixel = (int)(barSize * i);
 
 						Position topLeft(1 + barSizePixel, 1);
