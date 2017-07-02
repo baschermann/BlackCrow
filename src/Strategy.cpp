@@ -145,6 +145,7 @@ namespace BlackCrow {
 			Broodwar->sendText("gaw gaw!");	
 			Broodwar->leaveGame(); 
 		});
+		start.runAfterRequirements(giveUp);
 
 		// Use Standard Strategy for now
 		standardStrategy(dynamicStart);
@@ -357,5 +358,56 @@ namespace BlackCrow {
 			}
 		});
 		checkUnitMix->runAfterRequirements(buildhatcheries);
+
+		// Build Spore Colony if flyer is detected TODO remove if we have overlord reactions also it won't repeat a failed attempt to build a creeper colony
+		BrickPtr overlordSafety = Bricks::makeBlank("A safe spot for overlords");
+		overlordSafety->requiredOnce([&bc = bc]() {
+			return std::any_of(bc.enemy.enemies.begin(), bc.enemy.enemies.end(), [](EnemyUnitPtr& eu) { return eu->type.isFlyer() && eu->type.canAttack(); });
+		});
+
+		BrickPtr creepColonyForSpore = Bricks::makeBlank("Build a creep colony");
+		creepColonyForSpore->requiredOnce([&bc = bc]() {
+			return bc.macro.hasAmountOf(UnitTypes::Zerg_Creep_Colony) <= 0
+				&& !bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Creep_Colony) <= 0
+				&& bc.macro.hasAmountOf(UnitTypes::Zerg_Spore_Colony) <= 0
+				&& !bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Spore_Colony) <= 0;
+		});
+		creepColonyForSpore->onceAfterRequirements([&bc = bc]() { bc.macro.planBuilding(UnitTypes::Zerg_Creep_Colony, bc.builder.getBuildingSpot(UnitTypes::Zerg_Creep_Colony)); });
+		overlordSafety->runAfterRequirements(creepColonyForSpore);
+
+		// TODO This needs to be handled by macro building planning and planned building
+		BrickPtr morphCreepColonyToSpore = Bricks::makeBlank("Morph creep colony to spore");
+		morphCreepColonyToSpore->requiredOnce([&bc = bc]() { return bc.macro.hasAmountOf(UnitTypes::Zerg_Creep_Colony) > 0; });
+		morphCreepColonyToSpore->repeatAfterRequirements([&bc = bc]() { 
+			for (auto unit : Broodwar->self()->getUnits()) {
+				if (unit->getType() == UnitTypes::Zerg_Creep_Colony && unit->isCompleted() && Broodwar->self()->minerals >= UnitTypes::Zerg_Creep_Colony.mineralPrice())
+					unit->morph(UnitTypes::Zerg_Creep_Colony);
+			}
+		});
+		creepColonyForSpore->runAfterRequirements(morphCreepColonyToSpore);
+
+		BrickPtr moveOverlordsToSpore = Bricks::makeBlank("Move Overlords to spore");
+		moveOverlordsToSpore->requiredOnce([&bc = bc]() { return bc.macro.hasAmountOf(UnitTypes::Zerg_Spore_Colony) > 0; });
+		moveOverlordsToSpore->repeatAfterRequirements([]() {
+			if (Broodwar->getFrameCount() % 10 == 0) {
+				auto ownUnits = Broodwar->self()->getUnits();
+				auto sporeIt = std::find(ownUnits.begin(), ownUnits.end(), [](Unit unit) { return unit->getType() == UnitTypes::Zerg_Spore_Colony; });
+				if (sporeIt != ownUnits.end()) {
+					Unit spore = *sporeIt;
+					for (auto unit : ownUnits)
+						if (unit->getType() == UnitTypes::Zerg_Overlord
+							&& Util::distance(unit->getPosition(), spore->getPosition()) > 16)
+							unit->move(spore->getPosition());
+				}
+			}
+		});
+		overlordSafety->runAfterRequirements(moveOverlordsToSpore);
+
+
+
+
+
+
+		predecessor->runAfterRequirements(overlordSafety);
 	}
 }
