@@ -72,4 +72,13 @@ namespace BlackCrow {
 	void SquadUnit::commandExecuted() {
 		nextCommandExecutesAt = Broodwar->getFrameCount() +Broodwar->getRemainingLatencyFrames();
 	}
+
+	void SquadUnit::resetSquadOverride() {
+		squadOverride = false;
+	}
+
+	void SquadUnit::squadOverrideScoutLocation(TilePosition location) {
+		squadOverride = true;
+		scoutLocation = location;
+	}
 }

@@ -4,7 +4,11 @@
 #include "SquadUnit.h"
 #include "Common.h"
 
-// Handles single units in a squad. Micro, target decision (focusfire) and positioning
+// Notes:
+//
+// A "stall" or "retreat" order does not order all units in the squad to retreat
+// but rather gives the suqad units the command to retreat if in enemy range and necessary
+// if they have no enemy nearby they will collect at a position
 
 namespace BlackCrow {
 
@@ -14,62 +18,45 @@ namespace BlackCrow {
 	class Squad {
 	public:
 
-		Squad();
-		void onFrame();
-
-		std::vector<SquadUnitPtr> sunits;
-
-		void add(const SquadUnitPtr sunit);
-		void remove(const SquadUnitPtr sunit);
-		void moveAll(BWAPI::Position position, bool queue);
-
-
-	protected:
-		BlackCrow &bc;
-		Squad(BlackCrow &parent);
-
-	};
-
-	class ScoutSquad : public Squad {
-	public:
-
-		ScoutSquad(BlackCrow &parent);
-		void onFrame();
-		bool isStillScouting();
-		int locationsToScout();
-		std::vector<BWAPI::TilePosition>& getScoutingPositions();
-		void addScoutPosition(BWAPI::TilePosition position);
-		void addStartLocations();
-		void addExpansions(bool addIslands);
-		void setGlobalSearch(bool searchGlobally);
-
-	private:
-		bool globalSearch;
-		void ScoutSquad::disband();
-		std::vector<BWAPI::TilePosition> scoutLocations;
-	};
-
-	class AttackSquad : public Squad {
-	public:
-
-		enum class State {
-			MOVE,
-			ATTACK
+		enum class INTENT {
+			STALL,
+			FIGHT,
+			BACKDOOR,
+			RUNBY,
+			DEFEND
 		};
 
-		// Common Functions
-		AttackSquad(BlackCrow &parent);
+		Squad(BlackCrow &parent);
 		void onFrame();
 
-		// Variables
-		State state = State::MOVE;
+		void add(const SquadUnitPtr& sunit);
+		void remove(const SquadUnitPtr& sunit);
+		std::vector<SquadUnitPtr>& getSquadUnits();
+		int size();
 
-		// Functions
+		// Scouting
+		bool isScouting();
+		int locationsToScoutLeft();
+		std::vector<BWAPI::TilePosition>& getScoutingLocations();
+		void addScoutLocation(const BWAPI::TilePosition& position);
+		void addScoutLocationsStartingPoints();
+		void addScoutLocationsExpansions(bool addIslands);
+
+		// Fighting
+		EnemyUnitPtr squadGoalTarget = nullptr;
 		bool isFightingBuilding(const EnemyUnitPtr eu);
 
-	};
+	private:
+		struct ScoutLocation {
+			BWAPI::TilePosition location;
+			std::vector<SquadUnitPtr> assigned;
 
-	class StallSquad : public Squad {
-	public:
+			ScoutLocation(BWAPI::TilePosition location) : location(location) {}
+		};
+
+		BlackCrow &bc;
+		std::vector<SquadUnitPtr> sunits;
+		std::vector<ScoutLocation> scoutLocations;
+		void adjustTarget();
 	};
 }

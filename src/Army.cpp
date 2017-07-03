@@ -13,25 +13,20 @@ namespace BlackCrow {
 	void Army::onStart() {}
 
 	void Army::onFrame() {
-		auto ssIt = scoutSquads.begin();
-		while (ssIt != scoutSquads.end()) {
-			ScoutSquadPtr ss = *ssIt;
-			if (ss->sunits.size() <= 0) {
-				ssIt = scoutSquads.erase(ssIt);
-			} else {
-				ss->onFrame();
-				ssIt++;
-			}
-		}
+		runSquadsAndUnits();
+	}
 
-		auto asIt = attackSquads.begin();
-		while (asIt != attackSquads.end()) {
-			AttackSquadPtr as = *asIt;
-			if (as->sunits.size() <= 0) {
-				asIt = attackSquads.erase(asIt);
-			} else {
-				as->onFrame();
-				asIt++;
+
+	void Army::runSquadsAndUnits() {
+		auto squadIt = squads.begin();
+		while (squadIt != squads.end()) {
+			SquadPtr squad = *squadIt;
+			if (squad->getSquadUnits().size() <= 0) {
+				squadIt = squads.erase(squadIt);
+			}
+			else {
+				squad->onFrame();
+				squadIt++;
 			}
 		}
 
@@ -50,7 +45,7 @@ namespace BlackCrow {
 			|| type == UnitTypes::Zerg_Overlord)
 			return;
 
-		assignAutomaticAttackSquad(addToArmy(unit));
+		assignToSquad(addToArmy(unit));
 	}
 
 	void Army::onUnitDestroyed(BWAPI::Unit unit) {
@@ -62,13 +57,14 @@ namespace BlackCrow {
 		}
 	}
 
-	SquadUnitPtr Army::addToArmy(BWAPI::Unit unit) {
+	SquadUnitPtr& Army::addToArmy(BWAPI::Unit unit) {
 		sunits.emplace_back(std::make_shared<SquadUnit>(bc, unit));
 		return sunits.back();
 	}
 
-	void Army::removeFromArmy(SquadUnitPtr sunit) {
+	void Army::removeFromArmy(SquadUnitPtr& sunit) {
 		assert(sunit->squad);
+		sunit->squad->remove(sunit);
 		sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
 	}
 
@@ -79,6 +75,61 @@ namespace BlackCrow {
 		}
 		return nullptr;
 	}
+
+	void Army::assignToSquad(SquadUnitPtr& sunit) {
+		SquadPtr squad = getOrCreateSquadIfNoneExist();
+		sunit->squad = squad;
+		squad->add(sunit);
+	}
+
+	void Army::startInitialScout() {
+		SquadPtr& squad = getOrCreateSquadIfNoneExist();
+		squad->addScoutLocationsStartingPoints();
+
+		if (squad->size() <= 0) {
+			SquadUnitPtr sunit = addToArmy(bc.macro.getDroneForBuilding(bc.macro.startPosition));
+			squad->add(sunit);
+			sunit->squad = squad;
+		}
+	}
+
+	void Army::workerUnderAttack(WorkerPtr& workerUnderAttack, Base& base) {
+		std::vector<WorkerPtr> closeWorkers;
+
+		for (WorkerPtr worker : base.workers) {
+			if (Util::distance(workerUnderAttack->unit->getPosition(), worker->unit->getPosition()) < 48)
+				closeWorkers.push_back(worker);
+		}
+
+		EnemyUnitPtr eu = bc.enemy.getClosestEnemy(workerUnderAttack->unit->getPosition(), [](EnemyUnitPtr eu) { return true; });
+		if (eu) {
+			for (WorkerPtr worker : closeWorkers) {
+				if (!worker->unit->isAttacking()) {
+					worker->stopMining();
+					worker->unit->attack(Broodwar->getUnit(eu->id));
+				}
+				worker->resetAfterAttackFrameCounter = 40;
+			}
+		}
+	}
+
+
+	// ### Private ###
+	SquadPtr& Army::createSquad() {
+		squads.emplace_back(std::make_shared<Squad>(bc));
+		return squads.back();
+	}
+
+	SquadPtr& Army::getOrCreateSquadIfNoneExist() {
+		if (squads.size() <= 0)
+			createSquad();
+		return squads.back();
+	}
+
+
+
+
+	/*
 
 	void Army::assignAutomaticAttackSquad(SquadUnitPtr sunit) {
 
@@ -126,24 +177,5 @@ namespace BlackCrow {
 		scoutSquads.emplace_back(std::make_shared<ScoutSquad>(bc));
 		return scoutSquads.back();
 	}
-
-	void Army::workerUnderAttack(WorkerPtr workerUnderAttack, Base& base) {
-		std::vector<WorkerPtr> closeWorkers;
-
-		for (WorkerPtr worker : base.workers) {
-			if (Util::distance(workerUnderAttack->unit->getPosition(), worker->unit->getPosition()) < 48)
-				closeWorkers.push_back(worker);
-		}
-
-		EnemyUnitPtr eu = bc.enemy.getClosestEnemy(workerUnderAttack->unit->getPosition(), [](EnemyUnitPtr eu) { return true; });
-		if (eu) {
-			for (WorkerPtr worker : closeWorkers) {
-				if (!worker->unit->isAttacking()) {
-					worker->stopMining();
-					worker->unit->attack(Broodwar->getUnit(eu->id));
-				}
-				worker->resetAfterAttackFrameCounter = 40;
-			}
-		}
-	}
+	*/
 }

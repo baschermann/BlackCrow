@@ -4,8 +4,6 @@ namespace BlackCrow {
 	class Worker;
 	class SquadUnit;
 	class Squad;
-	class ScoutSquad;
-	class AttackSquad;
 	class UnitMix;
 	class PlannedUnit;
 	class PlannedBuilding;
@@ -19,8 +17,6 @@ namespace BlackCrow {
 	typedef std::shared_ptr<Worker> WorkerPtr;
 	typedef std::shared_ptr<SquadUnit> SquadUnitPtr;
 	typedef std::shared_ptr<Squad> SquadPtr;
-	typedef std::shared_ptr<ScoutSquad> ScoutSquadPtr;
-	typedef std::shared_ptr<AttackSquad> AttackSquadPtr;
 	typedef std::shared_ptr<UnitMix> UnitMixPtr;
 	typedef std::shared_ptr<PlannedUnit> PlannedUnitPtr;
 	typedef std::shared_ptr<PlannedBuilding> PlannedBuildingPtr;

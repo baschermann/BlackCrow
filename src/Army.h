@@ -19,24 +19,23 @@ namespace BlackCrow {
 
 		// Variables
 		std::vector<SquadUnitPtr> sunits;
-		std::vector<ScoutSquadPtr> scoutSquads;
-		std::vector<AttackSquadPtr> attackSquads;
+		std::vector<SquadPtr> squads;
 
 		// Functions
 		void onUnitCreated(BWAPI::Unit unit);
 		void onUnitDestroyed(BWAPI::Unit unit);
-		SquadUnitPtr addToArmy(BWAPI::Unit unit);
-		void removeFromArmy(SquadUnitPtr sunit);
+		SquadUnitPtr& addToArmy(BWAPI::Unit unit);
+		void removeFromArmy(SquadUnitPtr& sunit);
 		SquadUnitPtr findSquadUnit(BWAPI::Unit unit);
-		AttackSquadPtr createAttackSquad();
-		ScoutSquadPtr createScoutSquad();
-		void assignAutomaticAttackSquad(SquadUnitPtr sunit);
-		void assignAutomaticScoutSquad(SquadUnitPtr sunit);
+		void assignToSquad(SquadUnitPtr& sunit);
 		void startInitialScout();
-		void workerUnderAttack(WorkerPtr worker, Base& base);
+		void workerUnderAttack(WorkerPtr& worker, Base& base);
 
 	private:
 		BlackCrow &bc;
+		void runSquadsAndUnits();
+		SquadPtr& createSquad();
+		SquadPtr& getOrCreateSquadIfNoneExist();
 	};
 
 }

@@ -476,7 +476,7 @@ namespace BlackCrow {
 					Broodwar->drawBoxMap(barPosHealth + topLeft, barPosHealth + bottomRight, color, true);
 				}
 
-				if (hasShields) {
+				if (hasShields) { // TODO Not 100% correct
 					Broodwar->drawBoxMap(barPosShield, barPosShield + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
 					for (int i = 0; i < bars; i++) {
 						Color color = i + 1 < ((float)bars + 1) * percentageShield ? Colors::Blue : Colors::Grey;

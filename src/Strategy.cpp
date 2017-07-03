@@ -364,6 +364,7 @@ namespace BlackCrow {
 		overlordSafety->requiredOnce([&bc = bc]() {
 			return std::any_of(bc.enemy.enemies.begin(), bc.enemy.enemies.end(), [](EnemyUnitPtr& eu) { return eu->type.isFlyer() && eu->type.canAttack(); });
 		});
+		predecessor->runAfterRequirements(overlordSafety);
 
 		BrickPtr creepColonyForSpore = Bricks::makeBlank("Build a creep colony");
 		creepColonyForSpore->requiredOnce([&bc = bc]() {
@@ -402,12 +403,5 @@ namespace BlackCrow {
 			}
 		});
 		overlordSafety->runAfterRequirements(moveOverlordsToSpore);
-
-
-
-
-
-
-		predecessor->runAfterRequirements(overlordSafety);
 	}
 }

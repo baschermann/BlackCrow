@@ -12,6 +12,18 @@ namespace BlackCrow {
 		SquadUnit(BlackCrow& bc, BWAPI::Unit unit);
 		void onFrame();
 
+		enum class OVERRIDE {
+			SCOUTING,
+			MOVE_OUT_OF_WAY,
+			DEFILER_SNACK
+		};
+
+		// Squad
+		bool squadOverride = false;
+		BWAPI::TilePosition scoutLocation = TilePositions::None;
+		void resetSquadOverride();
+		void squadOverrideScoutLocation(BWAPI::TilePosition location);
+
 		// Variables
 		BWAPI::Unit unit = nullptr;
 		int attackTargetId = -13337;

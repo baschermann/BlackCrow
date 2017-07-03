@@ -11,23 +11,128 @@ namespace BlackCrow {
 
 	Squad::Squad(BlackCrow &parent) : bc(parent) {}
 
-	void Squad::onFrame() {}
+	void Squad::onFrame() {
+		// Remove visible scouting locations
+		auto scoutLocationIt = scoutLocations.begin();
+		while (scoutLocationIt != scoutLocations.end()) {
+			if (Broodwar->isVisible(scoutLocationIt->location))
+				scoutLocationIt = scoutLocations.erase(scoutLocationIt);
+			else
+				scoutLocationIt++;
+		}
 
-	void Squad::add(const SquadUnitPtr unit) {
-		sunits.push_back(unit);
-	}
+		 
+		// Looking for a squad goal myself. Should the army 
+		adjustTarget();
 
-	void Squad::remove(const SquadUnitPtr sunit) {
-		sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
-	}
+		// For all scouting points get the closest unit
+		for (auto& scoutLocation : scoutLocations) {
+			if (scoutLocation.assigned.size() <= 0) {
+				SquadUnitPtr closestUnit = nullptr;
+				double closestDistance = std::numeric_limits<double>().max();
 
-	void Squad::moveAll(BWAPI::Position position, bool queue) {
-		for (SquadUnitPtr sunit : sunits) {
-			if (sunit->isIdle() || !sunit->isMoving())
-				sunit->attackMove(position, queue);
+				for (auto& sunit : sunits) {
+					if (!sunit->squadOverride) {
+						double distance = Util::distance(Position(scoutLocation.location), sunit->unit->getPosition());
+						if (distance < closestDistance) {
+							closestUnit = sunit;
+							closestDistance = distance;
+						}
+					}
+				}
+
+				if (closestUnit) {
+					closestUnit->squadOverrideScoutLocation(scoutLocation.location);
+				}
+			}
 		}
 	}
 
+	void Squad::add(const SquadUnitPtr& unit) {
+		sunits.push_back(unit);
+	}
+
+	void Squad::remove(const SquadUnitPtr& sunit) {
+		sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
+	}
+
+	std::vector<SquadUnitPtr>& Squad::getSquadUnits() {
+		return sunits;
+	}
+
+	int Squad::size() {
+		return sunits.size();
+	}
+
+	// Scouting
+	bool Squad::isScouting() {
+		return scoutLocations.size() > 0;
+	}
+
+	int Squad::locationsToScoutLeft() {
+		return scoutLocations.size();
+	}
+
+	void Squad::addScoutLocation(const BWAPI::TilePosition& position) {
+		scoutLocations.push_back(ScoutLocation(position));
+	}
+
+	void Squad::addScoutLocationsStartingPoints() {
+
+		for (BWAPI::TilePosition tilePosition : bc.bwem.StartingLocations()) {
+			if (!Broodwar->isVisible(tilePosition)) {
+				tilePosition.x += 1;
+				tilePosition.y += 1;
+				addScoutLocation(tilePosition);
+			}
+		}
+	}
+
+	void Squad::addScoutLocationsExpansions(bool addIslands) {
+		for (const Base& base : bc.macro.bases)
+			if (!Broodwar->isVisible(base.bwemBase.Location()))
+				if (addIslands)
+					addScoutLocation(base.bwemBase.Location());
+				else
+					if (!base.isIsland)
+						addScoutLocation(base.bwemBase.Location());
+	}
+
+	// Fighting
+	bool Squad::isFightingBuilding(const EnemyUnitPtr eu) {
+		return (eu->type == UnitTypes::Zerg_Sunken_Colony
+			|| eu->type == UnitTypes::Zerg_Spore_Colony
+			|| eu->type == UnitTypes::Protoss_Photon_Cannon
+			|| eu->type == UnitTypes::Terran_Bunker)
+			&& Broodwar->getUnit(eu->id)->isCompleted();
+	}
+
+	void Squad::adjustTarget() {
+		EnemyUnitPtr enemyUnit = bc.enemy.getClosestEnemy(bc.macro.startPosition, [](const EnemyUnitPtr eu) {
+			Unit unit = Broodwar->getUnit(eu->id);
+			return !eu->type.isFlyer()
+				&& !eu->type.isInvincible()
+				&& !eu->isGhost
+				&& eu->type != UnitTypes::Zerg_Larva
+				&& eu->type != UnitTypes::Zerg_Egg
+				&& eu->type != UnitTypes::Zerg_Lurker_Egg
+				&& !(!unit->isDetected() && unit->isBurrowed())
+				&& !(unit->isCloaked() && !unit->isDetected())
+				&& !(!unit->isDetected() && unit->isBurrowed());
+			// Add under Disruption Web
+		});
+
+		if (enemyUnit)
+			squadGoalTarget = enemyUnit;
+		else
+			if (scoutLocations.size() <= 0)
+				addScoutLocationsExpansions(false);
+	}
+
+
+
+
+		/*
 	// ######## Scout Squad #########
 	ScoutSquad::ScoutSquad(BlackCrow &parent) : Squad(parent) {}
 
@@ -64,58 +169,6 @@ namespace BlackCrow {
 			disband();
 	}
 
-	bool ScoutSquad::isStillScouting() {
-		return scoutLocations.size() > 0;
-	}
-
-	int ScoutSquad::locationsToScout() {
-		return scoutLocations.size();
-	}
-
-	std::vector<BWAPI::TilePosition>& ScoutSquad::getScoutingPositions() {
-		return scoutLocations;
-	}
-
-	void ScoutSquad::addScoutPosition(BWAPI::TilePosition tilePosition) {
-		scoutLocations.push_back(tilePosition);
-	}
-
-	void ScoutSquad::addStartLocations() {
-		for (BWAPI::TilePosition tilePosition : bc.bwem.StartingLocations()) {
-			if (!Broodwar->isVisible(tilePosition)) {
-				tilePosition.x += 1;
-				tilePosition.y += 1;
-				addScoutPosition(tilePosition);
-			}
-		}
-	}
-
-	void ScoutSquad::addExpansions(bool addIslands) {
-		for (const Base& base : bc.macro.bases) {
-			if (!Broodwar->isVisible(base.bwemBase.Location()))
-				if (addIslands)
-					addScoutPosition(base.bwemBase.Location());
-				else
-					if(!base.isIsland)
-						addScoutPosition(base.bwemBase.Location());
-		}
-	}
-
-	void ScoutSquad::setGlobalSearch(bool searchGlobally) {
-		globalSearch = searchGlobally;
-	}
-
-	void ScoutSquad::disband() {
-		for (SquadUnitPtr sunit : sunits) {
-			if (sunit->unit->getType() == UnitTypes::Zerg_Drone) {
-				bc.macro.addDrone(sunit->unit);
-				bc.army.removeFromArmy(sunit);
-			} else {
-				bc.army.assignAutomaticAttackSquad(sunit);
-			}
-		}
-		sunits.clear();
-	}
 
 	// ######## Attack Squad #########
 	AttackSquad::AttackSquad(BlackCrow &parent) : Squad(parent) {}
@@ -204,12 +257,5 @@ namespace BlackCrow {
 			break;
 		}
 	}
-
-	bool AttackSquad::isFightingBuilding(const EnemyUnitPtr eu) {
-		return (eu->type == UnitTypes::Zerg_Sunken_Colony
-			|| eu->type == UnitTypes::Zerg_Spore_Colony
-			|| eu->type == UnitTypes::Protoss_Photon_Cannon
-			|| eu->type == UnitTypes::Terran_Bunker)
-			&& Broodwar->getUnit(eu->id)->isCompleted();
-	}
+	*/
 }

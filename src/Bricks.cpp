@@ -43,9 +43,9 @@ namespace BlackCrow {
 
 
 				// Condition
-				bool conditions = checkConditions();
-				//bool conditions = std::all_of(conditions.begin(), conditions.end(), []() {}); // TODO how does this work?
-				if (conditions) {
+				bool cond = checkConditions();
+				//bool cond = std::all_of(conditions.begin(), conditions.end(), [](std::function<bool(void)> con) { return con(); }); // TODO how does this work?
+				if (cond) {
 
 					// Onces when true
 					if (!oncesTrueHaveRun) {
@@ -77,7 +77,7 @@ namespace BlackCrow {
 				for (auto& successor : successorsRequirement)
 					successor->run();
 
-				if(conditions)
+				if(cond)
 					// Run Successors when conditions are true
 					for (auto& successor : successorsTrue)
 						successor->run();
