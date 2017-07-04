@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include "Common.h"
 
 namespace BlackCrow {
 	namespace Util {
@@ -50,5 +51,6 @@ namespace BlackCrow {
 		BWAPI::Position middleOfBuilding(BWAPI::UnitType building);
 
 		int randomIntIncl(int a, int b);
+		bool isFightingBuilding(const EnemyUnitPtr eu);
 	}
 }

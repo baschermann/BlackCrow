@@ -61,7 +61,7 @@ namespace BlackCrow {
 				bc.macro.addDrone(unit);
 			} else {
 				if (type != UnitTypes::Zerg_Overlord) {
-					bc.army.assignAutomaticAttackSquad(bc.army.addToArmy(unit));
+					bc.army.assignToSquad(bc.army.addToArmy(unit));
 				}
 			}
 		}

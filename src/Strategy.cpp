@@ -369,9 +369,9 @@ namespace BlackCrow {
 		BrickPtr creepColonyForSpore = Bricks::makeBlank("Build a creep colony");
 		creepColonyForSpore->requiredOnce([&bc = bc]() {
 			return bc.macro.hasAmountOf(UnitTypes::Zerg_Creep_Colony) <= 0
-				&& !bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Creep_Colony) <= 0
+				&& !(bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Creep_Colony) <= 0)
 				&& bc.macro.hasAmountOf(UnitTypes::Zerg_Spore_Colony) <= 0
-				&& !bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Spore_Colony) <= 0;
+				&& !(bc.macro.getCurrentlyPlannedAmount(UnitTypes::Zerg_Spore_Colony) <= 0);
 		});
 		creepColonyForSpore->onceAfterRequirements([&bc = bc]() { bc.macro.planBuilding(UnitTypes::Zerg_Creep_Colony, bc.builder.getBuildingSpot(UnitTypes::Zerg_Creep_Colony)); });
 		overlordSafety->runAfterRequirements(creepColonyForSpore);
@@ -381,7 +381,7 @@ namespace BlackCrow {
 		morphCreepColonyToSpore->requiredOnce([&bc = bc]() { return bc.macro.hasAmountOf(UnitTypes::Zerg_Creep_Colony) > 0; });
 		morphCreepColonyToSpore->repeatAfterRequirements([&bc = bc]() { 
 			for (auto unit : Broodwar->self()->getUnits()) {
-				if (unit->getType() == UnitTypes::Zerg_Creep_Colony && unit->isCompleted() && Broodwar->self()->minerals >= UnitTypes::Zerg_Creep_Colony.mineralPrice())
+				if (unit->getType() == UnitTypes::Zerg_Creep_Colony && unit->isCompleted() && Broodwar->self()->minerals() >= UnitTypes::Zerg_Creep_Colony.mineralPrice())
 					unit->morph(UnitTypes::Zerg_Creep_Colony);
 			}
 		});
@@ -392,7 +392,7 @@ namespace BlackCrow {
 		moveOverlordsToSpore->repeatAfterRequirements([]() {
 			if (Broodwar->getFrameCount() % 10 == 0) {
 				auto ownUnits = Broodwar->self()->getUnits();
-				auto sporeIt = std::find(ownUnits.begin(), ownUnits.end(), [](Unit unit) { return unit->getType() == UnitTypes::Zerg_Spore_Colony; });
+				auto sporeIt = std::find_if(ownUnits.begin(), ownUnits.end(), [](const Unit unit) { return unit->getType() == UnitTypes::Zerg_Spore_Colony; });
 				if (sporeIt != ownUnits.end()) {
 					Unit spore = *sporeIt;
 					for (auto unit : ownUnits)

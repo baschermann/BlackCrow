@@ -154,5 +154,13 @@ namespace BlackCrow {
 		}
 	}
 
+	bool Util::isFightingBuilding(const EnemyUnitPtr eu) {
+		return (eu->type == UnitTypes::Zerg_Sunken_Colony
+			|| eu->type == UnitTypes::Zerg_Spore_Colony
+			|| eu->type == UnitTypes::Protoss_Photon_Cannon
+			|| eu->type == UnitTypes::Terran_Bunker)
+			&& Broodwar->getUnit(eu->id)->isCompleted();
+	}
+
 	
 }

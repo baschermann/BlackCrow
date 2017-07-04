@@ -138,6 +138,7 @@ namespace BlackCrow {
 		}
 		Broodwar->setTextSize(BWAPI::Text::Size::Default);
 
+		/*
 		// Selected Units Info
 		int yOffset = 0;
 		Color darkRed = Color(96, 0, 0);
@@ -157,6 +158,7 @@ namespace BlackCrow {
 					Broodwar->drawLineMap(sunit->unit->getPosition(), eu->position, darkRed);
 			}
 		}
+		*/
 
 		// Builder Debug
 		//int i = 0;
@@ -397,20 +399,16 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawSquadInfo() {
-		for (ScoutSquadPtr scoutSquad : bc.army.scoutSquads) {
-			if (scoutSquad->sunits.size() > 0) {
-				auto positionsIt = scoutSquad->getScoutingPositions().begin();
+		
+		for (SquadPtr squad : bc.army.squads) {
+			if (squad->sunits.size() > 0) {
 
-				while (positionsIt != scoutSquad->getScoutingPositions().end()) {
-					BWAPI::Unit scoutUnit = scoutSquad->sunits.back()->unit;
-					TilePosition& tilePosition = *positionsIt;
 
-					if (*positionsIt == scoutSquad->getScoutingPositions().back()) {
-						Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::White);
-					} else {
-						Broodwar->drawLineMap(scoutUnit->getPosition().x, scoutUnit->getPosition().y, tilePosition.x * 32, tilePosition.y * 32, BWAPI::Colors::Grey);
+				for (auto& sunit : squad->sunits) {
+					if (sunit->squadOverride == SquadUnit::Override::SCOUTING) {
+						Broodwar->drawLineMap(sunit->self->getPosition(), Position(sunit->scoutLocation), BWAPI::Colors::White);
+						Broodwar->drawBoxMap(Position(sunit->scoutLocation), Position(sunit->scoutLocation + TilePosition(1, 1)), Colors::Green);
 					}
-					positionsIt++;
 				}
 			}
 		}

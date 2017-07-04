@@ -18,7 +18,7 @@ namespace BlackCrow {
 	class Squad {
 	public:
 
-		enum class INTENT {
+		enum class Intent {
 			STALL,
 			FIGHT,
 			BACKDOOR,
@@ -29,24 +29,25 @@ namespace BlackCrow {
 		Squad(BlackCrow &parent);
 		void onFrame();
 
+		Intent intent = Intent::STALL;
+
 		void add(const SquadUnitPtr& sunit);
 		void remove(const SquadUnitPtr& sunit);
 		std::vector<SquadUnitPtr>& getSquadUnits();
 		int size();
+		
 
 		// Scouting
 		bool isScouting();
 		int locationsToScoutLeft();
-		std::vector<BWAPI::TilePosition>& getScoutingLocations();
 		void addScoutLocation(const BWAPI::TilePosition& position);
 		void addScoutLocationsStartingPoints();
 		void addScoutLocationsExpansions(bool addIslands);
 
 		// Fighting
 		EnemyUnitPtr squadGoalTarget = nullptr;
-		bool isFightingBuilding(const EnemyUnitPtr eu);
 
-	private:
+	//private:
 		struct ScoutLocation {
 			BWAPI::TilePosition location;
 			std::vector<SquadUnitPtr> assigned;
@@ -58,5 +59,7 @@ namespace BlackCrow {
 		std::vector<SquadUnitPtr> sunits;
 		std::vector<ScoutLocation> scoutLocations;
 		void adjustTarget();
+		void removeScoutedLocations();
+		void assignSunitsToScoutLocations();
 	};
 }

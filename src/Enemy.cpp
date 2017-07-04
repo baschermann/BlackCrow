@@ -103,6 +103,7 @@ namespace BlackCrow {
 				EnemyUnitPtr& eu = *enemyUnitIt;
 				removeEnemyUnitFromArea(eu, eu->area);
 				enemies.erase(enemyUnitIt);
+				eu->isDestroyed = true;
 				return;
 			} else
 				enemyUnitIt++;

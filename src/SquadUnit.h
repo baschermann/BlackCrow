@@ -12,36 +12,49 @@ namespace BlackCrow {
 		SquadUnit(BlackCrow& bc, BWAPI::Unit unit);
 		void onFrame();
 
-		enum class OVERRIDE {
+		enum class Override {
+			NONE,
 			SCOUTING,
 			MOVE_OUT_OF_WAY,
 			DEFILER_SNACK
 		};
 
 		// Squad
-		bool squadOverride = false;
-		BWAPI::TilePosition scoutLocation = TilePositions::None;
+		Override squadOverride = Override::NONE;
+		BWAPI::TilePosition scoutLocation = BWAPI::TilePositions::None;
 		void resetSquadOverride();
 		void squadOverrideScoutLocation(BWAPI::TilePosition location);
 
 		// Variables
-		BWAPI::Unit unit = nullptr;
-		int attackTargetId = -13337;
+		BWAPI::Unit self = nullptr;
+		EnemyUnitPtr target = nullptr;
 		SquadPtr squad = nullptr;
 		int lastCommandSent = 0;
 		int nextCommandExecutesAt = 0;
 
 		// Functions
-		bool isIdle();
-		void move(BWAPI::Position position, bool queue);
-		bool isMoving();
-		void attackMove(BWAPI::Position position, bool queue);
-		void setAttackTarget(int id);
 		bool hasTarget();
 		bool commandInQueue();
 		void commandExecuted();
 
 	private:
 		BlackCrow &bc;
+
+		EnemyUnitPtr getClosestTarget();
+		EnemyUnitPtr getClosestThreat();
+
+		void move(BWAPI::Position position, bool queue, bool overrideCommand);
+		void attackMove(BWAPI::Position position, bool queue, bool overrideCommand);
+		void attack(BWAPI::Unit enemyUnit, bool queue, bool overrideCommand);
+
+		void scout();
+		void moveOutOfWay();
+		void defilerSnack();
+		void backdoor();
+		void defend();
+		void fight();
+		void runby();
+		void stall();
+			
 	};
 }
