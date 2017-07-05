@@ -22,7 +22,7 @@ namespace BlackCrow {
 		showManagerInfos = true;
 		showPlacementInfos = true;
 		showBwem = false;
-		showSquadInfo = false;
+		showSquadInfo = true;
 		showEnemyUnits = true;
 		showLifeBars = true;
 
@@ -400,18 +400,22 @@ namespace BlackCrow {
 
 	void Debug::drawSquadInfo() {
 		
+		
 		for (SquadPtr squad : bc.army.squads) {
 			if (squad->sunits.size() > 0) {
-
-
 				for (auto& sunit : squad->sunits) {
 					if (sunit->squadOverride == SquadUnit::Override::SCOUTING) {
 						Broodwar->drawLineMap(sunit->self->getPosition(), Position(sunit->scoutLocation), BWAPI::Colors::White);
 						Broodwar->drawBoxMap(Position(sunit->scoutLocation), Position(sunit->scoutLocation + TilePosition(1, 1)), Colors::Green);
 					}
+
+					Broodwar->drawCircleMap(sunit->self->getPosition(), 3, Colors::Green, true);
+					if (sunit->squadOverride != SquadUnit::Override::NONE)
+						Broodwar->drawTextMap(sunit->self->getPosition(), "OVR");
 				}
 			}
 		}
+		
 	}
 
 	void Debug::drawEnemyUnits() {

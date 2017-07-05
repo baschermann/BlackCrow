@@ -26,14 +26,27 @@ namespace BlackCrow {
 			DEFEND
 		};
 
+		struct ScoutLocation {
+			BWAPI::TilePosition location;
+			std::vector<SquadUnitPtr> assigned;
+			std::function<bool(void)> cancelCondition;
+
+			ScoutLocation(BWAPI::TilePosition location) : location(location) {}
+
+			template <class UnaryPredicate>
+			ScoutLocation(BWAPI::TilePosition location, UnaryPredicate cancelCondition) : location(location), cancelCondition(cancelCondition) {}
+
+		};
+
 		Squad(BlackCrow &parent);
 		void onFrame();
 
 		Intent intent = Intent::STALL;
+		std::vector<SquadUnitPtr> sunits;
+		std::vector<ScoutLocation> scoutLocations;
 
 		void add(const SquadUnitPtr& sunit);
 		void remove(const SquadUnitPtr& sunit);
-		std::vector<SquadUnitPtr>& getSquadUnits();
 		int size();
 		
 
@@ -47,19 +60,12 @@ namespace BlackCrow {
 		// Fighting
 		EnemyUnitPtr squadGoalTarget = nullptr;
 
-	//private:
-		struct ScoutLocation {
-			BWAPI::TilePosition location;
-			std::vector<SquadUnitPtr> assigned;
-
-			ScoutLocation(BWAPI::TilePosition location) : location(location) {}
-		};
+	private:
 
 		BlackCrow &bc;
-		std::vector<SquadUnitPtr> sunits;
-		std::vector<ScoutLocation> scoutLocations;
 		void adjustTarget();
 		void removeScoutedLocations();
+		void removeAssignedScoutUnits(ScoutLocation& scoutLocation);
 		void assignSunitsToScoutLocations();
 	};
 }

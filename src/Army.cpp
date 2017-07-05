@@ -21,7 +21,7 @@ namespace BlackCrow {
 		auto squadIt = squads.begin();
 		while (squadIt != squads.end()) {
 			SquadPtr squad = *squadIt;
-			if (squad->getSquadUnits().size() <= 0) {
+			if (squad->sunits.size() <= 0) {
 				squadIt = squads.erase(squadIt);
 			}
 			else {
@@ -85,6 +85,10 @@ namespace BlackCrow {
 	void Army::startInitialScout() {
 		SquadPtr& squad = getOrCreateSquadIfNoneExist();
 		squad->addScoutLocationsStartingPoints();
+
+		for (auto& scoutLocation : squad->scoutLocations) {
+			scoutLocation.cancelCondition = [&bc = bc, scoutLocation]() { return bc.enemy.hasKnownBuilding() || Broodwar->isVisible(scoutLocation.location); };
+		}
 
 		if (squad->size() <= 0) {
 			SquadUnitPtr sunit = addToArmy(bc.macro.getDroneForBuilding(bc.macro.startPosition));

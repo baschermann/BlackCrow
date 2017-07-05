@@ -12,7 +12,7 @@ namespace BlackCrow {
 	Squad::Squad(BlackCrow &parent) : bc(parent) {}
 
 	void Squad::onFrame() {
-		// Looking for a squad goal myself. Should the army 
+		// Looking for a squad goal myself. The army should be assigning targets
 		adjustTarget();
 
 		// Remove scouted Locations and free Units
@@ -34,10 +34,6 @@ namespace BlackCrow {
 		sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
 	}
 
-	std::vector<SquadUnitPtr>& Squad::getSquadUnits() {
-		return sunits;
-	}
-
 	int Squad::size() {
 		return sunits.size();
 	}
@@ -56,7 +52,6 @@ namespace BlackCrow {
 	}
 
 	void Squad::addScoutLocationsStartingPoints() {
-
 		for (BWAPI::TilePosition tilePosition : bc.bwem.StartingLocations()) {
 			if (!Broodwar->isVisible(tilePosition)) {
 				tilePosition.x += 1;
@@ -103,15 +98,30 @@ namespace BlackCrow {
 	void Squad::removeScoutedLocations() {
 		auto scoutLocationIt = scoutLocations.begin();
 		while (scoutLocationIt != scoutLocations.end()) {
-			if (Broodwar->isVisible(scoutLocationIt->location)) {
-				for (auto& sunit : scoutLocationIt->assigned)
-					if (sunit->squadOverride == SquadUnit::Override::SCOUTING) {
-						sunit->resetSquadOverride();
-					}
-				scoutLocationIt = scoutLocations.erase(scoutLocationIt);
-			} else
-				scoutLocationIt++;
+			ScoutLocation& scoutLocation = *scoutLocationIt;
+
+			// If they have no cancel condition, remove if their scouting locations are visible
+			if (!scoutLocation.cancelCondition) {
+				if (Broodwar->isVisible(scoutLocation.location)) {
+					removeAssignedScoutUnits(scoutLocation);
+					scoutLocationIt = scoutLocations.erase(scoutLocationIt);
+				} else
+					scoutLocationIt++;
+			} else {
+				// Check cancel condition
+				if (scoutLocation.cancelCondition()) {
+					removeAssignedScoutUnits(scoutLocation);
+					scoutLocationIt = scoutLocations.erase(scoutLocationIt);
+				} else
+					scoutLocationIt++;
+			}
 		}
+	}
+
+	void Squad::removeAssignedScoutUnits(ScoutLocation& scoutLocation) {
+		for (auto& sunit : scoutLocation.assigned)
+			if (sunit->squadOverride == SquadUnit::Override::SCOUTING)
+				sunit->resetSquadOverride();
 	}
 
 	void Squad::assignSunitsToScoutLocations() {
@@ -136,6 +146,19 @@ namespace BlackCrow {
 				}
 			}
 		}
+
+
+
+		// Put unused drones back to mining
+		auto& droneIt = std::find_if(sunits.begin(), sunits.end(), [](SquadUnitPtr& sunit) { 
+			return sunit->squadOverride != SquadUnit::Override::SCOUTING
+				&& sunit->self->getType() == UnitTypes::Zerg_Drone; 
+		});
+		if (droneIt != sunits.end()) {
+			bc.macro.addDrone((*droneIt)->self);
+			bc.army.removeFromArmy(*droneIt);
+		}
+
 	}
 
 

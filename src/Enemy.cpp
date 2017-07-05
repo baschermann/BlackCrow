@@ -101,9 +101,9 @@ namespace BlackCrow {
 		while (enemyUnitIt != enemies.end()) {
 			if ((*enemyUnitIt)->id == unit->getID()) {
 				EnemyUnitPtr& eu = *enemyUnitIt;
+				eu->isDestroyed = true;
 				removeEnemyUnitFromArea(eu, eu->area);
 				enemies.erase(enemyUnitIt);
-				eu->isDestroyed = true;
 				return;
 			} else
 				enemyUnitIt++;
