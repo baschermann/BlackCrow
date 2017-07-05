@@ -169,9 +169,9 @@ namespace BlackCrow {
 
 		if (buildingType == UnitTypes::Zerg_Hatchery) {
 			ad.left = 1;
-			ad.right = 1;
+			ad.right = 0;
 			ad.bottom = 1;
-			ad.top = 1;
+			ad.top = 0;
 		}
 
 		return ad;
