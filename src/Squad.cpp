@@ -156,7 +156,7 @@ namespace BlackCrow {
 		});
 		if (droneIt != sunits.end()) {
 			bc.macro.addDrone((*droneIt)->self);
-			bc.army.removeFromArmy(*droneIt);
+			bc.army.releaseFromArmy(*droneIt);
 		}
 
 	}

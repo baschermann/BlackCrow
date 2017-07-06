@@ -62,9 +62,10 @@ namespace BlackCrow {
 		return sunits.back();
 	}
 
-	void Army::removeFromArmy(SquadUnitPtr& sunit) {
+	void Army::releaseFromArmy(SquadUnitPtr& sunit) {
 		assert(sunit->squad);
 		sunit->squad->remove(sunit);
+		sunit->squad = nullptr;
 		sunits.erase(std::remove(sunits.begin(), sunits.end(), sunit), sunits.end());
 	}
 

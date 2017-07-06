@@ -399,14 +399,12 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawSquadInfo() {
-		
-		
 		for (SquadPtr squad : bc.army.squads) {
 			if (squad->sunits.size() > 0) {
 				for (auto& sunit : squad->sunits) {
 					if (sunit->squadOverride == SquadUnit::Override::SCOUTING) {
 						Broodwar->drawLineMap(sunit->self->getPosition(), Position(sunit->scoutLocation), BWAPI::Colors::White);
-						Broodwar->drawBoxMap(Position(sunit->scoutLocation), Position(sunit->scoutLocation + TilePosition(1, 1)), Colors::Green);
+						Broodwar->drawBoxMap(Position(sunit->scoutLocation), Position(sunit->scoutLocation + TilePosition(1, 1) / 2), Colors::Green);
 					}
 
 					Broodwar->drawCircleMap(sunit->self->getPosition(), 3, Colors::Green, true);

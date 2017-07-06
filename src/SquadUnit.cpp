@@ -10,6 +10,8 @@ namespace BlackCrow {
 	SquadUnit::SquadUnit(BlackCrow& blackCrow, BWAPI::Unit unit) : bc(blackCrow), self(unit) {}
 
 	void SquadUnit::onFrame() {
+		assert(squad);
+
 		switch (squadOverride) {
 		case Override::SCOUTING:
 			scout();
