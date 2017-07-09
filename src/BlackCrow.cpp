@@ -165,17 +165,17 @@ namespace BlackCrow {
 
 	void BlackCrow::onUnitDestroy(BWAPI::Unit unit) {
 		try {
-			// BWEM
-			if (unit->getType().isMineralField())
-				bwem.OnMineralDestroyed(unit);
-			else if (unit->getType().isSpecialBuilding())
-				bwem.OnStaticBuildingDestroyed(unit);
-
 			// Other
 			army.onUnitDestroyed(unit);
 			builder.onBuildingDestroyed(unit);
 			macro.onUnitDestroyed(unit);
 			enemy.onUnitDestroyed(unit);
+
+			// BWEM
+			if (unit->getType().isMineralField())
+				bwem.OnMineralDestroyed(unit);
+			else if (unit->getType().isSpecialBuilding())
+				bwem.OnStaticBuildingDestroyed(unit);
 
 		} catch (const std::exception & e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;
