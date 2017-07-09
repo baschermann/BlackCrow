@@ -94,11 +94,6 @@ namespace BlackCrow {
 			SquadUnitPtr sunit = addToArmy(bc.macro.getDroneForBuilding(bc.macro.startPosition));
 			squad->add(sunit);
 			sunit->squad = squad;
-
-			// For testing get 2 scouts
-			sunit = addToArmy(bc.macro.getDroneForBuilding(bc.macro.startPosition));
-			squad->add(sunit);
-			sunit->squad = squad;
 		}
 	}
 

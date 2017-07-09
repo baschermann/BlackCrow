@@ -189,15 +189,17 @@ namespace BlackCrow {
 	void SquadUnit::stall() {
 		EnemyUnitPtr threat = getClosestThreat();
 		if (threat) {
-			int keepDistance = (int)((double)self->getType().sightRange() * 0.9);
-			int toEnemyDistance = Util::distance(self->getPosition(), threat->position);
-			if (toEnemyDistance < keepDistance) {
-				self->move(squad->squadGoalTarget->position);
+			//int stayAwayDistance = (int)((double)self->getType().sightRange() * 0.9);
+			int stayAwayDistance = std::max((int)((double)threat->type.groundWeapon().maxRange() * 1.2), 175);
+			int enemyDistance = (int)Util::distance(self->getPosition(), threat->position);
+
+			if (enemyDistance < stayAwayDistance) {
+				move(bc.macro.startPosition);
 			} else {
-				self->move(bc.macro.startPosition);
+				attackMove(squad->squadGoalTarget->position);
 			}
 		} else {
-			self->move(squad->squadGoalTarget->position);
+			attackMove(squad->squadGoalTarget->position);
 		}
 	}
 }
