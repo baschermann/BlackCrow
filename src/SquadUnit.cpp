@@ -10,7 +10,7 @@ namespace BlackCrow {
 	SquadUnit::SquadUnit(BlackCrow& blackCrow, BWAPI::Unit unit) : bc(blackCrow), self(unit) {}
 
 	void SquadUnit::onFrame() {
-		assert(squad);
+		//assert(squad);
 
 		switch (squadOverride) {
 		case Override::SCOUTING:
@@ -23,23 +23,25 @@ namespace BlackCrow {
 			defilerSnack();
 			break;
 		case Override::NONE:
-			// Follow Squad Order
-			switch (squad->intent) {
-			case Squad::Intent::BACKDOOR:
-				backdoor();
-				break;
-			case Squad::Intent::DEFEND:
-				defend();
-				break;
-			case Squad::Intent::FIGHT:
-				fight();
-				break;
-			case Squad::Intent::RUNBY:
-				runby();
-				break;
-			case Squad::Intent::STALL:
-				stall();
-				break;
+			if (squad) {
+				// Follow Squad Order
+				switch (squad->intent) {
+				case Squad::Intent::BACKDOOR:
+					backdoor();
+					break;
+				case Squad::Intent::DEFEND:
+					defend();
+					break;
+				case Squad::Intent::FIGHT:
+					fight();
+					break;
+				case Squad::Intent::RUNBY:
+					runby();
+					break;
+				case Squad::Intent::STALL:
+					stall();
+					break;
+				}
 			}
 			
 			break;
@@ -188,11 +190,14 @@ namespace BlackCrow {
 		EnemyUnitPtr threat = getClosestThreat();
 		if (threat) {
 			int keepDistance = (int)((double)self->getType().sightRange() * 0.9);
-			if (Util::distance(self->getPosition(), threat->position) < keepDistance) {
+			int toEnemyDistance = Util::distance(self->getPosition(), threat->position);
+			if (toEnemyDistance < keepDistance) {
 				self->move(squad->squadGoalTarget->position);
 			} else {
 				self->move(bc.macro.startPosition);
 			}
+		} else {
+			self->move(squad->squadGoalTarget->position);
 		}
 	}
 }

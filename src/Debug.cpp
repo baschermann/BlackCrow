@@ -219,7 +219,7 @@ namespace BlackCrow {
 
 		if (showPlacementInfos)
 			drawPlacementInfo();
-
+		
 		if (showBwem)
 			drawBwem();
 
@@ -410,7 +410,12 @@ namespace BlackCrow {
 					Broodwar->drawCircleMap(sunit->self->getPosition(), 3, Colors::Green, true);
 					if (sunit->squadOverride != SquadUnit::Override::NONE)
 						Broodwar->drawTextMap(sunit->self->getPosition(), "OVR");
+
+					if(sunit->squad && sunit->squad->squadGoalTarget)
+						Broodwar->drawLineMap(sunit->self->getPosition(), sunit->squad->squadGoalTarget->position, Colors::Brown);
 				}
+
+				Broodwar->drawTextScreen(10, 120, "Squad unit amount: %i", squad->size());
 			}
 		}
 		

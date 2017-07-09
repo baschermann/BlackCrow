@@ -21,6 +21,9 @@ namespace BlackCrow {
 		// For all scouting points get the closest unit
 		assignSunitsToScoutLocations();
 
+		// Remove drones from the squad when they are not needed for scouting
+		removeUnusedDrones();
+
 		// Call onFrame for all of the squad units
 		for (auto& sunit : sunits)
 			sunit->onFrame();
@@ -146,19 +149,20 @@ namespace BlackCrow {
 				}
 			}
 		}
+	}
 
-
-
-		// Put unused drones back to mining
-		auto& droneIt = std::find_if(sunits.begin(), sunits.end(), [](SquadUnitPtr& sunit) { 
-			return sunit->squadOverride != SquadUnit::Override::SCOUTING
-				&& sunit->self->getType() == UnitTypes::Zerg_Drone; 
-		});
-		if (droneIt != sunits.end()) {
-			bc.macro.addDrone((*droneIt)->self);
-			bc.army.releaseFromArmy(*droneIt);
+	void Squad::removeUnusedDrones() {
+		std::vector<SquadUnitPtr> dronesToRemove;
+		for (auto& sunit : sunits) {
+			if (sunit->squadOverride != SquadUnit::Override::SCOUTING
+				&& sunit->self->getType() == UnitTypes::Zerg_Drone)
+				dronesToRemove.push_back(sunit);
 		}
 
+		for (auto& drone : dronesToRemove) {
+			bc.army.releaseFromArmy(drone);
+			bc.macro.addDrone(drone->self);
+		}
 	}
 
 

@@ -67,5 +67,6 @@ namespace BlackCrow {
 		void removeScoutedLocations();
 		void removeAssignedScoutUnits(ScoutLocation& scoutLocation);
 		void assignSunitsToScoutLocations();
+		void removeUnusedDrones();
 	};
 }
