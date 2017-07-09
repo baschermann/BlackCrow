@@ -439,7 +439,7 @@ namespace BlackCrow {
 	}
 
 	void Debug::drawLifeBars() {
-		float barSize = bc.config.barSize; // Pixel width and height of a single health rectangle
+		float barSize = 3; // Pixel width and height of a single health/shield rectangle
 
 		for (Unit unit : Broodwar->getAllUnits()) {
 			if (!unit->getPlayer()->isNeutral()) {
