@@ -52,5 +52,6 @@ namespace BlackCrow {
 
 		int randomIntIncl(int a, int b);
 		bool isFightingBuilding(const EnemyUnitPtr eu);
+		BWAPI::Position getPointAlongPoints(const BWAPI::Position p1, const BWAPI::Position p2, const double distance);
 	}
 }

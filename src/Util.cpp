@@ -162,5 +162,14 @@ namespace BlackCrow {
 			&& Broodwar->getUnit(eu->id)->isCompleted();
 	}
 
+	BWAPI::Position Util::getPointAlongPoints(const BWAPI::Position p1, const BWAPI::Position p2, const double distance) {
+		double len = std::sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));
+		
+		double dx = (p2.x - p1.x) / len;
+		double dy = (p2.y - p1.y) / len;
+		
+		return Position((int)(p1.x + distance * dx), (int)(p1.y + distance * dy));
+	}
+
 	
 }
