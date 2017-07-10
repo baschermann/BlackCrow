@@ -138,27 +138,12 @@ namespace BlackCrow {
 		}
 		Broodwar->setTextSize(BWAPI::Text::Size::Default);
 
-		/*
 		// Selected Units Info
-		int yOffset = 0;
-		Color darkRed = Color(96, 0, 0);
-		for (SquadUnitPtr sunit : bc.army.sunits) {
-			EnemyUnitPtr eu = bc.enemy.getEnemy(sunit->attackTargetId);
-
-			if (eu) {
-				if (sunit->unit->isSelected()) {
-					Unit u = Broodwar->getUnit(sunit->attackTargetId);
-					if (u)
-						Broodwar->drawTextScreen(200, 10 + yOffset++ * 15, "\x11 Target ID: %i, Type %s", sunit->attackTargetId, eu->type.getName().c_str());
-					else
-						Broodwar->drawTextScreen(200, 10 + yOffset++ * 15, "\x11 Target ID: %i", sunit->attackTargetId);
-				}
-
-				if (sunit->hasTarget())
-					Broodwar->drawLineMap(sunit->unit->getPosition(), eu->position, darkRed);
+		for (Unit u : Broodwar->self()->getUnits()) {
+			if (u->isSelected()) {
+				//Broodwar->drawLineMap(u->getPosition(), Util::getPointDirectionDistance(u->getPosition(), u->getAngle(), 50), Colors::White);
 			}
 		}
-		*/
 
 		// Builder Debug
 		//int i = 0;
@@ -200,13 +185,23 @@ namespace BlackCrow {
 		// Draw APM, LSpeed, Time
 		Broodwar->setTextSize(BWAPI::Text::Size::Small);
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
-		Broodwar->drawTextScreen(175, 0, "LS: %.1f", bc.getAverageFrameTime());
+		Broodwar->drawTextScreen(185, 0, "LS: %.1f", bc.getAverageFrameTime());
 		int seconds = Broodwar->elapsedTime() % 60;
 		if(seconds >= 10)
-			Broodwar->drawTextScreen(230, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, seconds);
+			Broodwar->drawTextScreen(240, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, seconds);
 		else
-			Broodwar->drawTextScreen(230, 0, "Time: %i:0%i", Broodwar->elapsedTime() / 60, seconds);
+			Broodwar->drawTextScreen(240, 0, "Time: %i:0%i", Broodwar->elapsedTime() / 60, seconds);
 		Broodwar->setTextSize(BWAPI::Text::Size::Default);
+
+		// Latency
+		Broodwar->setTextSize(BWAPI::Text::Size::Small);
+		Broodwar->drawTextScreen(120, 10, "LF: %i", Broodwar->getLatencyFrames());
+		Broodwar->drawTextScreen(185, 10, "L: %i", Broodwar->getLatency());
+		Broodwar->drawTextScreen(240, 10, "RLF: %i", Broodwar->getRemainingLatencyFrames());
+		Broodwar->drawTextScreen(305, 10, "TS: %i",  Broodwar->getLatencyFrames() - Broodwar->getLatency() + 1);
+		Broodwar->setTextSize(BWAPI::Text::Size::Default);
+
+
 
 		// Draw Mouse Tile Position
 		//Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);

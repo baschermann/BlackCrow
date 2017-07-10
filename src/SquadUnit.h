@@ -55,8 +55,6 @@ namespace BlackCrow {
 		void fight();
 		void runby();
 		void stall();
-
-		BWAPI::Position getRetreatPosition(EnemyUnitPtr eu, double distance);
 			
 	};
 }

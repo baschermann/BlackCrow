@@ -189,25 +189,41 @@ namespace BlackCrow {
 	void SquadUnit::stall() {
 		EnemyUnitPtr threat = getClosestThreat();
 		if (threat) {
-			int stayAwayDistance = std::max((int)((double)threat->type.groundWeapon().maxRange() * 1.2), 175);
-			int enemyDistance = (int)Util::distance(self->getPosition(), threat->position);
+			Unit beu = Broodwar->getUnit(threat->id);
+			if (beu->isVisible()) {
 
-			if (enemyDistance < stayAwayDistance) {
-				BWAPI::Position retreatPosition = getRetreatPosition(threat, stayAwayDistance);
+				int enemyWeaponDistance = threat->type.groundWeapon().maxRange();
+				int margins = self->getType().size() + threat->type.size();
 
-				Broodwar->drawLineMap(self->getPosition(), retreatPosition, Colors::White);
-				Broodwar->drawCircleMap(retreatPosition, 3, Colors::White, true);
+					//x - dimensionLeft to x + dimensionRight()
+					//y - dimensionUp, y + dimensionDown
 
-				move(retreatPosition);
-			} else {
-				attackMove(squad->squadGoalTarget->position);
+				Position futurePosition = Util::getPointDirectionDistance(self->getPosition(), self->getAngle(), Broodwar->getRemainingLatencyFrames() * self->getPlayer()->topSpeed(self->getType()));
+				Position threatFuturePosition = Util::getPointDirectionDistance(beu->getPosition(), beu->getAngle(), Broodwar->getRemainingLatencyFrames() * beu->getPlayer()->topSpeed(threat->type));
+				int futureDistanceBetween = (int)Util::distance(futurePosition, threatFuturePosition);
+
+				Broodwar->drawLineMap(self->getPosition(), futurePosition, Colors::Orange);
+				Broodwar->drawLineMap(beu->getPosition(), threatFuturePosition, Colors::Red);
+				Broodwar->drawCircleMap(beu->getPosition(), threat->type.groundWeapon().maxRange(), Colors::Blue);
+				Broodwar->drawCircleMap(self->getPosition(), self->getType().size(), Colors::Purple);
+				Broodwar->drawCircleMap(beu->getPosition(), threat->type.size(), Colors::Purple);
+
+					if (futureDistanceBetween < enemyWeaponDistance) {
+						BWAPI::Position retreatPosition = Util::getPointAlongPoints(threat->position, self->getPosition(), enemyWeaponDistance);
+
+						Broodwar->drawLineMap(self->getPosition(), retreatPosition, Colors::White);
+						Broodwar->drawCircleMap(retreatPosition, 3, Colors::White, true);
+
+						move(retreatPosition);
+					} else {
+						//if (squad->squadGoalTarget)
+							//move(squad->squadGoalTarget->position);
+					}
+					
 			}
 		} else {
-			attackMove(squad->squadGoalTarget->position);
+			if (squad->squadGoalTarget)
+				attackMove(squad->squadGoalTarget->position);
 		}
-	}
-
-	BWAPI::Position SquadUnit::getRetreatPosition(EnemyUnitPtr eu, double distance) {
-		Util::getPointAlongPoints(eu->position, self->getPosition(), distance);
 	}
 }

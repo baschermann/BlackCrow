@@ -152,6 +152,20 @@ namespace BlackCrow {
 			double frameAverage = averageTotal / (double)list.size();
 			average += -(average - frameAverage) * dampFactor;
 		}
+
+		BWAPI::Position Util::getPointAlongPoints(const BWAPI::Position p1, const BWAPI::Position p2, const double distance) {
+			assert(p1 != p2);
+			double len = std::sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));
+
+			double dx = (p2.x - p1.x) / len;
+			double dy = (p2.y - p1.y) / len;
+
+			return Position((int)(p1.x + distance * dx), (int)(p1.y + distance * dy));
+		}
+
+		BWAPI::Position Util::getPointDirectionDistance(const BWAPI::Position pos, double angleRad, double distance) {
+			return Position((int)(pos.x + std::cos(angleRad) * distance), (int)(pos.y + std::sin(angleRad) * distance));
+		}
 	}
 
 	bool Util::isFightingBuilding(const EnemyUnitPtr eu) {
@@ -161,15 +175,4 @@ namespace BlackCrow {
 			|| eu->type == UnitTypes::Terran_Bunker)
 			&& Broodwar->getUnit(eu->id)->isCompleted();
 	}
-
-	BWAPI::Position Util::getPointAlongPoints(const BWAPI::Position p1, const BWAPI::Position p2, const double distance) {
-		double len = std::sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));
-		
-		double dx = (p2.x - p1.x) / len;
-		double dy = (p2.y - p1.y) / len;
-		
-		return Position((int)(p1.x + distance * dx), (int)(p1.y + distance * dy));
-	}
-
-	
 }
