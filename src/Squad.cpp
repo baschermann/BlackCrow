@@ -168,7 +168,7 @@ namespace BlackCrow {
 
 
 
-		/*
+	/*
 	// ######## Scout Squad #########
 	ScoutSquad::ScoutSquad(BlackCrow &parent) : Squad(parent) {}
 

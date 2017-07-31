@@ -14,11 +14,11 @@ namespace BlackCrow {
 			return sqrt((diffY * diffY) + (diffX * diffX));
 		}
 
-		double distance(BWAPI::Position p1, BWAPI::Position p2) {
+		double distance(const BWAPI::Position& p1, const BWAPI::Position& p2) {
 			return distance(p1.x, p1.y, p2.x, p2.y);
 		}
 
-		double distance(BWAPI::TilePosition p1, BWAPI::TilePosition p2) {
+		double distance(const BWAPI::TilePosition& p1, const BWAPI::TilePosition& p2) {
 			return distance(p1.x, p1.y, p2.x, p2.y);
 		}
 		
@@ -166,6 +166,78 @@ namespace BlackCrow {
 		BWAPI::Position Util::getPointDirectionDistance(const BWAPI::Position pos, double angleRad, double distance) {
 			return Position((int)(pos.x + std::cos(angleRad) * distance), (int)(pos.y + std::sin(angleRad) * distance));
 		}
+
+		// #### Square ####
+		Rectangle::Rectangle(BWAPI::Unit unit) {
+			Position p = unit->getPosition();
+			x = p.x;
+			y = p.y;
+			UnitType t = unit->getType();
+			width = t.dimensionLeft() + t.dimensionRight();
+			height = t.dimensionUp() + t.dimensionDown();
+		}
+
+		Rectangle::Rectangle(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {}
+
+		double Rectangle::getDistanceTo(const Rectangle& other) { // TODO faster and better
+			// Check for collision
+			if(x < other.x + other.width && x + width > other.x
+				&& y < other.y + other.height && y + height > other.y) {
+				// Collision
+				return 0;
+			} else {
+				// Get shortest distance
+				double shortestDistance = std::numeric_limits<double>().max();
+
+				// For all corners check with other corners
+				for (int selfCorner = 0; selfCorner < 4; selfCorner++) {
+					int selfX = x;
+					int selfY = y;
+
+					switch (selfCorner) {
+					case 1:
+						selfX = x + width;
+						break;
+					case 2:
+						selfY = y + height;
+						break;
+					case 3:
+						selfX = x + width;
+						selfY = y + height;
+						break;
+					}
+
+					for (int otherCorner = 0; otherCorner < 4; otherCorner++) {
+						int otherX = other.x;
+						int otherY = other.y;
+
+						switch (otherCorner) {
+						case 1:
+							otherX = other.x + other.width;
+							break;
+						case 2:
+							otherY = other.y + other.height;
+							break;
+						case 3:
+							otherX = other.x + other.width;
+							otherY = other.y + other.height;
+							break;
+						}
+
+						int checkDistance = Util::distance(selfX, selfY, otherX, otherY);
+						if (checkDistance < shortestDistance) {
+							shortestDistance = checkDistance;
+						}
+					}		
+				}
+
+				// check from corner to edge
+				// 
+
+				return shortestDistance;
+			}
+		}
+
 	}
 
 	bool Util::isFightingBuilding(const EnemyUnitPtr eu) {

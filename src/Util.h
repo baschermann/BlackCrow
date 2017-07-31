@@ -40,12 +40,23 @@ namespace BlackCrow {
 			double dampFactor = 0.05;
 		};
 
+		// Rectangles!
+		class Rectangle {
+		public:
+			int x, y, width, height;
+
+			Rectangle(BWAPI::Unit unit);
+			Rectangle(int x, int y, int width, int height);
+
+			double getDistanceTo(const Rectangle& other);
+		};
+
 		RgbColor HsvToRgb(HsvColor hsv);
 		HsvColor RgbToHsv(RgbColor rgb);
 
 		double distance(int x1, int y1, int x2, int y2);
-		double distance(BWAPI::Position p1, BWAPI::Position p2);
-		double distance(BWAPI::TilePosition p1, BWAPI::TilePosition p2);
+		double distance(const BWAPI::Position& p1, const BWAPI::Position& p2);
+		double distance(const BWAPI::TilePosition& p1, const BWAPI::TilePosition& p2);
 		BWAPI::Unit findClosestUnit(std::vector<BWAPI::Unit> units, BWAPI::Position position);
 
 		BWAPI::Position middleOfBuilding(BWAPI::UnitType building);

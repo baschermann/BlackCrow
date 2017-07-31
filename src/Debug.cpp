@@ -231,6 +231,32 @@ namespace BlackCrow {
 			drawManagerInfo();
 
 		drawFrameTimeDisplay();
+
+
+		// Test Rectangle
+		static Util::Square left(0, 0, 20, 20);
+		static Util::Square right(0, 0, 20, 20);
+
+		if (Broodwar->getMouseState(MouseButton::M_LEFT)) {
+			Position mouse = Broodwar->getMousePosition();
+			Position screen = Broodwar->getScreenPosition();
+			left.x = mouse.x + screen.x;
+			left.y = mouse.y + screen.y;
+
+			Broodwar->sendText("Distance: %f", left.getDistanceTo(right));
+		}
+
+		if (Broodwar->getMouseState(MouseButton::M_RIGHT)) {
+			Position mouse = Broodwar->getMousePosition();
+			Position screen = Broodwar->getScreenPosition();
+			right.x = mouse.x + screen.x;
+			right.y = mouse.y + screen.y;
+
+			Broodwar->sendText("Distance: %f", left.getDistanceTo(right));
+		}
+
+		Broodwar->drawBoxMap(left.x, left.y, left.x + left.width, left.y + left.height, Colors::Green);
+		Broodwar->drawBoxMap(right.x, right.y, right.x + right.width, right.y + right.height, Colors::Purple);
 	}
 
 	void Debug::drawFrameTimeDisplay() {
