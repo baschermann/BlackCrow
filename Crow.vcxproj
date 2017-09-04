@@ -115,6 +115,8 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AStar.cpp" />
+    <ClCompile Include="src\PathFinder.cpp" />
     <ClCompile Include="src\Client.cpp" />
     <ClCompile Include="src\Bricks.cpp" />
     <ClCompile Include="src\Overlords.cpp" />
@@ -141,6 +143,8 @@
     <ClCompile Include="src\UnitMix.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AStar.h" />
+    <ClInclude Include="src\PathFinder.h" />
     <ClInclude Include="src\Bricks.h" />
     <ClInclude Include="src\Overlords.h" />
     <ClInclude Include="src\Common.h" />

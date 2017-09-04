@@ -8,7 +8,15 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	Map::Map(BlackCrow &parent) : bc(parent) {
-		mapTiles = std::vector<std::vector<Cell>>(Broodwar->mapWidth(), std::vector<Cell>(Broodwar->mapHeight()));
+		tileWidth = Broodwar->mapWidth();
+		tileHeight = Broodwar->mapHeight();
+		miniTileWidth = Broodwar->mapWidth() * 4;
+		miniTileHeight = Broodwar->mapHeight() * 4;
+
+		tiles = std::vector<std::vector<Cell>>(tileWidth, std::vector<Cell>(tileHeight));
+		miniTiles = std::vector<std::vector<MiniCell>>(miniTileWidth, std::vector<MiniCell>(miniTileHeight));
+
+		
 	}
 
 	void Map::onStart() {
@@ -19,15 +27,22 @@ namespace BlackCrow {
 		}
 
 		// Set Tile Information
-		for (int x = 0; x < Broodwar->mapWidth(); x++) {
-			for (int y = 0; y < Broodwar->mapHeight(); y++) {
-				mapTiles[x][y].buildable = Broodwar->isBuildable(x, y, true);
-				mapTiles[x][y].resourceBuildable = true;
-				mapTiles[x][y].mineralLine = true;
+		for (unsigned int x = 0; x < tileWidth; x++) {
+			for (unsigned int y = 0; y < tileHeight; y++) {
+				tiles[x][y].buildable = Broodwar->isBuildable(x, y, true);
+				tiles[x][y].resourceBuildable = true;
+				tiles[x][y].mineralLine = true;
 
 				int areaId = bc.bwem.GetTile(TilePosition(x, y)).AreaId();
 				if (areaId >= 1)
 					getArea(areaId)->associatedTiles.emplace_back(TilePosition(x, y));
+			}
+		}
+
+		// Set MiniTile Information
+		for (unsigned int x = 0; x < miniTileWidth; x++) {
+			for (unsigned int y = 0; y < miniTileHeight; y++) {
+				miniTiles[x][y].walkable = Broodwar->isWalkable(WalkPosition(x, y));
 			}
 		}
 	}

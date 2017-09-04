@@ -46,7 +46,7 @@ namespace BlackCrow {
 		for (int x = xStart; x <= xEnd; x++) {
 			for (int y = yStart; y <= yEnd; y++) {
 				if (x >= 0 && x < Broodwar->mapWidth() && y >= 0 && y < Broodwar->mapHeight())
-					bc.map.mapTiles[x][y].buildable = buildable;
+					bc.map.tiles[x][y].buildable = buildable;
 			}
 		}
 	}
@@ -55,7 +55,7 @@ namespace BlackCrow {
 		for (int x = xStart; x <= xEnd; x++) {
 			for (int y = yStart; y <= yEnd; y++) {
 				if (x >= 0 && x < Broodwar->mapWidth() && y >= 0 && y < Broodwar->mapHeight())
-					bc.map.mapTiles[x][y].resourceBuildable = buildable;
+					bc.map.tiles[x][y].resourceBuildable = buildable;
 			}
 		}
 	}
@@ -67,7 +67,7 @@ namespace BlackCrow {
 			for (int y = yStart; y <= yEnd; y++) {
 				if (x >= 0 && x < Broodwar->mapWidth() && y >= 0 && y < Broodwar->mapHeight())
 					if (Util::distance(x * 32 + 16, y * 32 + 16, base.x, base.y) + 42 < distanceBetween)
-						bc.map.mapTiles[x][y].mineralLine = buildable;
+						bc.map.tiles[x][y].mineralLine = buildable;
 			}
 		}
 	}
@@ -108,7 +108,7 @@ namespace BlackCrow {
 	}
 
 	bool Builder::canBuildTypeAt(UnitType type, int x, int y, bool inMineralLine) {
-		if (x < 0 || x >= Broodwar->mapWidth() || y < 0 || y >= Broodwar->mapHeight() || !bc.map.mapTiles[x][y].buildable)
+		if (x < 0 || x >= Broodwar->mapWidth() || y < 0 || y >= Broodwar->mapHeight() || !bc.map.tiles[x][y].buildable)
 			return false;
 
 		positions.push_back(TilePosition(x, y)); // DEBUG
@@ -122,13 +122,13 @@ namespace BlackCrow {
 					return false;
 				}
 
-				canBuild &= bc.map.mapTiles[tilePosX][tilePosY].buildable;
+				canBuild &= bc.map.tiles[tilePosX][tilePosY].buildable;
 
 				if (!inMineralLine)
-					canBuild &= bc.map.mapTiles[tilePosX][tilePosY].mineralLine;
+					canBuild &= bc.map.tiles[tilePosX][tilePosY].mineralLine;
 
 				if (type == UnitTypes::Zerg_Hatchery)
-					canBuild &= bc.map.mapTiles[tilePosX][tilePosY].resourceBuildable;
+					canBuild &= bc.map.tiles[tilePosX][tilePosY].resourceBuildable;
 
 				if (type.requiresCreep())
 					canBuild &= Broodwar->hasCreep(TilePosition(tilePosX, tilePosY));

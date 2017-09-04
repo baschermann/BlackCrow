@@ -192,6 +192,9 @@ namespace BlackCrow {
 			Unit beu = Broodwar->getUnit(threat->id);
 			if (beu->isVisible()) {
 
+
+				// i think you check the getUpgradeLevel for the opponent
+				//Yes, I think there's enemy->weapon upgrade something(weapon)
 				int enemyWeaponDistance = threat->type.groundWeapon().maxRange();
 				int margins = self->getType().size() + threat->type.size();
 

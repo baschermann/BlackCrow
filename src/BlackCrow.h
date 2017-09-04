@@ -13,6 +13,7 @@
 #include "Util.h"
 #include "Tech.h"
 #include "Army.h"
+#include "PathFinder.h"
 
 
 // Remember not to use "Broodwar" in any global class constructor!
@@ -48,6 +49,7 @@ namespace BlackCrow {
 		Strategy strategy;
 		Tech tech;
 		Army army;
+		PathFinder pathFinder;
 
 		BlackCrow();
 		void init();

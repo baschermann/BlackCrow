@@ -117,6 +117,12 @@
     <ClCompile Include="src\Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\PathFinder.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AStar.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Army.h">
@@ -190,6 +196,12 @@
     </ClInclude>
     <ClInclude Include="src\Bricks.h">
       <Filter>Source Files\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PathFinder.h">
+      <Filter>Source Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AStar.h">
+      <Filter>Source Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,11 +19,16 @@ namespace BlackCrow {
 
 		struct MiniCell {
 			bool walkable;
-			bool chokepoint;
 		};
 
-		std::vector<std::vector<Cell>> mapTiles;
+		std::vector<std::vector<Cell>> tiles;
+		std::vector<std::vector<MiniCell>> miniTiles;
 		std::vector<AreaPtr> areas;
+
+		unsigned int tileWidth = 0;
+		unsigned int tileHeight = 0;
+		unsigned int miniTileWidth = 0;
+		unsigned int miniTileHeight = 0;
 
 		Map(BlackCrow &parent);
 		void onStart();

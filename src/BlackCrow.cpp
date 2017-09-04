@@ -5,15 +5,16 @@ namespace BlackCrow {
 	using namespace BWAPI;
 	using namespace Filter;
 
-	BlackCrow::BlackCrow() : 
-		builder(*this), 
-		debug(*this), 
-		enemy(*this), 
-		macro(*this), 
-		map(*this), 
-		strategy(*this), 
-		tech(*this), 
-		army(*this), 
+	BlackCrow::BlackCrow() :
+		builder(*this),
+		debug(*this),
+		enemy(*this),
+		macro(*this),
+		map(*this),
+		strategy(*this),
+		tech(*this),
+		army(*this),
+		pathFinder(*this),
 		bwem(BWEM::Map::Instance()), 
 		frameTimeAverager(60, 0.024) 
 	{}
@@ -49,10 +50,8 @@ namespace BlackCrow {
 			auto end = std::chrono::high_resolution_clock::now();
 
 			std::chrono::duration<double, std::milli> diff = end - start;
-			//Broodwar->sendText("Init has taken %fms", diff.count());
+			Broodwar->sendText("Init has taken %fms", diff.count());
 			//Broodwar->sendText("black sheep wall");
-
-
 
 		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;

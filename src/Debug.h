@@ -41,7 +41,6 @@ namespace BlackCrow {
 
 	private:
 		BlackCrow &bc;
-		std::unordered_map<Planned::Status, std::string> plannedStatusStrings;
 
 		bool showBaseInfo;
 		bool showBuildable;

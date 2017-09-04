@@ -29,10 +29,6 @@ namespace BlackCrow {
 		displayBroodwar.setBackgroundColor(Color(0, 100, 0)); // Dark Green
 		displayBroodwar.setShowPercentage(105);
 		displayBroodwar.setShowSpikes(false);
-
-		plannedStatusStrings.emplace(Planned::Status::ACTIVE, "Active");
-		plannedStatusStrings.emplace(Planned::Status::COMPLETED, "Completed");
-		plannedStatusStrings.emplace(Planned::Status::FAILED, "Failed");
 	}
 
 	void Debug::onStart() {}
@@ -40,9 +36,7 @@ namespace BlackCrow {
 	bool Debug::command(std::string text) {
 
 		if (text == "help") {
-			Broodwar << "Commands are: ib (base info), im (manager info), mb (map building placement)" << std::endl;
-			Broodwar << "pi (placement info), test (changes)" << std::endl;
-			Broodwar << "bwem (bwem terrain data)" << std::endl;
+			Broodwar << "Commands are: ib, buildable, manager, placement, bwem, squad, enemy, lifebars" << std::endl;
 			return true;
 		}
 
@@ -130,20 +124,6 @@ namespace BlackCrow {
 
 
 	void Debug::drawOnFrame() {
-
-		// Draw current order
-		Broodwar->setTextSize(BWAPI::Text::Size::Small);
-		for (auto unit : Broodwar->self()->getUnits()) {
-			//Broodwar->drawTextMap(unit->getPosition(), "%s", unit->getOrder().c_str());
-		}
-		Broodwar->setTextSize(BWAPI::Text::Size::Default);
-
-		// Selected Units Info
-		for (Unit u : Broodwar->self()->getUnits()) {
-			if (u->isSelected()) {
-				//Broodwar->drawLineMap(u->getPosition(), Util::getPointDirectionDistance(u->getPosition(), u->getAngle(), 50), Colors::White);
-			}
-		}
 
 		// Builder Debug
 		//int i = 0;
@@ -234,6 +214,7 @@ namespace BlackCrow {
 
 
 		// Test Rectangle
+		/*
 		static Util::Square left(0, 0, 20, 20);
 		static Util::Square right(0, 0, 20, 20);
 
@@ -257,6 +238,59 @@ namespace BlackCrow {
 
 		Broodwar->drawBoxMap(left.x, left.y, left.x + left.width, left.y + left.height, Colors::Green);
 		Broodwar->drawBoxMap(right.x, right.y, right.x + right.width, right.y + right.height, Colors::Purple);
+		*/
+
+		// Test Path
+		static PairUint left(0, 0);
+		static PairUint right(0, 0);
+		static PathResultUptr path = nullptr;
+
+		if (Broodwar->getMouseState(MouseButton::M_LEFT)) {
+			Position mouse = Broodwar->getMousePosition();
+			Position screen = Broodwar->getScreenPosition();
+			left.first = (mouse.x + screen.x) / 8;
+			left.second = (mouse.y + screen.y) / 8;
+		}
+
+		if (Broodwar->getMouseState(MouseButton::M_RIGHT)) {
+			Position mouse = Broodwar->getMousePosition();
+			Position screen = Broodwar->getScreenPosition();
+			right.first = (mouse.x + screen.x) / 8;
+			right.second = (mouse.y + screen.y) / 8;
+
+			path = bc.pathFinder.findPath(left, right);
+		}
+
+		if (path && path->hasPath) {
+			PairUint prev = path->path.front();
+			for (PairUint pos : path->path) {
+				if (pos != prev) {
+					Broodwar->drawLineMap(Position(prev.first*8, prev.second*8), Position(pos.first*8, pos.second*8), Colors::Orange);
+					prev = pos;
+				}
+			}
+		}
+
+		Broodwar->drawBoxMap(Position(left.first*8 + 3, left.second*8 + 3), Position(left.first*8 + 5, left.second*8 + 5), Colors::Purple, true);
+		Broodwar->drawBoxMap(Position(right.first*8 + 3, right.second*8 + 3), Position(right.first*8 + 5, right.second*8 + 5), Colors::White, true);
+
+
+		// Draw Walkable Mini Tiles
+		/*
+		for (int x = 0; x < bc.map.miniTiles.size(); x++) {
+			for (int y = 0; y < bc.map.miniTiles[x].size(); y++) {
+
+				if (x * 8 > Broodwar->getScreenPosition().x - 20 && x * 8 < Broodwar->getScreenPosition().x + 800
+					&& y * 8 > Broodwar->getScreenPosition().y - 20 && y * 8 < Broodwar->getScreenPosition().y + 500) {
+
+					if (bc.map.miniTiles[x][y].walkable)
+						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Green);
+					else
+						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Red);
+				}
+			}
+		}
+		*/
 	}
 
 	void Debug::drawFrameTimeDisplay() {
@@ -293,16 +327,16 @@ namespace BlackCrow {
 				bool draw = false;
 				Color color = Colors::Orange;;
 
-				if (!bc.map.mapTiles[x][y].resourceBuildable) {
+				if (!bc.map.tiles[x][y].resourceBuildable) {
 					draw = true;
 				}
 
-				if (!bc.map.mapTiles[x][y].buildable) {
+				if (!bc.map.tiles[x][y].buildable) {
 					draw = true;
 					color = Colors::Red;
 				}
 
-				if (!bc.map.mapTiles[x][y].mineralLine) {
+				if (!bc.map.tiles[x][y].mineralLine) {
 					draw = true;
 					color = Colors::Yellow;
 				}
