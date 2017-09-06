@@ -143,6 +143,7 @@
     <ClCompile Include="src\UnitMix.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PriorityQueue.h" />
     <ClInclude Include="src\AStar.h" />
     <ClInclude Include="src\PathFinder.h" />
     <ClInclude Include="src\Bricks.h" />

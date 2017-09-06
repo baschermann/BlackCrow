@@ -203,5 +203,8 @@
     <ClInclude Include="src\AStar.h">
       <Filter>Source Files\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="src\PriorityQueue.h">
+      <Filter>Source Files\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
