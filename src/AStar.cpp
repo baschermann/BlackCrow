@@ -76,6 +76,7 @@ namespace BlackCrow {
 		successor.prev = currentNode.pos;
 		successor.hasPrev = true;
 		successor.total = totalCost;
+		successor.heuristic = heuristic;
 
 		
 
