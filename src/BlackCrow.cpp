@@ -51,7 +51,7 @@ namespace BlackCrow {
 
 			std::chrono::duration<double, std::milli> diff = end - start;
 			Broodwar->sendText("Init has taken %fms", diff.count());
-			//Broodwar->sendText("black sheep wall");
+			Broodwar->sendText("black sheep wall");
 
 		} catch (const std::exception &e) {
 			Broodwar << "EXCEPTION: " << e.what() << std::endl;

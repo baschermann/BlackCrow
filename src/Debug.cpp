@@ -262,12 +262,10 @@ namespace BlackCrow {
 		}
 
 		if (path && path->hasPath) {
-			PairUint prev = path->path.front();
+			PairUint last = path->path.front();
 			for (PairUint pos : path->path) {
-				if (pos != prev) {
-					Broodwar->drawLineMap(Position(prev.first*8, prev.second*8), Position(pos.first*8, pos.second*8), Colors::Orange);
-					prev = pos;
-				}
+				Broodwar->drawLineMap(Position(last.first*8 + 4, last.second*8 + 4), Position(pos.first*8 + 4, pos.second*8 + 4), Colors::Orange);
+				last = pos;
 			}
 		}
 

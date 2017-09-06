@@ -13,8 +13,13 @@ namespace BlackCrow {
 		auto pathResult = std::make_unique<PathResult>(PathResult());
 
 		AStar astar(bc, start, end);
+
+		auto startTime = std::chrono::high_resolution_clock::now();
 		pathResult->path = astar.startSearching();
-		Broodwar->sendText("Analyzed nodes: %i", astar.analyzedNodes);
+		auto endTime = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double, std::milli> diff = endTime - startTime;
+
+		Broodwar->sendText("Looked at: %i, added: %i, analyzed: %i, time (ms): %f", astar.lookedAtNodes, astar.addedNodes, astar.analyzedNodes, diff.count());
 
 		//astar.fillResultIn(pathResult->path);
 		pathResult->hasPath = pathResult->path.size() > 0 ? true : false;
