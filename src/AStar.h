@@ -17,7 +17,7 @@ namespace BlackCrow {
 		int lookedAtNodes = 0;
 		int addedNodes = 0;
 
-	private:
+	//private:
 
 		struct Node {
 			PairUint pos;

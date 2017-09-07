@@ -287,8 +287,17 @@ namespace BlackCrow {
 						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Red);
 				}
 			}
+		}		*/
+		
+
+		
+		// Draw Walkable Mini Tiles
+		if (path) {
+			for (PairUint pos : path->visitedNodes) {
+				Broodwar->drawBoxMap(Position(pos.first * 8 + 1, pos.second * 8 + 1), Position(pos.first * 8 + 7, pos.second * 8 + 7), Colors::Orange);
+			}
 		}
-		*/
+		
 	}
 
 	void Debug::drawFrameTimeDisplay() {

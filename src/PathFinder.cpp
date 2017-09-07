@@ -24,6 +24,11 @@ namespace BlackCrow {
 		//astar.fillResultIn(pathResult->path);
 		pathResult->hasPath = pathResult->path.size() > 0 ? true : false;
 
+		
+		for (auto it = astar.closed.begin(); it != astar.closed.end(); ++it) {
+			pathResult->visitedNodes.push_back(it->first);
+		}
+
 		return pathResult;
 	}
 }

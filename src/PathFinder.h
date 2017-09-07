@@ -10,6 +10,7 @@ namespace BlackCrow {
 	struct PathResult {
 		bool hasPath = false;
 		std::vector<PairUint> path;
+		std::vector<PairUint> visitedNodes;
 	};
 
 	class PathFinder {
