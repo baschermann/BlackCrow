@@ -1,68 +1,102 @@
+// From https://github.com/Kruecke/cpu-astar/blob/master/src/PriorityQueue.h
+
 #pragma once
+
+#ifndef _DEBUG
+#define NDEBUG
+#endif
 
 #include <algorithm>
 #include <cassert>
 #include <iterator>
-#include <utility>
+#include <list>
+#include <map>
 #include <vector>
 
-template <typename T, typename Compare = std::less<T>>
+template <typename T, typename ValueCompare = std::less<T>, typename PrioCompare = std::less<T>>
 class PriorityQueue {
+private:
+    template <typename Compare>
+    struct Wrapper {
+        Wrapper(Compare comp) : m_comp(comp) {}
+
+        template <typename Iterator>
+        bool operator()(const Iterator &a, const Iterator &b) {
+            return m_comp(*a, *b);
+        }
+
+        Compare m_comp;
+    };
+
+    using DataIter = typename std::list<T>::iterator;
+    using ConstDataIter = typename std::list<T>::const_iterator;
+
 public:
-	PriorityQueue(Compare compare = Compare()) : m_compare(std::move(compare)) {} // ?? Compare()
+    PriorityQueue(ValueCompare valueComp = ValueCompare(), PrioCompare prioComp = PrioCompare())
+        : m_lookup(valueComp), m_prioComp(prioComp) {}
 
-	const T& top() const { // Const function?
-		return m_heap.front(); 
-	}
-	bool empty() const { return m_heap.empty(); }
-	auto size() const { return m_heap.size(); }
+    const T &   top() const { return *m_heap.front(); }
+    bool        empty() const { return m_data.empty(); }
+    std::size_t size() const { return m_data.size(); }
 
-	void push(const T &value) {
-		m_heap.push_back(value);
-		std::push_heap(m_heap.begin(), m_heap.end(), m_compare);
-	}
+    void push(const T &value) {
+        m_data.push_back(value);
+        const auto it = --m_data.end();
+        m_lookup.emplace(value, it);
+        m_heap.push_back(it);
+        std::push_heap(m_heap.begin(), m_heap.end(), m_prioComp);
+    }
 
-	template <typename... Args>
-	void emplace(Args &&... args) {
-		m_heap.emplace_back(std::forward<Args>(args)...);
-		std::push_heap(m_heap.begin(), m_heap.end(), m_compare);
-	}
+    template <typename... Args>
+    void emplace(Args &&... args) {
+        m_data.emplace_back(std::forward<Args>(args)...);
+        const auto it = --m_data.end();
+        m_lookup.emplace(*it, it);
+        m_heap.push_back(it);
+        std::push_heap(m_heap.begin(), m_heap.end(), m_prioComp);
+    }
 
-	void pop() {
-		std::pop_heap(m_heap.begin(), m_heap.end(), m_compare);
-		m_heap.pop_back();
-	}
+    void pop() {
+        const auto it = m_heap.front();
+        std::pop_heap(m_heap.begin(), m_heap.end(), m_prioComp);
+        m_heap.pop_back();
 
-	// Extra functionality that is not in std::priority_queue
-	const T &operator[](std::size_t index) const {
-		assert(index >= 0 && index < m_heap.size()); // Is this slow?
-		return m_heap[index];
-	}
+        assert(it != m_data.end());
+        m_lookup.erase(*it);
+        m_data.erase(it);
+    }
 
-	// Return index of a value for which predicate p returns true.
-	template <typename UnaryPredicate>
-	std::size_t find_if(UnaryPredicate p) const { // Faster alternative?
-		// This a basicly a breadth-first search, although not quite optimal. We could cancel the
-		// search earlier if we'd give up a bit of generality here.
-		auto it = std::find_if(m_heap.begin(), m_heap.end(), p);
+    // --- These member functions don't exist in std::priority_queue. ----------
 
-		return std::distance(m_heap.begin(), it);
-	}
+    // Look up value in priority queue.
+    ConstDataIter find(const T &value) const {
+        const auto it = m_lookup.find(value);
+        return it != m_lookup.end() ? it->second : m_data.end();
+    }
 
-	void update(std::size_t index, T newValue) {
-		assert(index >= 0 && index < m_heap.size());
+    // find(myValue) == end() means myValue is not in this priority queue.
+    ConstDataIter end() const { return m_data.end(); }
 
-		// Only moving up the heap is supported!
-		// FIXME: assert(???)
+    void update(const ConstDataIter &it, T newValue) {
+        assert(it != m_data.end());
 
-		m_heap[index] = std::move(newValue);
-		std::push_heap(m_heap.begin(), std::next(m_heap.begin(), index + 1), m_compare);
+        // Only moving up the heap is supported!
+        // FIXME: assert(???)
 
-		assert(std::is_heap(m_heap.begin(), m_heap.end(), m_compare)); // Necessary?
-	}
+        // TODO: This function is still bad because we have to find the element in the priority
+        // heap.
+        const auto heapIt = std::find(m_heap.begin(), m_heap.end(), it);
+        assert(heapIt != m_heap.end());
+
+        **heapIt = std::move(newValue); // update value
+        push_heap(m_heap.begin(), heapIt + 1, m_prioComp);
+
+        assert(std::is_heap(m_heap.begin(), m_heap.end(), m_prioComp));
+    }
 
 private:
-	std::vector<T> m_heap;
-	Compare m_compare;
+    std::list<T>                        m_data;
+    std::map<T, DataIter, ValueCompare> m_lookup;
+    std::vector<DataIter>               m_heap;
+    Wrapper<PrioCompare>                m_prioComp;
 };
-

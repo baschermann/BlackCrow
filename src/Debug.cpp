@@ -292,9 +292,11 @@ namespace BlackCrow {
 
 		
 		// Draw Walkable Mini Tiles
+		int numberOfShapes = 0;
 		if (path) {
 			for (PairUint pos : path->visitedNodes) {
 				Broodwar->drawBoxMap(Position(pos.first * 8 + 1, pos.second * 8 + 1), Position(pos.first * 8 + 7, pos.second * 8 + 7), Colors::Orange);
+				if (numberOfShapes++ > 19000) break;
 			}
 		}
 		

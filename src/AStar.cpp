@@ -66,26 +66,36 @@ namespace BlackCrow {
 		}
 
 		const auto totalCost = currentNode.total + distanceCost;
-		const auto index = open.find_if([&](const Node &node) { return node.pos == successor.pos; });
+		//const auto index = open.find_if([&](const Node &node) { return node.pos == successor.pos; });
+		const auto it = open.find(successor);
 
-		if (index < open.size() && open[index].total <= totalCost)
+		if (it != open.end() && it->total <= totalCost)
 			return;
 
-		const auto heuristic = Util::distance(successor.pos.first, successor.pos.second, end.first, end.second);
+		//const auto heuristic = Util::distance(successor.pos.first, successor.pos.second, end.first, end.second);
+		const auto heuristic = heuristicDistance(successor.pos, end);
 
 		successor.prev = currentNode.pos;
 		successor.hasPrev = true;
 		successor.total = totalCost;
 		successor.heuristic = heuristic;
 
-		
-
-		if (index < open.size())
-			open.update(index, successor);
+		if (it != open.end())
+			open.update(it, successor);
 		else {
 			open.emplace(successor);
 			addedNodes++;
 		}
+	}
 
+	// Heuristic distance calculations
+	// http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html#heuristics-for-grid-maps
+	#define D 1
+	#define D2 1.414213562373f
+	// Diagonal distance
+	float AStar::heuristicDistance(const PairUint &a, const PairUint &b) {
+		auto dx = std::abs(a.first - b.first);
+		auto dy = std::abs(a.second - b.second);
+		return D * (dx + dy) + (D2 - 2 * D) * std::min(dx, dy);
 	}
 }

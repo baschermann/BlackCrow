@@ -31,33 +31,42 @@ namespace BlackCrow {
 			bool operator==(const Node &other) const {
 				return pos == other.pos;
 			}
+
+			// Needed for (tree) set/map
+			inline bool operator<(const Node &other) const {
+				return pos.second < other.pos.second || (pos.second == other.pos.second && pos.first < other.pos.first);
+			}
 		};
 
-		
+		/*
 		struct NodeHasher {
 			inline size_t operator() (const Node& node) const {
 				return (node.pos.first * 5923) & (node.pos.second * 45751);
 			}
 		};
-		
+		*/
 
-		struct Compare {
-			bool operator()(const Node &a, const Node &b) {
+		// Comparator to find nodes in PriorityQueue.
+		struct ValueCompare {
+			bool operator()(const Node &a, const Node &b) const { return a < b; }
+		};
+
+		// Comparator to put cheapest nodes first.
+		struct PrioCompare {
+			bool operator()(const Node &a, const Node &b) const {
 				return a.total + a.heuristic > b.total + b.heuristic;
 			}
 		};
-		
 
 		BlackCrow& bc;
 		PairUint start;
 		PairUint end;
 		
 		//Open open;
-		PriorityQueue<Node, Compare> open;
+		PriorityQueue<Node, ValueCompare, PrioCompare> open;
 		std::map<PairUint, Node> closed;
 
 		void expandNode(Node& successor, const float distanceCost, const Node& currentNode, const PairUint& end);
-	};
-
-	
+		float heuristicDistance(const PairUint &a, const PairUint &b);
+	};	
 }
