@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Army">
       <UniqueIdentifier>{961a545d-1161-4baa-a09c-c64af4f8200a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Misc\Pathfinding">
+      <UniqueIdentifier>{abe7a662-c39d-4317-9428-2b65e3a3d194}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Area.cpp">
@@ -117,11 +120,11 @@
     <ClCompile Include="src\Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PathFinder.cpp">
-      <Filter>Source Files\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="src\AStar.cpp">
-      <Filter>Source Files\Misc</Filter>
+      <Filter>Source Files\Misc\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PathFinder.cpp">
+      <Filter>Source Files\Misc\Pathfinding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -197,14 +200,14 @@
     <ClInclude Include="src\Bricks.h">
       <Filter>Source Files\Strategy</Filter>
     </ClInclude>
-    <ClInclude Include="src\PathFinder.h">
-      <Filter>Source Files\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="src\AStar.h">
-      <Filter>Source Files\Misc</Filter>
+      <Filter>Source Files\Misc\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PathFinder.h">
+      <Filter>Source Files\Misc\Pathfinding</Filter>
     </ClInclude>
     <ClInclude Include="src\PriorityQueue.h">
-      <Filter>Source Files\Misc</Filter>
+      <Filter>Source Files\Misc\Pathfinding</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

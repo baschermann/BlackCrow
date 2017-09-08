@@ -56,9 +56,7 @@ namespace BlackCrow {
 		lookedAtNodes++;
 		
 		if (closed.count(successor.pos) != 0
-			|| successor.pos.first < 0
 			|| successor.pos.first >= bc.map.miniTileWidth
-			|| successor.pos.second < 0
 			|| successor.pos.second >= bc.map.miniTileHeight
 			|| !bc.map.miniTiles[successor.pos.first][successor.pos.second].walkable
 			) {
