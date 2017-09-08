@@ -92,8 +92,8 @@ namespace BlackCrow {
 	#define D2 1.414213562373f
 	// Diagonal distance
 	float AStar::heuristicDistance(const PairUint &a, const PairUint &b) {
-		auto dx = a.first - b.first;
-		auto dy = a.second - b.second;
+		auto dx = std::abs((int)a.first - (int)b.first);
+		auto dy = std::abs((int)a.second - (int)b.second);
 		return D * (dx + dy) + (D2 - 2 * D) * std::min(dx, dy);
 	}
 }
