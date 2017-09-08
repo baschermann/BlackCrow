@@ -1,10 +1,5 @@
 // From https://github.com/Kruecke/cpu-astar/blob/master/src/PriorityQueue.h
-
 #pragma once
-
-#ifndef _DEBUG
-#define NDEBUG
-#endif
 
 #include <algorithm>
 #include <cassert>

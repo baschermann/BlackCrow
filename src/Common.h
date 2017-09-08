@@ -29,5 +29,5 @@ namespace BlackCrow {
 	typedef std::shared_ptr<Area> AreaPtr;
 	typedef std::unique_ptr<PathResult> PathResultUptr;
 
-	typedef std::pair<int, int> PairUint;
+	typedef std::pair<unsigned int, unsigned int> PairUint;
 }

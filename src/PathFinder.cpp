@@ -21,7 +21,6 @@ namespace BlackCrow {
 
 		Broodwar->sendText("Looked at: %i, added: %i, analyzed: %i, time (ms): %f", astar.lookedAtNodes, astar.addedNodes, astar.analyzedNodes, diff.count());
 
-		//astar.fillResultIn(pathResult->path);
 		pathResult->hasPath = pathResult->path.size() > 0 ? true : false;
 
 		

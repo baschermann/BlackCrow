@@ -66,13 +66,11 @@ namespace BlackCrow {
 		}
 
 		const auto totalCost = currentNode.total + distanceCost;
-		//const auto index = open.find_if([&](const Node &node) { return node.pos == successor.pos; });
 		const auto it = open.find(successor);
 
 		if (it != open.end() && it->total <= totalCost)
 			return;
 
-		//const auto heuristic = Util::distance(successor.pos.first, successor.pos.second, end.first, end.second);
 		const auto heuristic = heuristicDistance(successor.pos, end);
 
 		successor.prev = currentNode.pos;
@@ -94,8 +92,8 @@ namespace BlackCrow {
 	#define D2 1.414213562373f
 	// Diagonal distance
 	float AStar::heuristicDistance(const PairUint &a, const PairUint &b) {
-		auto dx = std::abs(a.first - b.first);
-		auto dy = std::abs(a.second - b.second);
+		auto dx = a.first - b.first;
+		auto dy = a.second - b.second;
 		return D * (dx + dy) + (D2 - 2 * D) * std::min(dx, dy);
 	}
 }
