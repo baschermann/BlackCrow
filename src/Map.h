@@ -15,6 +15,7 @@ namespace BlackCrow {
 			bool buildable;
 			bool resourceBuildable;
 			bool mineralLine;
+			std::vector<EnemyUnitPtr> enemiesInRange;
 		};
 
 		struct MiniCell {

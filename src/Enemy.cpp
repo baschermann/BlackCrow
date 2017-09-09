@@ -14,6 +14,7 @@ namespace BlackCrow {
 	void Enemy::onStart() {}
 
 	void Enemy::enemyDiscovered(BWAPI::Unit unit) {
+
 		if (Broodwar->self()->isEnemy(unit->getPlayer())) {
 			EnemyUnitPtr eu = getEnemy(unit->getID());
 
@@ -25,24 +26,19 @@ namespace BlackCrow {
 				newEnemy->isVisible = true;
 				newEnemy->lastSeen = Broodwar->getFrameCount();
 				newEnemy->type = unit->getType();
-				newEnemy->tilePosition = BWAPI::TilePositions::Invalid;
+				newEnemy->tilePosition = unit->getTilePosition();
 				setEnemyUnitArea(newEnemy, bc.map.getNearestArea(TilePosition(unit->getPosition())));
+				updateEnemyRangeInMapTiles(eu, unit, newEnemy->tilePosition);
 
 				eu = newEnemy;
 			}
 
-			if (eu->type.isBuilding()) {
-				if (eu->tilePosition.x != unit->getTilePosition().x || eu->tilePosition.y != unit->getTilePosition().y) {
-					eu->tilePosition = unit->getTilePosition();
-					assert(eu->tilePosition != BWAPI::TilePositions::Invalid);
-					setEnemyUnitArea(eu, bc.map.getNearestArea(eu->tilePosition));
-				}
-			} else {
-				if (eu->position != unit->getPosition()) {
-					eu->position = unit->getPosition();
-					setEnemyUnitArea(eu, bc.map.getNearestArea(TilePosition(unit->getPosition())));
-				}
+			if (eu->tilePosition != unit->getTilePosition()) {
+				updateEnemyRangeInMapTiles(eu, unit, unit->getTilePosition(), eu->tilePosition);
+				eu->tilePosition = unit->getTilePosition();
 			}
+
+			eu->position = unit->getPosition();
 		}
 	}
 
@@ -57,12 +53,10 @@ namespace BlackCrow {
 				eu->isGhost = false;
 
 				if (eu->type.isBuilding() && (unit->getTilePosition().x != eu->tilePosition.x || unit->getTilePosition().y != eu->tilePosition.y)) {
-					eu->tilePosition.x = unit->getTilePosition().x;
-					eu->tilePosition.y = unit->getTilePosition().y;
+					eu->tilePosition = unit->getTilePosition();
 					setEnemyUnitArea(eu, bc.map.getNearestArea(eu->tilePosition));
 				} else {
-					eu->position.x = unit->getPosition().x;
-					eu->position.y = unit->getPosition().y;
+					eu->position = unit->getPosition();
 					setEnemyUnitArea(eu, bc.map.getNearestArea(TilePosition(unit->getPosition())));
 				}
 
@@ -73,12 +67,10 @@ namespace BlackCrow {
 				eu->lastSeen = Broodwar->getFrameCount();
 
 				// Handling dead extractors
-				if (eu->type == UnitTypes::Resource_Vespene_Geyser) {
-					//Broodwar->sendText("Dead Geyser detected. Deleting that thing");
+				if (eu->type == UnitTypes::Resource_Vespene_Geyser)
 					euIt = enemies.erase(euIt);
-				} else {
+				else
 					euIt++;
-				}
 			} else {
 				eu->isVisible = false;
 
@@ -138,5 +130,39 @@ namespace BlackCrow {
 	void Enemy::removeEnemyUnitFromArea(const EnemyUnitPtr& eu, const AreaPtr& area) {
 		if (eu->area)
 			area->enemies.erase(std::remove(area->enemies.begin(), area->enemies.end(), eu), area->enemies.end());
+	}
+
+	void Enemy::updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const Unit u, const TilePosition& current, const TilePosition& old) {
+		if (eu->type.canAttack()) {
+			int maxRange = eu->type.groundWeapon().maxRange();
+			int tileRadius = std::ceil(maxRange / 32);
+
+			// Remove old
+			if (old != BWAPI::TilePositions::Invalid) {
+				for (int x = old.x - tileRadius; x < old.x + tileRadius; x++) {
+					for (int y = old.y - tileRadius; y < old.y + tileRadius; y++) {
+						float radius = Util::distance(x, y, old.x, old.y);
+						if (radius <= maxRange) {
+							auto enemies = bc.map.tiles[x][y].enemiesInRange;
+							enemies.erase(std::remove(enemies.begin(), enemies.end(), eu), enemies.end());
+						}
+					}
+				}
+			}
+
+			// Add new
+			for (int x = current.x - tileRadius; x < current.x + tileRadius; x++) {
+				for (int y = current.y - tileRadius; y < current.y + tileRadius; y++) {
+					float radius = Util::distance(x, y, current.x, current.y);
+					if (radius <= maxRange) {
+						bc.map.tiles[x][y].enemiesInRange.push_back(eu);
+					}
+				}
+			}
+		}
+	}
+
+	void Enemy::updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const BWAPI::Unit u, const BWAPI::TilePosition& current) {
+		updateEnemyRangeInMapTiles(eu, u, current, BWAPI::TilePositions::Invalid);
 	}
 }

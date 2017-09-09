@@ -40,7 +40,7 @@ namespace BlackCrow {
 			return true;
 		}
 
-		
+
 
 		if (text == "1") {
 			bc.enemy.enemies.clear();
@@ -133,11 +133,11 @@ namespace BlackCrow {
 		// Minerals
 		//Broodwar->drawTextScreen(10, 65, "Average Smoothed Minerals: %f", bc.macro.getAverageMineralsPerFrame());
 		//Broodwar->drawTextScreen(10, 50, "Average Minerals: %f", bc.macro.mineralFrameAverage);
-		
+
 		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
 		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
 
-		
+
 
 
 		/*
@@ -167,7 +167,7 @@ namespace BlackCrow {
 		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
 		Broodwar->drawTextScreen(185, 0, "LS: %.1f", bc.getAverageFrameTime());
 		int seconds = Broodwar->elapsedTime() % 60;
-		if(seconds >= 10)
+		if (seconds >= 10)
 			Broodwar->drawTextScreen(240, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, seconds);
 		else
 			Broodwar->drawTextScreen(240, 0, "Time: %i:0%i", Broodwar->elapsedTime() / 60, seconds);
@@ -178,7 +178,7 @@ namespace BlackCrow {
 		Broodwar->drawTextScreen(120, 10, "LF: %i", Broodwar->getLatencyFrames());
 		Broodwar->drawTextScreen(185, 10, "L: %i", Broodwar->getLatency());
 		Broodwar->drawTextScreen(240, 10, "RLF: %i", Broodwar->getRemainingLatencyFrames());
-		Broodwar->drawTextScreen(305, 10, "TS: %i",  Broodwar->getLatencyFrames() - Broodwar->getLatency() + 1);
+		Broodwar->drawTextScreen(305, 10, "TS: %i", Broodwar->getLatencyFrames() - Broodwar->getLatency() + 1);
 		Broodwar->setTextSize(BWAPI::Text::Size::Default);
 
 
@@ -194,7 +194,7 @@ namespace BlackCrow {
 
 		if (showPlacementInfos)
 			drawPlacementInfo();
-		
+
 		if (showBwem)
 			drawBwem();
 
@@ -202,8 +202,8 @@ namespace BlackCrow {
 			drawEnemyUnits();
 
 		if (showLifeBars)
-			drawLifeBars(); 
-		
+			drawLifeBars();
+
 		if (showSquadInfo)
 			drawSquadInfo();
 
@@ -240,6 +240,7 @@ namespace BlackCrow {
 		Broodwar->drawBoxMap(right.x, right.y, right.x + right.width, right.y + right.height, Colors::Purple);
 		*/
 
+		/*
 		// Test Path
 		static PairUint left(0, 0);
 		static PairUint right(0, 0);
@@ -264,14 +265,23 @@ namespace BlackCrow {
 		if (path && path->hasPath) {
 			PairUint last = path->path.front();
 			for (PairUint pos : path->path) {
-				Broodwar->drawLineMap(Position(last.first*8 + 4, last.second*8 + 4), Position(pos.first*8 + 4, pos.second*8 + 4), Colors::Orange);
+				Broodwar->drawLineMap(Position(last.first * 8 + 4, last.second * 8 + 4), Position(pos.first * 8 + 4, pos.second * 8 + 4), Colors::Orange);
 				last = pos;
 			}
 		}
 
-		Broodwar->drawBoxMap(Position(left.first*8 + 3, left.second*8 + 3), Position(left.first*8 + 5, left.second*8 + 5), Colors::Purple, true);
-		Broodwar->drawBoxMap(Position(right.first*8 + 3, right.second*8 + 3), Position(right.first*8 + 5, right.second*8 + 5), Colors::White, true);
+		Broodwar->drawBoxMap(Position(left.first * 8 + 3, left.second * 8 + 3), Position(left.first * 8 + 5, left.second * 8 + 5), Colors::Purple, true);
+		Broodwar->drawBoxMap(Position(right.first * 8 + 3, right.second * 8 + 3), Position(right.first * 8 + 5, right.second * 8 + 5), Colors::White, true);
 
+		// Draw nodes in open list
+		int numberOfShapes = 0;
+		if (path) {
+			for (PairUint pos : path->visitedNodes) {
+				Broodwar->drawBoxMap(Position(pos.first * 8 + 1, pos.second * 8 + 1), Position(pos.first * 8 + 7, pos.second * 8 + 7), Colors::Orange);
+				if (numberOfShapes++ > 19000) break;
+			}
+		}
+		*/
 
 		// Draw Walkable Mini Tiles
 		/*
@@ -288,18 +298,11 @@ namespace BlackCrow {
 				}
 			}
 		}		*/
-		
 
-		
-		// Draw Walkable Mini Tiles
-		int numberOfShapes = 0;
-		if (path) {
-			for (PairUint pos : path->visitedNodes) {
-				Broodwar->drawBoxMap(Position(pos.first * 8 + 1, pos.second * 8 + 1), Position(pos.first * 8 + 7, pos.second * 8 + 7), Colors::Orange);
-				if (numberOfShapes++ > 19000) break;
-			}
-		}
-		
+
+
+
+
 	}
 
 	void Debug::drawFrameTimeDisplay() {
@@ -432,7 +435,7 @@ namespace BlackCrow {
 				std::shared_ptr<PlannedUnit> plannedUnit = std::dynamic_pointer_cast<PlannedUnit>(planned);
 				//if (plannedUnit && plannedUnit->unit)
 					//Broodwar->drawTextScreen(xStart - 22, yStart + 13 * i, std::to_string(plannedUnit->unit->getID()).c_str());
-				
+
 				i++;
 			}
 		}
@@ -482,7 +485,7 @@ namespace BlackCrow {
 				Broodwar->drawTextScreen(10, 120, "Squad unit amount: %i", squad->size());
 			}
 		}
-		
+
 	}
 
 	void Debug::drawEnemyUnits() {
@@ -522,7 +525,7 @@ namespace BlackCrow {
 				float percentageShield = 0;
 
 				bool hasShields = unit->getType().maxShields() > 0 ? true : false;
-				if(hasShields)
+				if (hasShields)
 					percentageShield = ((float)unit->getShields()) / (float)unit->getType().maxShields();
 
 				// TODO Colors are cacheable
