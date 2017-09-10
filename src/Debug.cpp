@@ -15,407 +15,97 @@ namespace BlackCrow {
 	using namespace Filter;
 
 	Debug::Debug(BlackCrow &parent) : bc(parent) {
-
-		showBaseInfo = false;
-		showBuildable = false;
-		fastDrawBuildable = false;
-		showManagerInfos = true;
-		showPlacementInfos = true;
-		showBwem = false;
-		showSquadInfo = true;
-		showEnemyUnits = true;
-		showLifeBars = true;
-
 		displayBroodwar.setBackgroundColor(Color(0, 100, 0)); // Dark Green
 		displayBroodwar.setShowPercentage(105);
 		displayBroodwar.setShowSpikes(false);
 	}
 
-	void Debug::onStart() {}
+	void Debug::onStart() {
 
-	bool Debug::command(std::string text) {
-
-		if (text == "help") {
-			Broodwar << "Commands are: ib, buildable, manager, placement, bwem, squad, enemy, lifebars" << std::endl;
-			return true;
-		}
-
-
-
-		if (text == "1") {
-			bc.enemy.enemies.clear();
-			return true;
-		}
-
-		if (text == "2") {
-			auto aaa = bc.tech.getTechPath(UnitTypes::Zerg_Mutalisk);
-			Broodwar->sendText("Size is %i", aaa.size());
-
-			for (auto item : aaa.items) {
-				Broodwar->sendText(item.getName().c_str());
+		addCommand("help", "Shows all chat commands with description", false, true, [&bc = bc]() {
+			for (auto command : bc.debug.commands) {
+				Broodwar->sendText("%s -> %s", command.command.c_str(), command.description.c_str());
 			}
+		});
+		
+		addCommand("test", "Temporary Test", false, true, []() {
+			Broodwar->sendText("Test output");
+		});
 
-			return true;
-		}
+		addCommand("bases", "Show base information", false, false, [&bc = bc]() {
+			for (Base& base : bc.macro.bases) {
+				/*
+				for (Mineral& mineral : base.minerals) {
+					Broodwar->drawBoxMap(Position(mineral.bwemMineral->TopLeft()), Position(mineral.bwemMineral->TopLeft()) + Position(10, 10), Colors::Black, true);
+					Broodwar->drawTextMap(Position(mineral.bwemMineral->TopLeft()) + Position(3, -1), std::to_string(mineral.workers.size()).c_str());
+					}
 
-		if (text == "ib") {
-			showBaseInfo = !showBaseInfo;
-			Broodwar->sendText(("Base information turned " + getOnOffString(showBaseInfo)).c_str());
-			return true;
-		}
-
-		if (text == "buildable") {
-			if (!showBuildable) {
-				showBuildable = true;
-				fastDrawBuildable = false;
-				Broodwar->sendText(("Buildable turned " + getOnOffString(showBuildable)).c_str());
-			} else {
-				if (!fastDrawBuildable) {
-					fastDrawBuildable = true;
-					Broodwar->sendText(("Fast Draw for Buildable turned " + getOnOffString(fastDrawBuildable)).c_str());
-				} else {
-					showBuildable = false;
-					Broodwar->sendText(("Buildable turned " + getOnOffString(showBuildable)).c_str());
+					for (Geyser& geyser : base.geysers) {
+					Broodwar->drawBoxMap(Position(geyser.bwemGeyser->TopLeft()), Position(geyser.bwemGeyser->TopLeft()) + Position(10, 10), Colors::Black);
+					Broodwar->drawTextMap(Position(geyser.bwemGeyser->TopLeft()), std::to_string(geyser.workers.size()).c_str());
 				}
+				*/
+
+				Broodwar->drawBoxMap(Position(base.bwemBase.Location()) + Position(25, 35), Position(base.bwemBase.Location()) + Position(100, 75), Colors::Black, true);
+				Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 35), "Total: %i (+%i)", base.getTotalWorkers(), base.getWorkersNeeded());
+				Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 45), "Mineral: %i", base.getTotalMineralWorkers());
+				Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 55), "Gas: %i (+%i)", base.getTotalGasWorkers(), base.getGasWorkerSlotsAvailable());
 			}
-			//Broodwar->sendText("Buildable turned %s, Fast Draw is %s", getOnOffString(showBuildable), getOnOffString(fastDrawBuildable));
-			return true;
-		}
-
-		if (text == "manager") {
-			showManagerInfos = !showManagerInfos;
-			Broodwar->sendText(("Show Manager turned " + getOnOffString(showManagerInfos)).c_str());
-			return true;
-		}
-
-		if (text == "placement") {
-			showPlacementInfos = !showPlacementInfos;
-			Broodwar->sendText(("Placement info turned " + getOnOffString(showPlacementInfos)).c_str());
-			return true;
-		}
-
-		if (text == "bwem") {
-			showBwem = !showBwem;
-			Broodwar->sendText(("BWEM info turned " + getOnOffString(showBwem)).c_str());
-			return true;
-		}
-
-		if (text == "squad") {
-			showSquadInfo = !showSquadInfo;
-			Broodwar->sendText(("Squad info turned " + getOnOffString(showSquadInfo)).c_str());
-			return true;
-		}
-
-		if (text == "enemy") {
-			showEnemyUnits = !showEnemyUnits;
-			Broodwar->sendText(("Enemy units turned " + getOnOffString(showEnemyUnits)).c_str());
-			return true;
-		}
-
-		if (text == "lifebars") {
-			showLifeBars = !showLifeBars;
-			Broodwar->sendText(("Lifebars turned " + getOnOffString(showLifeBars)).c_str());
-			return true;
-		}
-
-		return false;
-	}
-
-
-
-	void Debug::drawOnFrame() {
-
-		// Builder Debug
-		//int i = 0;
-		//for (BWAPI::TilePosition p : bc.builder.positions)
-		//	Broodwar->drawTextMap(Position(p), "%i", i++);
-
-		// Minerals
-		//Broodwar->drawTextScreen(10, 65, "Average Smoothed Minerals: %f", bc.macro.getAverageMineralsPerFrame());
-		//Broodwar->drawTextScreen(10, 50, "Average Minerals: %f", bc.macro.mineralFrameAverage);
-
-		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
-		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
-
-
-
-
-		/*
-		// Unit Mix and Strategy calculation numbers
-		int ox = 250;
-		int yx = 250;
-
-		Broodwar->drawTextScreen(ox, yx, "UMix s/pf: %f", bc.strategy.unitMix->supplyPerFrame());
-		Broodwar->drawTextScreen(ox, yx + 10, "UMix m/pf: %f", bc.strategy.unitMix->mineralPerFrame());
-		Broodwar->drawTextScreen(ox, yx + 20, "UMix l/pf: %f", bc.strategy.unitMix->larvaPerFrame());
-		Broodwar->drawTextScreen(ox, yx + 30, "avg m/pf: %f", bc.macro.getAverageMineralsPerFrame());
-		Broodwar->drawTextScreen(ox + 100, yx + 30, "avger m/pf: %f", bc.macro.mineralIncomeAverager.average);
-		Broodwar->drawTextScreen(ox, yx + 40, "avg l/pr: %f", bc.macro.getAverageLarvaePerFrame());
-		Broodwar->drawTextScreen(ox, yx + 50, "prod multi min: %f", bc.strategy.productionMultiplierMinerals);
-		Broodwar->drawTextScreen(ox, yx + 60, "prod multi larvae: %f", bc.strategy.productionMultiplierLarvae);
-		Broodwar->drawTextScreen(ox, yx + 70, "prod multi: %f", bc.strategy.productionMultiplier);
-		*/
-
-		// Draw Area information
-		for (const AreaPtr& area : bc.map.areas) {
-			auto center = (area->bwemArea.TopLeft() + area->bwemArea.BottomRight()) / 2;
-			Broodwar->drawTextMap(Position(center), "%i enemy units", area->enemies.size());
-		}
-
-		// Draw APM, LSpeed, Time
-		Broodwar->setTextSize(BWAPI::Text::Size::Small);
-		Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
-		Broodwar->drawTextScreen(185, 0, "LS: %.1f", bc.getAverageFrameTime());
-		int seconds = Broodwar->elapsedTime() % 60;
-		if (seconds >= 10)
-			Broodwar->drawTextScreen(240, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, seconds);
-		else
-			Broodwar->drawTextScreen(240, 0, "Time: %i:0%i", Broodwar->elapsedTime() / 60, seconds);
-		Broodwar->setTextSize(BWAPI::Text::Size::Default);
-
-		// Latency
-		Broodwar->setTextSize(BWAPI::Text::Size::Small);
-		Broodwar->drawTextScreen(120, 10, "LF: %i", Broodwar->getLatencyFrames());
-		Broodwar->drawTextScreen(185, 10, "L: %i", Broodwar->getLatency());
-		Broodwar->drawTextScreen(240, 10, "RLF: %i", Broodwar->getRemainingLatencyFrames());
-		Broodwar->drawTextScreen(305, 10, "TS: %i", Broodwar->getLatencyFrames() - Broodwar->getLatency() + 1);
-		Broodwar->setTextSize(BWAPI::Text::Size::Default);
-
-
-
-		// Draw Mouse Tile Position
-		//Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
-
-		if (showBaseInfo)
-			drawBaseInformation();
-
-		if (showBuildable)
-			drawBuildable();
-
-		if (showPlacementInfos)
-			drawPlacementInfo();
-
-		if (showBwem)
-			drawBwem();
-
-		if (showEnemyUnits)
-			drawEnemyUnits();
-
-		if (showLifeBars)
-			drawLifeBars();
-
-		if (showSquadInfo)
-			drawSquadInfo();
-
-		if (showManagerInfos)
-			drawManagerInfo();
-
-		drawFrameTimeDisplay();
-
-
-		// Test Rectangle
-		/*
-		static Util::Square left(0, 0, 20, 20);
-		static Util::Square right(0, 0, 20, 20);
-
-		if (Broodwar->getMouseState(MouseButton::M_LEFT)) {
-			Position mouse = Broodwar->getMousePosition();
-			Position screen = Broodwar->getScreenPosition();
-			left.x = mouse.x + screen.x;
-			left.y = mouse.y + screen.y;
-
-			Broodwar->sendText("Distance: %f", left.getDistanceTo(right));
-		}
-
-		if (Broodwar->getMouseState(MouseButton::M_RIGHT)) {
-			Position mouse = Broodwar->getMousePosition();
-			Position screen = Broodwar->getScreenPosition();
-			right.x = mouse.x + screen.x;
-			right.y = mouse.y + screen.y;
-
-			Broodwar->sendText("Distance: %f", left.getDistanceTo(right));
-		}
-
-		Broodwar->drawBoxMap(left.x, left.y, left.x + left.width, left.y + left.height, Colors::Green);
-		Broodwar->drawBoxMap(right.x, right.y, right.x + right.width, right.y + right.height, Colors::Purple);
-		*/
-
-		/*
-		// Test Path
-		static PairUint left(0, 0);
-		static PairUint right(0, 0);
-		static PathResultUptr path = nullptr;
-
-		if (Broodwar->getMouseState(MouseButton::M_LEFT)) {
-			Position mouse = Broodwar->getMousePosition();
-			Position screen = Broodwar->getScreenPosition();
-			left.first = (mouse.x + screen.x) / 8;
-			left.second = (mouse.y + screen.y) / 8;
-		}
-
-		if (Broodwar->getMouseState(MouseButton::M_RIGHT)) {
-			Position mouse = Broodwar->getMousePosition();
-			Position screen = Broodwar->getScreenPosition();
-			right.first = (mouse.x + screen.x) / 8;
-			right.second = (mouse.y + screen.y) / 8;
-
-			path = bc.pathFinder.findPath(left, right);
-		}
-
-		if (path && path->hasPath) {
-			PairUint last = path->path.front();
-			for (PairUint pos : path->path) {
-				Broodwar->drawLineMap(Position(last.first * 8 + 4, last.second * 8 + 4), Position(pos.first * 8 + 4, pos.second * 8 + 4), Colors::Orange);
-				last = pos;
-			}
-		}
-
-		Broodwar->drawBoxMap(Position(left.first * 8 + 3, left.second * 8 + 3), Position(left.first * 8 + 5, left.second * 8 + 5), Colors::Purple, true);
-		Broodwar->drawBoxMap(Position(right.first * 8 + 3, right.second * 8 + 3), Position(right.first * 8 + 5, right.second * 8 + 5), Colors::White, true);
-
-		// Draw nodes in open list
-		int numberOfShapes = 0;
-		if (path) {
-			for (PairUint pos : path->visitedNodes) {
-				Broodwar->drawBoxMap(Position(pos.first * 8 + 1, pos.second * 8 + 1), Position(pos.first * 8 + 7, pos.second * 8 + 7), Colors::Orange);
-				if (numberOfShapes++ > 19000) break;
-			}
-		}
-		*/
-
-		// Draw Walkable Mini Tiles
-		/*
-		for (int x = 0; x < bc.map.miniTiles.size(); x++) {
-			for (int y = 0; y < bc.map.miniTiles[x].size(); y++) {
-
-				if (x * 8 > Broodwar->getScreenPosition().x - 20 && x * 8 < Broodwar->getScreenPosition().x + 800
-					&& y * 8 > Broodwar->getScreenPosition().y - 20 && y * 8 < Broodwar->getScreenPosition().y + 500) {
-
-					if (bc.map.miniTiles[x][y].walkable)
-						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Green);
-					else
-						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Red);
-				}
-			}
-		}		*/
-
-
-
-
-
-	}
-
-	void Debug::drawFrameTimeDisplay() {
-		displayBot.updateAndDraw(bc, 0, 0);
-		//displayBroodwar.updateAndDraw(bc, 0, 10); // TODO fix, broke with taking the average of frame time
-	}
-
-	void Debug::drawBaseInformation() {
-		// TODO
-		for (Base& base : bc.macro.bases) {
-			/*
-			for (Mineral& mineral : base.minerals) {
-				Broodwar->drawBoxMap(Position(mineral.bwemMineral->TopLeft()), Position(mineral.bwemMineral->TopLeft()) + Position(10, 10), Colors::Black, true);
-				Broodwar->drawTextMap(Position(mineral.bwemMineral->TopLeft()) + Position(3, -1), std::to_string(mineral.workers.size()).c_str());
-			}
-
-			for (Geyser& geyser : base.geysers) {
-				Broodwar->drawBoxMap(Position(geyser.bwemGeyser->TopLeft()), Position(geyser.bwemGeyser->TopLeft()) + Position(10, 10), Colors::Black);
-				Broodwar->drawTextMap(Position(geyser.bwemGeyser->TopLeft()), std::to_string(geyser.workers.size()).c_str());
-			}
-			*/
-
-			Broodwar->drawBoxMap(Position(base.bwemBase.Location()) + Position(25, 35), Position(base.bwemBase.Location()) + Position(100, 75), Colors::Black, true);
-			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 35), "Total: %i (+%i)", base.getTotalWorkers(), base.getWorkersNeeded());
-			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 45), "Mineral: %i", base.getTotalMineralWorkers());
-			Broodwar->drawTextMap(Position(base.bwemBase.Location()) + Position(30, 55), "Gas: %i (+%i)", base.getTotalGasWorkers(), base.getGasWorkerSlotsAvailable());
-		}
-	}
-
-	void Debug::drawBuildable() {
-		for (int x = 0; x < Broodwar->mapWidth(); x++) {
-			for (int y = 0; y < Broodwar->mapHeight(); y++) {
-
-				bool draw = false;
-				Color color = Colors::Orange;;
-
-				if (!bc.map.tiles[x][y].resourceBuildable) {
-					draw = true;
-				}
-
-				if (!bc.map.tiles[x][y].buildable) {
-					draw = true;
-					color = Colors::Red;
-				}
-
-				if (!bc.map.tiles[x][y].mineralLine) {
-					draw = true;
-					color = Colors::Yellow;
-				}
-
-				if (draw) {
-
-					if (fastDrawBuildable)
-						Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, color, false);
-					else {
-						// Note: Using Position classes costs additional 30% (at least in debug)
-						int border = 1;
-						int length = 5;
-
-						// Top Left
-						Broodwar->drawLineMap(x * 32 + border, y * 32 + border, x * 32 + border + length, y * 32 + border, color);
-						Broodwar->drawLineMap(x * 32 + border, y * 32 + border, x * 32 + border, y * 32 + border + length, color);
-
-						// Top Right
-						Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + border, x * 32 + 32 - border - length, y * 32 + border, color);
-						Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + border, x * 32 + 32 - border, y * 32 + border + length, color);
-
-						// Bottom Left
-						Broodwar->drawLineMap(x * 32 + border, y * 32 + 32 - border, x * 32 + border, y * 32 + 32 - border - length, color);
-						Broodwar->drawLineMap(x * 32 + border, y * 32 + 32 - border, x * 32 + border + length, y * 32 + 32 - border, color);
-
-						// Bottom Right
-						Broodwar->drawLineMap(x * 32 + 33 - border, y * 32 + 32 - border, x * 32 + 32 - border - length, y * 32 + 32 - border, color);
-						Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + 32 - border, x * 32 + 32 - border, y * 32 + 32 - border - length, color);
+		});
+
+		addCommand("buildable", "Show buildable space", false, false, [&bc = bc]() {
+			for (int x = 0; x < Broodwar->mapWidth(); x++) {
+				for (int y = 0; y < Broodwar->mapHeight(); y++) {
+
+					bool draw = false;
+					Color color = Colors::Orange;;
+
+					if (!bc.map.tiles[x][y].resourceBuildable) {
+						draw = true;
+					}
+
+					if (!bc.map.tiles[x][y].buildable) {
+						draw = true;
+						color = Colors::Red;
+					}
+
+					if (!bc.map.tiles[x][y].mineralLine) {
+						draw = true;
+						color = Colors::Yellow;
+					}
+
+					if (draw) {
+
+						//if (fastDrawBuildable)
+							Broodwar->drawBoxMap(32 * x + 2, 32 * y + 2, 32 * x + 28, 32 * y + 28, color, false);
+						/*else {
+							// Note: Using Position classes costs additional 30% (at least in debug)
+							int border = 1;
+							int length = 5;
+
+							// Top Left
+							Broodwar->drawLineMap(x * 32 + border, y * 32 + border, x * 32 + border + length, y * 32 + border, color);
+							Broodwar->drawLineMap(x * 32 + border, y * 32 + border, x * 32 + border, y * 32 + border + length, color);
+
+							// Top Right
+							Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + border, x * 32 + 32 - border - length, y * 32 + border, color);
+							Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + border, x * 32 + 32 - border, y * 32 + border + length, color);
+
+							// Bottom Left
+							Broodwar->drawLineMap(x * 32 + border, y * 32 + 32 - border, x * 32 + border, y * 32 + 32 - border - length, color);
+							Broodwar->drawLineMap(x * 32 + border, y * 32 + 32 - border, x * 32 + border + length, y * 32 + 32 - border, color);
+
+							// Bottom Right
+							Broodwar->drawLineMap(x * 32 + 33 - border, y * 32 + 32 - border, x * 32 + 32 - border - length, y * 32 + 32 - border, color);
+							Broodwar->drawLineMap(x * 32 + 32 - border, y * 32 + 32 - border, x * 32 + 32 - border, y * 32 + 32 - border - length, color);
+						//}
+						*/
 					}
 				}
 			}
-		}
-	}
+		});
 
-	std::string Debug::getOnOffString(bool value) {
-		return value ? "on" : "off";
-	}
-
-	std::string Debug::getShortName(std::string longName) {
-		std::string::size_type pos = longName.find("_");
-
-		if (pos != std::string::npos)
-			return longName.substr(pos + 1);
-
-		return longName;
-	}
-
-	void Debug::drawManagerInfo() {
-		// Strategy Manager
-		// Build Order
-
-		/*
-		if (bc.strategy.buildOrder.size() > 0) {
-			int xStart = 500;
-			int yStart = 20;
-
-			Broodwar->drawTextScreen(xStart, yStart, "\x03 Build Order Items left %i", bc.strategy.buildOrder.size());
-			Broodwar->drawLineScreen(xStart + 4, yStart + 15, xStart + 120, yStart + 15, BWAPI::Colors::Yellow);
-
-			int offset = 0;
-			for (auto item : bc.strategy.buildOrder) {
-				Broodwar->drawTextScreen(xStart + 5, yStart + 17 + offset, item.c_str());
-				offset += 10;
-			}
-		}*/
-
-		{
+		addCommand("manager", "showManagerInfos", true, true, [&bc = bc]() {
 			// Macro Manager
 			// Planned Units
 			int xStart = 20;
@@ -438,175 +128,330 @@ namespace BlackCrow {
 
 				i++;
 			}
-		}
-	}
+		});
 
+		addCommand("bwem", "Draws standard BWEM debug output", false, false, [&bc = bc]() {
+			BWEM::utils::gridMapExample(bc.bwem);
+			BWEM::utils::drawMap(bc.bwem);
+		});
 
-	// Plannet Building Locations
-	void Debug::drawPlacementInfo() {
-		// TODO
-		/*
-		for (PlannedUnit* pu : *bc.macro.plannedUnits) {
-			if (pu->type.isBuilding()) {
-				if (pu->buildLocation) {
-					Broodwar->drawBoxMap(pu->buildLocation.x * 32, pu->buildLocation.y * 32, pu->buildLocation.x * 32 + pu->type.tileWidth() * 32, pu->buildLocation.y * 32 + pu->type.tileHeight() * 32, BWAPI::Colors::Orange, false);
-					if (pu->larvaEgg && pu->larvaEgg->getType() == BWAPI::UnitTypes::Zerg_Drone) {
-						Broodwar->drawLineMap(pu->larvaEgg->getPosition().x, pu->larvaEgg->getPosition().y, pu->buildLocation.x * 32, pu->buildLocation.y * 32, BWAPI::Colors::Orange);
-						//Broodwar->sendText("Build expansion at %i, %i", pu->buildLocation.x * 32, pu->buildLocation.y * 32);
+		addCommand("squad", "Shows squad information", true, false, [&bc = bc]() {
+			for (SquadPtr squad : bc.army.squads) {
+				if (squad->sunits.size() > 0) {
+					for (auto& sunit : squad->sunits) {
+						if (sunit->squadOverride == SquadUnit::Override::SCOUTING) {
+							Broodwar->drawLineMap(sunit->self->getPosition(), Position(sunit->scoutLocation), BWAPI::Colors::White);
+							Broodwar->drawBoxMap(Position(sunit->scoutLocation), Position(sunit->scoutLocation + TilePosition(1, 1) / 2), Colors::Green);
+						}
+
+						//Broodwar->drawCircleMap(sunit->self->getPosition(), 3, Colors::Green, true);
+						if (sunit->squadOverride != SquadUnit::Override::NONE)
+							Broodwar->drawTextMap(sunit->self->getPosition(), "OVR");
+
+						//if(sunit->squad && sunit->squad->squadGoalTarget)
+							//Broodwar->drawLineMap(sunit->self->getPosition(), sunit->squad->squadGoalTarget->position, Colors::Brown);
+					}
+
+					Broodwar->drawTextScreen(10, 120, "Squad unit amount: %i", squad->size());
+				}
+			}
+		});
+
+		addCommand("enemies", "Show enemy information", true, false, [&bc = bc]() {
+			Broodwar->setTextSize(BWAPI::Text::Size::Small);
+
+			for (EnemyUnitPtr eu : bc.enemy.enemies) {
+				Unit unit = Broodwar->getUnit(eu->id);
+				bool a = unit->isVisible();
+
+				if (!unit->isVisible()) {
+					if (eu->type.isBuilding()) {
+						Broodwar->drawBoxMap(eu->tilePosition.x * 32, eu->tilePosition.y * 32, eu->tilePosition.x * 32 + eu->type.tileWidth() * 32, eu->tilePosition.y * 32 + eu->type.tileHeight() * 32, Colors::Grey, false);
+						Broodwar->drawTextMap(eu->tilePosition.x * 32, eu->tilePosition.y * 32, getShortName(eu->type.getName()).c_str());
+					} else {
+						Color borderColor = eu->isGhost ? Colors::Black : Colors::Grey;
+						Broodwar->drawBoxMap(eu->position.x, eu->position.y, eu->position.x + eu->type.width(), eu->position.y + eu->type.height(), borderColor, false);
+						Broodwar->drawTextMap(eu->position.x, eu->position.y, getShortName(eu->type.getName()).c_str());
 					}
 				}
 			}
-		}
-		*/
-	}
 
-	void Debug::drawBwem() {
-		BWEM::utils::gridMapExample(bc.bwem);
-		BWEM::utils::drawMap(bc.bwem);
-	}
+			Broodwar->setTextSize(BWAPI::Text::Size::Default);
+		});
 
-	void Debug::drawSquadInfo() {
-		for (SquadPtr squad : bc.army.squads) {
-			if (squad->sunits.size() > 0) {
-				for (auto& sunit : squad->sunits) {
-					if (sunit->squadOverride == SquadUnit::Override::SCOUTING) {
-						Broodwar->drawLineMap(sunit->self->getPosition(), Position(sunit->scoutLocation), BWAPI::Colors::White);
-						Broodwar->drawBoxMap(Position(sunit->scoutLocation), Position(sunit->scoutLocation + TilePosition(1, 1) / 2), Colors::Green);
-					}
+		addCommand("lifebars", "Draws life bars", true, false, [&bc = bc]() {
+			float barSize = 3; // Pixel width and height of a single health/shield rectangle
 
-					//Broodwar->drawCircleMap(sunit->self->getPosition(), 3, Colors::Green, true);
-					if (sunit->squadOverride != SquadUnit::Override::NONE)
-						Broodwar->drawTextMap(sunit->self->getPosition(), "OVR");
+			for (Unit unit : Broodwar->getAllUnits()) {
+				if (!unit->getPlayer()->isNeutral()) {
+					int length = (int)(unit->getType().width() * 0.85);
+					int bars = (int)(length / (barSize + 1));
+					int pixelLength = (int)(bars * barSize + 2);
 
-					//if(sunit->squad && sunit->squad->squadGoalTarget)
-						//Broodwar->drawLineMap(sunit->self->getPosition(), sunit->squad->squadGoalTarget->position, Colors::Brown);
-				}
+					Position barPosHealth = unit->getPosition() - Position((int)(pixelLength * 0.5), (int)(unit->getType().dimensionUp() * 1.2));
+					Position barPosShield = barPosHealth - Position(0, (int)barSize + 1);
+					float percentageHealth = (float)unit->getHitPoints() / (float)unit->getType().maxHitPoints();
+					float percentageShield = 0;
 
-				Broodwar->drawTextScreen(10, 120, "Squad unit amount: %i", squad->size());
-			}
-		}
+					bool hasShields = unit->getType().maxShields() > 0 ? true : false;
+					if (hasShields)
+						percentageShield = ((float)unit->getShields()) / (float)unit->getType().maxShields();
 
-	}
+					// TODO Colors are cacheable
+					Util::HsvColor hsvColor;
+					hsvColor.h = (char)(-(0xFF * 0.33) * percentageHealth);
+					hsvColor.s = 0xFF;
+					hsvColor.v = (char)(0xFF * 0.7);
 
-	void Debug::drawEnemyUnits() {
-		Broodwar->setTextSize(BWAPI::Text::Size::Small);
+					Util::RgbColor rgbColor = Util::HsvToRgb(hsvColor);
+					Color healthBarColor(rgbColor.r, rgbColor.b, rgbColor.g);
 
-		for (EnemyUnitPtr eu : bc.enemy.enemies) {
-			Unit unit = Broodwar->getUnit(eu->id);
-			bool a = unit->isVisible();
-
-			if (!unit->isVisible()) {
-				if (eu->type.isBuilding()) {
-					Broodwar->drawBoxMap(eu->tilePosition.x * 32, eu->tilePosition.y * 32, eu->tilePosition.x * 32 + eu->type.tileWidth() * 32, eu->tilePosition.y * 32 + eu->type.tileHeight() * 32, Colors::Grey, false);
-					Broodwar->drawTextMap(eu->tilePosition.x * 32, eu->tilePosition.y * 32, getShortName(eu->type.getName()).c_str());
-				} else {
-					Color borderColor = eu->isGhost ? Colors::Black : Colors::Grey;
-					Broodwar->drawBoxMap(eu->position.x, eu->position.y, eu->position.x + eu->type.width(), eu->position.y + eu->type.height(), borderColor, false);
-					Broodwar->drawTextMap(eu->position.x, eu->position.y, getShortName(eu->type.getName()).c_str());
-				}
-			}
-		}
-
-		Broodwar->setTextSize(BWAPI::Text::Size::Default);
-	}
-
-	void Debug::drawLifeBars() {
-		float barSize = 3; // Pixel width and height of a single health/shield rectangle
-
-		for (Unit unit : Broodwar->getAllUnits()) {
-			if (!unit->getPlayer()->isNeutral()) {
-				int length = (int)(unit->getType().width() * 0.85);
-				int bars = (int)(length / (barSize + 1));
-				int pixelLength = (int)(bars * barSize + 2);
-
-				Position barPosHealth = unit->getPosition() - Position((int)(pixelLength * 0.5), (int)(unit->getType().dimensionUp() * 1.2));
-				Position barPosShield = barPosHealth - Position(0, (int)barSize + 1);
-				float percentageHealth = (float)unit->getHitPoints() / (float)unit->getType().maxHitPoints();
-				float percentageShield = 0;
-
-				bool hasShields = unit->getType().maxShields() > 0 ? true : false;
-				if (hasShields)
-					percentageShield = ((float)unit->getShields()) / (float)unit->getType().maxShields();
-
-				// TODO Colors are cacheable
-				Util::HsvColor hsvColor;
-				hsvColor.h = (char)(-(0xFF * 0.33) * percentageHealth);
-				hsvColor.s = 0xFF;
-				hsvColor.v = (char)(0xFF * 0.7);
-
-				Util::RgbColor rgbColor = Util::HsvToRgb(hsvColor);
-				Color healthBarColor(rgbColor.r, rgbColor.b, rgbColor.g);
-
-				// Draw Health
-				Broodwar->drawBoxMap(barPosHealth, barPosHealth + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
-				for (int i = 0; i < bars; i++) {
-					Color color = i < (float)bars * percentageHealth ? healthBarColor : Colors::Grey;
-					int barSizePixel = (int)(barSize * i);
-
-					Position topLeft(1 + barSizePixel, 1);
-					Position bottomRight((int)barSize + barSizePixel, (int)barSize + 1);
-					Broodwar->drawBoxMap(barPosHealth + topLeft, barPosHealth + bottomRight, color, true);
-				}
-
-				if (hasShields) { // TODO Not 100% correct
-					Broodwar->drawBoxMap(barPosShield, barPosShield + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
+					// Draw Health
+					Broodwar->drawBoxMap(barPosHealth, barPosHealth + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
 					for (int i = 0; i < bars; i++) {
-						Color color = i + 1 < ((float)bars + 1) * percentageShield ? Colors::Blue : Colors::Grey;
+						Color color = i < (float)bars * percentageHealth ? healthBarColor : Colors::Grey;
 						int barSizePixel = (int)(barSize * i);
 
 						Position topLeft(1 + barSizePixel, 1);
 						Position bottomRight((int)barSize + barSizePixel, (int)barSize + 1);
-						Broodwar->drawBoxMap(barPosShield + topLeft, barPosShield + bottomRight, color, true);
+						Broodwar->drawBoxMap(barPosHealth + topLeft, barPosHealth + bottomRight, color, true);
+					}
+
+					if (hasShields) { // TODO Not 100% correct
+						Broodwar->drawBoxMap(barPosShield, barPosShield + Position(pixelLength - 1, (int)barSize + 2), Colors::Black, true);
+						for (int i = 0; i < bars; i++) {
+							Color color = i + 1 < ((float)bars + 1) * percentageShield ? Colors::Blue : Colors::Grey;
+							int barSizePixel = (int)(barSize * i);
+
+							Position topLeft(1 + barSizePixel, 1);
+							Position bottomRight((int)barSize + barSizePixel, (int)barSize + 1);
+							Broodwar->drawBoxMap(barPosShield + topLeft, barPosShield + bottomRight, color, true);
+						}
 					}
 				}
 			}
-		}
-	}
+		});
 
-	void Debug::drawTestPath() {
-		static Position left, right;
+		addCommand("bwempath", "Draws a BWEM test path with left & right mouse click", false, false, [&bc = bc]() {
+			static Position left, right;
 
-		Broodwar->drawCircleMap(left, 10, BWAPI::Colors::Red);
-		Broodwar->drawCircleMap(right, 10, BWAPI::Colors::Red);
+			Broodwar->drawCircleMap(left, 10, BWAPI::Colors::Red);
+			Broodwar->drawCircleMap(right, 10, BWAPI::Colors::Red);
 
-		// Testdistances
-		if (Broodwar->getMouseState(BWAPI::MouseButton::M_LEFT)) {
-			left = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
-		}
-
-		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
-			right = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
-		}
-
-		Broodwar->drawCircleMap(left, 15, BWAPI::Colors::Red);
-		Broodwar->drawCircleMap(right, 15, BWAPI::Colors::Red);
-
-		int length;
-		const BWEM::CPPath& path = bc.bwem.GetPath(Position(left), Position(right), &length);
-
-		if (path.empty()) { // no ChokePoint between a and b: 
-			// just draw a single line between them:
-			Broodwar->drawLineMap(left, right, BWAPI::Colors::Cyan);
-		} else {
-			// draw a line between each ChokePoint in Path:
-			const BWEM::ChokePoint * cpPrevious = nullptr;
-			for (const BWEM::ChokePoint * cp : path) {
-				if (cpPrevious)
-					Broodwar->drawLineMap(Position(cpPrevious->Center()), Position(cp->Center()), BWAPI::Colors::Cyan);
-				cpPrevious = cp;
+			// Testdistances
+			if (Broodwar->getMouseState(BWAPI::MouseButton::M_LEFT)) {
+				left = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
 			}
 
-			Broodwar->drawLineMap(left, Position(path.front()->Center()), BWAPI::Colors::Cyan);
-			Broodwar->drawLineMap(right, Position(path.back()->Center()), BWAPI::Colors::Cyan);
-		}
+			if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
+				right = Broodwar->getMousePosition() + Broodwar->getScreenPosition();
+			}
 
-		if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT) || Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
-			Broodwar->sendText("BWEM length: %i", length);
-		}
+			Broodwar->drawCircleMap(left, 15, BWAPI::Colors::Red);
+			Broodwar->drawCircleMap(right, 15, BWAPI::Colors::Red);
 
+			int length;
+			const BWEM::CPPath& path = bc.bwem.GetPath(Position(left), Position(right), &length);
+
+			if (path.empty()) { // no ChokePoint between a and b: 
+								// just draw a single line between them:
+				Broodwar->drawLineMap(left, right, BWAPI::Colors::Cyan);
+			} else {
+				// draw a line between each ChokePoint in Path:
+				const BWEM::ChokePoint * cpPrevious = nullptr;
+				for (const BWEM::ChokePoint * cp : path) {
+					if (cpPrevious)
+						Broodwar->drawLineMap(Position(cpPrevious->Center()), Position(cp->Center()), BWAPI::Colors::Cyan);
+					cpPrevious = cp;
+				}
+
+				Broodwar->drawLineMap(left, Position(path.front()->Center()), BWAPI::Colors::Cyan);
+				Broodwar->drawLineMap(right, Position(path.back()->Center()), BWAPI::Colors::Cyan);
+			}
+
+			if (Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT) || Broodwar->getMouseState(BWAPI::MouseButton::M_RIGHT)) {
+				Broodwar->sendText("BWEM length: %i", length);
+			}
+		});
+
+		addCommand("area", "Shows area information", true, false, [&bc = bc]() {
+			for (const AreaPtr& area : bc.map.areas) {
+				auto center = (area->bwemArea.TopLeft() + area->bwemArea.BottomRight()) / 2;
+				Broodwar->drawTextMap(Position(center), "%i enemy units", area->enemies.size());
+			}
+		});
+
+		addCommand("network", "Shows latency, turn size etc.", true, false, [&bc = bc]() {
+			// Draw APM, LSpeed, Time
+			Broodwar->setTextSize(BWAPI::Text::Size::Small);
+			Broodwar->drawTextScreen(120, 0, "APM: %i", Broodwar->getAPM());
+			Broodwar->drawTextScreen(185, 0, "LS: %.1f", bc.getAverageFrameTime());
+			int seconds = Broodwar->elapsedTime() % 60;
+			if (seconds >= 10)
+				Broodwar->drawTextScreen(240, 0, "Time: %i:%i", Broodwar->elapsedTime() / 60, seconds);
+			else
+				Broodwar->drawTextScreen(240, 0, "Time: %i:0%i", Broodwar->elapsedTime() / 60, seconds);
+			Broodwar->setTextSize(BWAPI::Text::Size::Default);
+
+			// Latency
+			Broodwar->setTextSize(BWAPI::Text::Size::Small);
+			Broodwar->drawTextScreen(120, 10, "LF: %i", Broodwar->getLatencyFrames());
+			Broodwar->drawTextScreen(185, 10, "L: %i", Broodwar->getLatency());
+			Broodwar->drawTextScreen(240, 10, "RLF: %i", Broodwar->getRemainingLatencyFrames());
+			Broodwar->drawTextScreen(305, 10, "TS: %i", Broodwar->getLatencyFrames() - Broodwar->getLatency() + 1);
+			Broodwar->setTextSize(BWAPI::Text::Size::Default);
+		});
+
+		addCommand("performance", "Shows top left performance counter", true, false, [&]() {
+			displayBot.updateAndDraw(bc, 0, 0);
+			//displayBroodwar.updateAndDraw(bc, 0, 10); // TODO fix, broke with taking the average of frame time
+		});
+
+		addCommand("unitmix", "Unit Mix information", false, false, [&bc = bc]() {
+			// Unit Mix and Strategy calculation numbers
+			int ox = 250;
+			int yx = 250;
+
+			Broodwar->drawTextScreen(ox, yx, "UMix s/pf: %f", bc.strategy.unitMix->supplyPerFrame());
+			Broodwar->drawTextScreen(ox, yx + 10, "UMix m/pf: %f", bc.strategy.unitMix->mineralPerFrame());
+			Broodwar->drawTextScreen(ox, yx + 20, "UMix l/pf: %f", bc.strategy.unitMix->larvaPerFrame());
+			Broodwar->drawTextScreen(ox, yx + 30, "avg m/pf: %f", bc.macro.getAverageMineralsPerFrame());
+			Broodwar->drawTextScreen(ox + 100, yx + 30, "avger m/pf: %f", bc.macro.mineralIncomeAverager.average);
+			Broodwar->drawTextScreen(ox, yx + 40, "avg l/pr: %f", bc.macro.getAverageLarvaePerFrame());
+			Broodwar->drawTextScreen(ox, yx + 50, "prod multi min: %f", bc.strategy.productionMultiplierMinerals);
+			Broodwar->drawTextScreen(ox, yx + 60, "prod multi larvae: %f", bc.strategy.productionMultiplierLarvae);
+			Broodwar->drawTextScreen(ox, yx + 70, "prod multi: %f", bc.strategy.productionMultiplier);
+		});
+		
+		addCommand("testpath", "Draws pathfinding path", false, false, [&bc = bc]() {
+			static PairUint left(0, 0);
+			static PairUint right(0, 0);
+			static PathResultUptr path = nullptr;
+
+			if (Broodwar->getMouseState(MouseButton::M_LEFT)) {
+				Position mouse = Broodwar->getMousePosition();
+				Position screen = Broodwar->getScreenPosition();
+				left.first = (mouse.x + screen.x) / 8;
+				left.second = (mouse.y + screen.y) / 8;
+			}
+
+			if (Broodwar->getMouseState(MouseButton::M_RIGHT)) {
+				Position mouse = Broodwar->getMousePosition();
+				Position screen = Broodwar->getScreenPosition();
+				right.first = (mouse.x + screen.x) / 8;
+				right.second = (mouse.y + screen.y) / 8;
+
+				path = bc.pathFinder.findPath(left, right);
+			}
+
+			if (path && path->hasPath) {
+				PairUint last = path->path.front();
+				for (PairUint pos : path->path) {
+					Broodwar->drawLineMap(Position(last.first * 8 + 4, last.second * 8 + 4), Position(pos.first * 8 + 4, pos.second * 8 + 4), Colors::Orange);
+					last = pos;
+				}
+			}
+
+			Broodwar->drawBoxMap(Position(left.first * 8 + 3, left.second * 8 + 3), Position(left.first * 8 + 5, left.second * 8 + 5), Colors::Purple, true);
+			Broodwar->drawBoxMap(Position(right.first * 8 + 3, right.second * 8 + 3), Position(right.first * 8 + 5, right.second * 8 + 5), Colors::White, true);
+
+			// Draw nodes in open list
+			int numberOfShapes = 0;
+			if (path) {
+				for (PairUint pos : path->visitedNodes) {
+					Broodwar->drawBoxMap(Position(pos.first * 8 + 1, pos.second * 8 + 1), Position(pos.first * 8 + 7, pos.second * 8 + 7), Colors::Orange);
+					if (numberOfShapes++ > 19000) break;
+				}
+			}
+		});
+
+		addCommand("mousetile", "Draws the tile number at mouse position", false, false, [&bc = bc]() {
+			Broodwar->drawTextMouse(0, -10, "%i, %i", (Broodwar->getMousePosition().x + Broodwar->getScreenPosition().x) / 32, (Broodwar->getMousePosition().y + +Broodwar->getScreenPosition().y) / 32);
+		});
 	}
 
+
+	template <class UnaryFunction>
+	void Debug::addCommand(std::string command, std::string description, bool active, bool executeOnce, UnaryFunction action) {
+		commands.emplace_back(command, description, active, executeOnce, action);
+	}
+
+	void Debug::onFrame() {
+		for (auto& command : commands) {
+			if (command.isActive) {
+				command.action();
+
+				if (command.executeOnce)
+					command.isActive = false;
+			}
+		}
+	}
+
+	bool Debug::command(std::string text) {
+		for (auto& command : commands) {
+			if (command.command == text) {
+				command.isActive = !command.isActive;
+
+				if (!command.executeOnce)
+					Broodwar->sendText("%s (%s) turned %s", command.command.c_str(), command.description.c_str(), command.isActive ? "ON" : "OFF");
+
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	/*
+	void Debug::drawOnFrame() {
+
+		// Builder Debug
+		//int i = 0;
+		//for (BWAPI::TilePosition p : bc.builder.positions)
+		//	Broodwar->drawTextMap(Position(p), "%i", i++);
+
+		// Minerals
+		//Broodwar->drawTextScreen(10, 65, "Average Smoothed Minerals: %f", bc.macro.getAverageMineralsPerFrame());
+		//Broodwar->drawTextScreen(10, 50, "Average Minerals: %f", bc.macro.mineralFrameAverage);
+
+		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
+		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
+
+		
+
+		// Draw Walkable Mini Tiles
+		/*
+		for (int x = 0; x < bc.map.miniTiles.size(); x++) {
+			for (int y = 0; y < bc.map.miniTiles[x].size(); y++) {
+
+				if (x * 8 > Broodwar->getScreenPosition().x - 20 && x * 8 < Broodwar->getScreenPosition().x + 800
+					&& y * 8 > Broodwar->getScreenPosition().y - 20 && y * 8 < Broodwar->getScreenPosition().y + 500) {
+
+					if (bc.map.miniTiles[x][y].walkable)
+						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Green);
+					else
+						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Red);
+				}
+			}
+		}*/
+	//}
+	
+
+	std::string Debug::getOnOffString(bool value) {
+		return value ? "on" : "off";
+	}
+
+	std::string Debug::getShortName(std::string longName) {
+		std::string::size_type pos = longName.find("_");
+		if (pos != std::string::npos)
+			return longName.substr(pos + 1);
+		return longName;
+	}
+
+	// #######################################################
 	// ############# Debug Performance Display ###############
+	// #######################################################
+
 	void DebugPerformanceDisplay::elapsedTime(double millis) {
 		frameTimeHistory.push_front(millis);
 

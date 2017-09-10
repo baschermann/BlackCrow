@@ -77,8 +77,7 @@ namespace BlackCrow {
 			strategy.onFrame();
 			tech.onFrame();
 			army.onFrame();
-
-			debug.drawOnFrame();
+			debug.onFrame();
 			// End of them hardwork
 
 			auto end = std::chrono::high_resolution_clock::now();

@@ -96,6 +96,11 @@ namespace BlackCrow {
 		double getAverageGasPerFrame();
 		double getAverageMineralsPerFrame();
 
+
+		// Income Averager
+		Util::DampenedAverager mineralIncomeAverager;
+		Util::DampenedAverager gasIncomeAverager;
+
 	private:
 		BlackCrow &bc;
 
@@ -108,10 +113,8 @@ namespace BlackCrow {
 		void calculateResourceAverages();
 		// Minerals
 		int lastFrameTotalMinerals = 0;
-		Util::DampenedAverager mineralIncomeAverager;
 		// Gas
 		int lastFrameTotalGas = 0; 
-		Util::DampenedAverager gasIncomeAverager;
 	};
 
 }

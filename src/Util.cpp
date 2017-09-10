@@ -224,7 +224,7 @@ namespace BlackCrow {
 							break;
 						}
 
-						int checkDistance = Util::distance(selfX, selfY, otherX, otherY);
+						double checkDistance = Util::distance(selfX, selfY, otherX, otherY);
 						if (checkDistance < shortestDistance) {
 							shortestDistance = checkDistance;
 						}

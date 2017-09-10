@@ -28,7 +28,7 @@ namespace BlackCrow {
 				newEnemy->type = unit->getType();
 				newEnemy->tilePosition = unit->getTilePosition();
 				setEnemyUnitArea(newEnemy, bc.map.getNearestArea(TilePosition(unit->getPosition())));
-				updateEnemyRangeInMapTiles(eu, unit, newEnemy->tilePosition);
+				updateEnemyRangeInMapTiles(newEnemy, unit, newEnemy->tilePosition);
 
 				eu = newEnemy;
 			}
@@ -135,13 +135,13 @@ namespace BlackCrow {
 	void Enemy::updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const Unit u, const TilePosition& current, const TilePosition& old) {
 		if (eu->type.canAttack()) {
 			int maxRange = eu->type.groundWeapon().maxRange();
-			int tileRadius = std::ceil(maxRange / 32);
+			int tileRadius = (int)std::ceil(maxRange / 32);
 
 			// Remove old
 			if (old != BWAPI::TilePositions::Invalid) {
 				for (int x = old.x - tileRadius; x < old.x + tileRadius; x++) {
 					for (int y = old.y - tileRadius; y < old.y + tileRadius; y++) {
-						float radius = Util::distance(x, y, old.x, old.y);
+						double radius = Util::distance(x, y, old.x, old.y);
 						if (radius <= maxRange) {
 							auto enemies = bc.map.tiles[x][y].enemiesInRange;
 							enemies.erase(std::remove(enemies.begin(), enemies.end(), eu), enemies.end());
@@ -153,7 +153,7 @@ namespace BlackCrow {
 			// Add new
 			for (int x = current.x - tileRadius; x < current.x + tileRadius; x++) {
 				for (int y = current.y - tileRadius; y < current.y + tileRadius; y++) {
-					float radius = Util::distance(x, y, current.x, current.y);
+					double radius = Util::distance(x, y, current.x, current.y);
 					if (radius <= maxRange) {
 						bc.map.tiles[x][y].enemiesInRange.push_back(eu);
 					}

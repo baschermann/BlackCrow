@@ -28,42 +28,43 @@ namespace BlackCrow {
 	// Draws debug information
 	class Debug {
 
+		struct Command {
+			std::string command;
+			std::string description;
+			std::function<void(void)> action;
+			bool isActive = false;
+			bool executeOnce = false;
+
+			template <class UnaryFunction>
+			Command(std::string command,
+				std::string description,
+				bool active,
+				bool executeOnce,
+				UnaryFunction action)
+				: command(command),
+				description(description),
+				isActive(active),
+				executeOnce(executeOnce),
+				action(action) {};
+		};
+
 	public:
 		Debug(BlackCrow &parent);
 
-		void onStart();
-		void drawOnFrame();
-
-		bool command(std::string text);
-		bool fastDrawBuildable;
 		DebugPerformanceDisplay displayBot;
 		DebugPerformanceDisplay displayBroodwar;
+		std::vector<Command> commands;
 
+		void onStart();
+		void onFrame();
+		bool command(std::string text);
+		static std::string getShortName(std::string longName);
+
+		template <class UnaryFunction>
+		void addCommand(std::string command, std::string description, bool active, bool executeOnce, UnaryFunction action);
+		
 	private:
 		BlackCrow &bc;
-
-		bool showBaseInfo;
-		bool showBuildable;
-		bool showManagerInfos;
-		bool showPlacementInfos;
-		bool showBwem;
-		bool showSquadInfo;
-		bool showEnemyUnits;
-		bool showLifeBars;
 		std::string getOnOffString(bool value);
-		std::string getShortName(std::string longName);
-
-		void drawBaseInformation();
-		void drawBuildable();
-		void drawManagerInfo();
-		void drawPlacementInfo();
-		void drawBwem();
-		void drawSquadInfo();
-		void drawEnemyUnits();
-		void drawLifeBars();
-
-		void drawFrameTimeDisplay();
-
-		void drawTestPath();
 	};
 }
