@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include "Planned.h"
 #include <memory>
+#include "Map.h"
 
 namespace BlackCrow {
 
@@ -25,7 +26,6 @@ namespace BlackCrow {
 		bool showSpikes = true;
 	};
 
-	// Draws debug information
 	class Debug {
 
 		struct Command {
@@ -54,6 +54,8 @@ namespace BlackCrow {
 		DebugPerformanceDisplay displayBot;
 		DebugPerformanceDisplay displayBroodwar;
 		std::vector<Command> commands;
+		std::vector<std::function<void(const unsigned int x, const unsigned int y, const Map::Cell& cell)>> cellFunctions;
+		std::vector<std::function<void(const unsigned int x, const unsigned int y, const Map::MiniCell& cell)>> miniCellFunctions;
 
 		void onStart();
 		void onFrame();
@@ -62,6 +64,12 @@ namespace BlackCrow {
 
 		template <class UnaryFunction>
 		void addCommand(std::string command, std::string description, bool active, bool executeOnce, UnaryFunction action);
+
+		template<class UnaryFunction>
+		void runOnEveryCell(UnaryFunction action);
+
+		template<class UnaryFunction>
+		void runOnEveryMiniCell(UnaryFunction action);
 		
 	private:
 		BlackCrow &bc;

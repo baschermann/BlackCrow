@@ -22,6 +22,13 @@ namespace BlackCrow {
 
 	void Debug::onStart() {
 
+		bc.debug.runOnEveryCell([](const unsigned int x, const unsigned int y, const Map::Cell& cell) {
+			if(cell.enemiesInRange.size() > 0)
+				Broodwar->drawTextMap(Position(x * 32 + 12, y * 32 + 12), std::to_string(cell.enemiesInRange.size()).c_str());
+		});
+
+
+
 		addCommand("help", "Shows all chat commands with description", false, true, [&bc = bc]() {
 			for (auto command : bc.debug.commands) {
 				Broodwar->sendText("%s -> %s", command.command.c_str(), command.description.c_str());
@@ -106,7 +113,6 @@ namespace BlackCrow {
 		});
 
 		addCommand("manager", "showManagerInfos", true, true, [&bc = bc]() {
-			// Macro Manager
 			// Planned Units
 			int xStart = 20;
 			int yStart = 20;
@@ -377,6 +383,19 @@ namespace BlackCrow {
 	}
 
 	void Debug::onFrame() {
+		for (auto& f : cellFunctions) {
+			for (unsigned int x = 0; x < bc.map.tileWidth; x++)
+				for (unsigned int y = 0; y < bc.map.tileHeight; y++)
+					f(x, y, bc.map.tiles[x][y]);
+		}
+
+		for (auto& f : miniCellFunctions) {
+			for (unsigned int x = 0; x < bc.map.miniTileWidth; x++)
+				for (unsigned int y = 0; y < bc.map.miniTileHeight; y++)
+					f(x, y, bc.map.miniTiles[x][y]);
+		}
+
+
 		for (auto& command : commands) {
 			if (command.isActive) {
 				command.action();
@@ -401,42 +420,6 @@ namespace BlackCrow {
 		return false;
 	}
 
-
-	/*
-	void Debug::drawOnFrame() {
-
-		// Builder Debug
-		//int i = 0;
-		//for (BWAPI::TilePosition p : bc.builder.positions)
-		//	Broodwar->drawTextMap(Position(p), "%i", i++);
-
-		// Minerals
-		//Broodwar->drawTextScreen(10, 65, "Average Smoothed Minerals: %f", bc.macro.getAverageMineralsPerFrame());
-		//Broodwar->drawTextScreen(10, 50, "Average Minerals: %f", bc.macro.mineralFrameAverage);
-
-		//Broodwar->drawTextScreen(10, 80, "Average Gas: %f", bc.macro.gasFrameAverage);
-		//Broodwar->drawTextScreen(10, 95, "Average Smoothed Gas: %f", bc.macro.getAverageGasPerFrame());
-
-		
-
-		// Draw Walkable Mini Tiles
-		/*
-		for (int x = 0; x < bc.map.miniTiles.size(); x++) {
-			for (int y = 0; y < bc.map.miniTiles[x].size(); y++) {
-
-				if (x * 8 > Broodwar->getScreenPosition().x - 20 && x * 8 < Broodwar->getScreenPosition().x + 800
-					&& y * 8 > Broodwar->getScreenPosition().y - 20 && y * 8 < Broodwar->getScreenPosition().y + 500) {
-
-					if (bc.map.miniTiles[x][y].walkable)
-						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Green);
-					else
-						Broodwar->drawBoxMap(Position(x * 8 + 1, y * 8 + 1), Position(x * 8 + 7, y * 8 + 7), Colors::Red);
-				}
-			}
-		}*/
-	//}
-	
-
 	std::string Debug::getOnOffString(bool value) {
 		return value ? "on" : "off";
 	}
@@ -446,6 +429,15 @@ namespace BlackCrow {
 		if (pos != std::string::npos)
 			return longName.substr(pos + 1);
 		return longName;
+	}
+
+	template<class UnaryFunction>
+	void Debug::runOnEveryCell(UnaryFunction action) {
+		cellFunctions.push_back(action);
+	}
+	template<class UnaryFunction>
+	void Debug::runOnEveryMiniCell(UnaryFunction action) {
+		miniCellFunctions.push_back(action);
 	}
 
 	// #######################################################

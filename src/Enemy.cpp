@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <BWEM/bwem.h>
 #include "BlackCrow.h"
+#include "Map.h"
 
 namespace BlackCrow {
 
