@@ -48,8 +48,9 @@ namespace BlackCrow {
 		double ghostTime(BWAPI::UnitType type);
 		void setEnemyUnitArea(const EnemyUnitPtr& eu, const AreaPtr& area);
 		void removeEnemyUnitFromArea(const EnemyUnitPtr& eu, const AreaPtr& area);
-		void updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const BWAPI::Unit u, const BWAPI::TilePosition& current);
-		void updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const BWAPI::Unit u, const BWAPI::TilePosition& current, const BWAPI::TilePosition& old);
+		//void updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const BWAPI::TilePosition& current);
+		//void updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const BWAPI::TilePosition& current, const BWAPI::TilePosition& old);
+		void updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu);
 	};
 
 }

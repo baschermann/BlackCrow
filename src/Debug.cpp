@@ -21,11 +21,12 @@ namespace BlackCrow {
 	}
 
 	void Debug::onStart() {
-
+		
 		bc.debug.runOnEveryCell([](const unsigned int x, const unsigned int y, const Map::Cell& cell) {
 			if(cell.enemiesInRange.size() > 0)
 				Broodwar->drawTextMap(Position(x * 32 + 12, y * 32 + 12), std::to_string(cell.enemiesInRange.size()).c_str());
 		});
+		
 
 
 

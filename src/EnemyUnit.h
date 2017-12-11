@@ -17,6 +17,7 @@ namespace BlackCrow {
 		bool isVisible;
 		bool isGhost = false;
 		bool isDestroyed = false;
+		std::vector<PairUint> weaponRangeTiles;
 	};
 
 	bool operator==(const EnemyUnit& left, const EnemyUnit& right);

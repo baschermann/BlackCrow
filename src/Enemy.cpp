@@ -29,17 +29,12 @@ namespace BlackCrow {
 				newEnemy->type = unit->getType();
 				newEnemy->tilePosition = unit->getTilePosition();
 				setEnemyUnitArea(newEnemy, bc.map.getNearestArea(TilePosition(unit->getPosition())));
-				updateEnemyRangeInMapTiles(newEnemy, unit, newEnemy->tilePosition);
-
 				eu = newEnemy;
 			}
 
-			if (eu->tilePosition != unit->getTilePosition()) {
-				updateEnemyRangeInMapTiles(eu, unit, unit->getTilePosition(), eu->tilePosition);
-				eu->tilePosition = unit->getTilePosition();
-			}
-
+			eu->tilePosition = unit->getTilePosition();
 			eu->position = unit->getPosition();
+			updateEnemyRangeInMapTiles(eu);
 		}
 	}
 
@@ -53,19 +48,19 @@ namespace BlackCrow {
 			if (unit->isVisible()) {
 				eu->isGhost = false;
 
-				if (eu->type.isBuilding() && (unit->getTilePosition().x != eu->tilePosition.x || unit->getTilePosition().y != eu->tilePosition.y)) {
+				if (unit->getType() != eu->type)
+					eu->type = unit->getType();
+				
+				eu->position = unit->getPosition();
+				if (eu->tilePosition != unit->getTilePosition()) {
 					eu->tilePosition = unit->getTilePosition();
 					setEnemyUnitArea(eu, bc.map.getNearestArea(eu->tilePosition));
-				} else {
-					eu->position = unit->getPosition();
-					setEnemyUnitArea(eu, bc.map.getNearestArea(TilePosition(unit->getPosition())));
-				}
-
-				if (unit->getType() != eu->type) {
-					eu->type = unit->getType();
+					updateEnemyRangeInMapTiles(eu);
 				}
 
 				eu->lastSeen = Broodwar->getFrameCount();
+
+				Broodwar->drawCircleMap(unit->getPosition(), eu->type.groundWeapon().maxRange(), Colors::Blue);
 
 				// Handling dead extractors
 				if (eu->type == UnitTypes::Resource_Vespene_Geyser)
@@ -133,7 +128,8 @@ namespace BlackCrow {
 			area->enemies.erase(std::remove(area->enemies.begin(), area->enemies.end(), eu), area->enemies.end());
 	}
 
-	void Enemy::updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const Unit u, const TilePosition& current, const TilePosition& old) {
+	/*
+	void Enemy::updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const TilePosition& current, const TilePosition& old) {
 		if (eu->type.canAttack()) {
 			int maxRange = eu->type.groundWeapon().maxRange();
 			int tileRadius = (int)std::ceil(maxRange / 32);
@@ -144,7 +140,7 @@ namespace BlackCrow {
 					for (int y = old.y - tileRadius; y < old.y + tileRadius; y++) {
 						double radius = Util::distance(x, y, old.x, old.y);
 						if (radius <= maxRange) {
-							auto enemies = bc.map.tiles[x][y].enemiesInRange;
+							auto& enemies = bc.map.tiles[x][y].enemiesInRange;
 							enemies.erase(std::remove(enemies.begin(), enemies.end(), eu), enemies.end());
 						}
 					}
@@ -162,8 +158,31 @@ namespace BlackCrow {
 			}
 		}
 	}
+	*/
 
-	void Enemy::updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu, const BWAPI::Unit u, const BWAPI::TilePosition& current) {
-		updateEnemyRangeInMapTiles(eu, u, current, BWAPI::TilePositions::Invalid);
+	void Enemy::updateEnemyRangeInMapTiles(const EnemyUnitPtr& eu) {
+		//updateEnemyRangeInMapTiles(eu, current, BWAPI::TilePositions::Invalid);
+		if (eu->type.canAttack()) {
+			int maxRange = eu->type.groundWeapon().maxRange();
+			int tileRadius = (int)std::ceil(maxRange / 32);
+
+			// Remove old
+			for (auto& pos : eu->weaponRangeTiles) {
+				//bc.map.tiles[pos.first][pos.second].enemiesInRange.erase
+				auto& enemies = bc.map.tiles[pos.first][pos.second].enemiesInRange;
+				enemies.erase(std::remove(enemies.begin(), enemies.end(), eu), enemies.end());
+			}
+
+			// Add new
+			for (int x = eu->tilePosition.x - tileRadius - 1; x <= eu->tilePosition.x + tileRadius + 1; x++) {
+				for (int y = eu->tilePosition.y - tileRadius - 1; y <= eu->tilePosition.y + tileRadius + 1; y++) {
+					double radius = Util::distance(x*32 + 16, y*32 + 16, eu->position.x, eu->position.y);
+					if (radius <= maxRange && x >= 0 && x < (int)bc.map.tileWidth && y >= 0 && y < (int)bc.map.tileHeight) {
+						bc.map.tiles[x][y].enemiesInRange.push_back(eu);
+						eu->weaponRangeTiles.push_back(PairUint(x, y));
+					}
+				}
+			}
+		}
 	}
 }

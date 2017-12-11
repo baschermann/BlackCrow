@@ -89,7 +89,7 @@ namespace BlackCrow {
 			debug.displayBroodwar.elapsedTime(diffLastFrame.count());
 
 			// Average frame time
-			frameTimeAverager.add(diffLastFrame.count()); // TODO replace with getLocalSpeed when available
+			frameTimeAverager.add(diffLastFrame.count()); // TODO replace with getLocalSpeed when available + make class use less time (add new, subtract last)
 			
 
 			// EXTRA set SPEED per KEEB

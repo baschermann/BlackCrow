@@ -205,23 +205,25 @@ namespace BlackCrow {
 				Position threatFuturePosition = Util::getPointDirectionDistance(beu->getPosition(), beu->getAngle(), Broodwar->getRemainingLatencyFrames() * beu->getPlayer()->topSpeed(threat->type));
 				int futureDistanceBetween = (int)Util::distance(futurePosition, threatFuturePosition);
 
+				/*
 				Broodwar->drawLineMap(self->getPosition(), futurePosition, Colors::Orange);
 				Broodwar->drawLineMap(beu->getPosition(), threatFuturePosition, Colors::Red);
 				Broodwar->drawCircleMap(beu->getPosition(), threat->type.groundWeapon().maxRange(), Colors::Blue);
 				Broodwar->drawCircleMap(self->getPosition(), self->getType().size(), Colors::Purple);
 				Broodwar->drawCircleMap(beu->getPosition(), threat->type.size(), Colors::Purple);
+				*/
 
-					if (futureDistanceBetween < enemyWeaponDistance) {
-						BWAPI::Position retreatPosition = Util::getPointAlongPoints(threat->position, self->getPosition(), enemyWeaponDistance);
+				if (futureDistanceBetween < enemyWeaponDistance) {
+					BWAPI::Position retreatPosition = Util::getPointAlongPoints(threat->position, self->getPosition(), enemyWeaponDistance);
 
-						Broodwar->drawLineMap(self->getPosition(), retreatPosition, Colors::White);
-						Broodwar->drawCircleMap(retreatPosition, 3, Colors::White, true);
+					Broodwar->drawLineMap(self->getPosition(), retreatPosition, Colors::White);
+					Broodwar->drawCircleMap(retreatPosition, 3, Colors::White, true);
 
-						move(retreatPosition);
-					} else {
-						//if (squad->squadGoalTarget)
-							//move(squad->squadGoalTarget->position);
-					}
+					move(retreatPosition);
+				} else {
+					//if (squad->squadGoalTarget)
+						//move(squad->squadGoalTarget->position);
+				}
 					
 			}
 		} else {
